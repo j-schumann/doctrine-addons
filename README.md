@@ -40,7 +40,7 @@ doctrine:
         # So we use our custom driver to disable foreign key checks for TRUNCATE
         # because only with TRUNCATE instead of DELETE FROM we ensure the same
         # autoincrement IDs for fixtures in tests
-        # "driver" left blank intentianally 
+        # "driver" left blank intentionally
         driver:
         driver_class: Vrok\DoctrineAddons\DAL\Driver\MariadbTestDriver
 ```
