@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vrok\DoctrineAddons\Tests;
+namespace Vrok\DoctrineAddons\DBAL\Tests;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\ConversionException;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vrok\DoctrineAddons\Tests;
+namespace Vrok\DoctrineAddons\DBAL\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
