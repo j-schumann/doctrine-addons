@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+// @todo use this base class instead of switching when support for DBAL@2.x.x is removed
+//use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Deprecations\Deprecation;
 
