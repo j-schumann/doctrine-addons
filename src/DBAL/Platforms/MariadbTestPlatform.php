@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
-use Doctrine\DBAL\Platforms\Keywords\MariaDb102Keywords;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Deprecations\Deprecation;
@@ -27,7 +26,7 @@ class MariadbTestPlatform extends MySQLPlatform
     /**
      * {@inheritdoc}
      *
-     * @link https://mariadb.com/kb/en/library/json-data-type/
+     * @see https://mariadb.com/kb/en/library/json-data-type/
      */
     public function getJsonTypeDeclarationSQL(array $column): string
     {
@@ -35,7 +34,7 @@ class MariadbTestPlatform extends MySQLPlatform
     }
 
     /**
-     * @deprecated Implement {@link createReservedKeywordsList()} instead.
+     * @deprecated implement {@link createReservedKeywordsList()} instead
      */
     protected function getReservedKeywordsClass(): string
     {
@@ -43,7 +42,7 @@ class MariadbTestPlatform extends MySQLPlatform
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4510',
             'MariaDb1027Platform::getReservedKeywordsClass() is deprecated,'
-            . ' use MariaDb1027Platform::createReservedKeywordsList() instead.'
+            .' use MariaDb1027Platform::createReservedKeywordsList() instead.'
         );
 
         return Keywords\MariaDb102Keywords::class;
