@@ -6,6 +6,7 @@ namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
 // @todo use this base class instead of switching when support for DBAL@2.x.x is removed
 //use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\Keywords\MariaDb102Keywords;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Deprecations\Deprecation;
 
@@ -46,7 +47,7 @@ class MariadbTestPlatform extends MySQLPlatform
             .' use MariaDb1027Platform::createReservedKeywordsList() instead.'
         );
 
-        return Keywords\MariaDb102Keywords::class;
+        return MariaDb102Keywords::class;
     }
 
     protected function initializeDoctrineTypeMappings(): void
