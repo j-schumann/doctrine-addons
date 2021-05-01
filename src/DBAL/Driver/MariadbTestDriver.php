@@ -10,6 +10,7 @@ use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
+use Doctrine\Deprecations\Deprecation;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
 /**
@@ -110,8 +111,10 @@ class MariadbTestDriver extends AbstractMySQLDriver
      * {@inheritdoc}
      *
      * @return Connection
+     *
+     * @todo remove additional parameters when support for dbal@2.x.x is dropped
      */
-    public function connect(array $params)
+    public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
         $driverOptions = $params['driverOptions'] ?? [];
 
@@ -158,5 +161,23 @@ class MariadbTestDriver extends AbstractMySQLDriver
         }
 
         return $dsn;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated
+     *
+     * @todo remove when support for dbal@2.x.x is dropped
+     */
+    public function getName()
+    {
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/issues/3580',
+            'Driver::getName() is deprecated'
+        );
+
+        return 'pdo_mysql';
     }
 }
