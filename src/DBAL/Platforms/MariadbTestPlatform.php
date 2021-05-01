@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
 use Doctrine\DBAL\Platforms\Keywords\MariaDb102Keywords;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Deprecations\Deprecation;
 
@@ -14,7 +14,7 @@ use Doctrine\Deprecations\Deprecation;
  * defined MariaDb1027Platform as final class we have to duplicate all other
  * methods from there...
  */
-class MariadbTestPlatform extends MySqlPlatform
+class MariadbTestPlatform extends MySQLPlatform
 {
     /**
      * {@inheritdoc}
