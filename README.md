@@ -3,7 +3,7 @@
 This is a library with additional classes for usage in combination with the
 Doctrine ORM.  
 
-[![Build Status](https://travis-ci.org/j-schumann/doctrine-addons.svg?branch=master)](https://travis-ci.org/j-schumann/doctrine-addons)
+![CI Status](https://github.com/j-schumann/doctrine-addons/actions/workflows/ci.yaml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/j-schumann/doctrine-addons/badge.svg?branch=master)](https://coveralls.io/github/j-schumann/doctrine-addons?branch=master)
 
 ## Enable types in Symfony
