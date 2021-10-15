@@ -17,7 +17,8 @@ abstract class NormalizerHelper
             return null;
         }
 
-        return trim(strip_tags($content));
+        // strip_tags does not convert &nbsp; etc -> use html_entity_decode too
+        return trim(html_entity_decode(strip_tags($content)));
     }
 
     public static function getTextLength(?string $content): int
