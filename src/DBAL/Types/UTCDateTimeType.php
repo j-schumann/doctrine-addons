@@ -61,7 +61,7 @@ class UTCDateTimeType extends DateTimeImmutableType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if (null === $value) {
+        if (null === $value || $value instanceof DateTimeImmutable) {
             return $value;
         }
 
