@@ -44,3 +44,16 @@ doctrine:
         driver:
         driver_class: Vrok\DoctrineAddons\DAL\Driver\MariadbTestDriver
 ```
+
+## Enable the PostgreSQLTestDriver in Symfony
+
+config/packages/test/doctrine.yaml
+```yaml
+doctrine:
+    dbal:
+        # Default purge/TRUNCATE behavior of Postgres does not reset autoincrement
+        # values, so we use our custom driver to reset identities for TRUNCATE.
+        # "driver" left blank intentionally
+        driver:
+        driver_class: Vrok\DoctrineAddons\DAL\Driver\PostgreSQLTestDriver
+```
