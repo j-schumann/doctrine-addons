@@ -10,7 +10,6 @@ use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
-use Doctrine\Deprecations\Deprecation;
 use PDO;
 use PDOException;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
@@ -41,7 +40,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
             return new MariadbTestPlatform();
         }
 
-        if (! $mariadb) {
+        if (!$mariadb) {
             $oracleMysqlVersion = $this->getOracleMysqlVersionNumber($version);
             if (version_compare($oracleMysqlVersion, '8', '>=')) {
                 return new MySQL80Platform();
@@ -66,32 +65,29 @@ class MariadbTestDriver extends AbstractMySQLDriver
     private function getOracleMysqlVersionNumber(string $versionString): string
     {
         if (
-            preg_match(
+            0 === preg_match(
                 '/^(?P<major>\d+)(?:\.(?P<minor>\d+)(?:\.(?P<patch>\d+))?)?/',
                 $versionString,
                 $versionParts
-            ) === 0
+            )
         ) {
-            throw Exception::invalidPlatformVersionSpecified(
-                $versionString,
-                '<major_version>.<minor_version>.<patch_version>'
-            );
+            throw Exception::invalidPlatformVersionSpecified($versionString, '<major_version>.<minor_version>.<patch_version>');
         }
 
         $majorVersion = $versionParts['major'];
         $minorVersion = $versionParts['minor'] ?? 0;
         $patchVersion = $versionParts['patch'] ?? null;
 
-        if ($majorVersion === '5' && $minorVersion === '7' && $patchVersion === null) {
+        if ('5' === $majorVersion && '7' === $minorVersion && null === $patchVersion) {
             $patchVersion = '9';
         }
 
-        return $majorVersion . '.' . $minorVersion . '.' . $patchVersion;
+        return $majorVersion.'.'.$minorVersion.'.'.$patchVersion;
     }
 
     /**
      * Detect MariaDB server version, including hack for some mariadb distributions
-     * that starts with the prefix '5.5.5-'
+     * that starts with the prefix '5.5.5-'.
      *
      * @param string $versionString Version string as returned by mariadb server, i.e. '5.5.5-Mariadb-10.0.8-xenial'
      *
@@ -100,19 +96,16 @@ class MariadbTestDriver extends AbstractMySQLDriver
     private function getMariaDbMysqlVersionNumber(string $versionString): string
     {
         if (
-            preg_match(
+            0 === preg_match(
                 '/^(?:5\.5\.5-)?(mariadb-)?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)/i',
                 $versionString,
                 $versionParts
-            ) === 0
+            )
         ) {
-            throw Exception::invalidPlatformVersionSpecified(
-                $versionString,
-                '^(?:5\.5\.5-)?(mariadb-)?<major_version>.<minor_version>.<patch_version>'
-            );
+            throw Exception::invalidPlatformVersionSpecified($versionString, '^(?:5\.5\.5-)?(mariadb-)?<major_version>.<minor_version>.<patch_version>');
         }
 
-        return $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'];
+        return $versionParts['major'].'.'.$versionParts['minor'].'.'.$versionParts['patch'];
     }
 
     /**
@@ -124,7 +117,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
     {
         $driverOptions = $params['driverOptions'] ?? [];
 
-        if (! empty($params['persistent'])) {
+        if (!empty($params['persistent'])) {
             $driverOptions[PDO::ATTR_PERSISTENT] = true;
         }
 
@@ -150,24 +143,24 @@ class MariadbTestDriver extends AbstractMySQLDriver
     private function constructPdoDsn(array $params): string
     {
         $dsn = 'mysql:';
-        if (isset($params['host']) && $params['host'] !== '') {
-            $dsn .= 'host=' . $params['host'] . ';';
+        if (isset($params['host']) && '' !== $params['host']) {
+            $dsn .= 'host='.$params['host'].';';
         }
 
         if (isset($params['port'])) {
-            $dsn .= 'port=' . $params['port'] . ';';
+            $dsn .= 'port='.$params['port'].';';
         }
 
         if (isset($params['dbname'])) {
-            $dsn .= 'dbname=' . $params['dbname'] . ';';
+            $dsn .= 'dbname='.$params['dbname'].';';
         }
 
         if (isset($params['unix_socket'])) {
-            $dsn .= 'unix_socket=' . $params['unix_socket'] . ';';
+            $dsn .= 'unix_socket='.$params['unix_socket'].';';
         }
 
         if (isset($params['charset'])) {
-            $dsn .= 'charset=' . $params['charset'] . ';';
+            $dsn .= 'charset='.$params['charset'].';';
         }
 
         return $dsn;
