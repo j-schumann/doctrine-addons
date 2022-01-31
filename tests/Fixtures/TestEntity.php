@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
 /**
- * @Entity
+ * @Entity()
  */
 class TestEntity
 {
     /**
-     * @Id
+     * @Id()
      * @Column(type="string")
-     * @GeneratedValue
+     * @GeneratedValue()
      */
     public string $id = '';
 
