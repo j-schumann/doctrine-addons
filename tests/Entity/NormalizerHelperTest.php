@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vrok\DoctrineAddons\Entity\Tests;
+namespace Vrok\DoctrineAddons\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Entity\NormalizerHelper;
