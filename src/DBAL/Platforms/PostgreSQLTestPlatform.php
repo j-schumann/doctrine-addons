@@ -12,7 +12,7 @@ class PostgreSQLTestPlatform extends PostgreSQL100Platform
     /**
      * {@inheritDoc}
      */
-    public function getTruncateTableSQL($tableName, $cascade = false)
+    public function getTruncateTableSQL($tableName, $cascade = false): string
     {
         $tableIdentifier = new Identifier($tableName);
         $sql = 'TRUNCATE '.$tableIdentifier->getQuotedName($this).' RESTART IDENTITY';

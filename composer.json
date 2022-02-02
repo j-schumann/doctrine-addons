@@ -13,7 +13,8 @@
     "require-dev": {
         "doctrine/orm": "^2.11.1",
         "friendsofphp/php-cs-fixer": "^3.5.0",
-        "phpunit/phpunit": "^9.5.13"
+        "phpunit/phpunit": "^9.5.13",
+        "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {

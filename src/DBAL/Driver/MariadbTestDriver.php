@@ -10,6 +10,7 @@ use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use PDO;
 use PDOException;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
@@ -33,7 +34,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
      *
      * @throws DBALException
      */
-    public function createDatabasePlatformForVersion($version)
+    public function createDatabasePlatformForVersion($version): MySQLPlatform
     {
         $mariadb = false !== stripos($version, 'mariadb');
         if ($mariadb && version_compare($this->getMariaDbMysqlVersionNumber($version), '10.2.7', '>=')) {
