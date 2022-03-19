@@ -4,7 +4,7 @@ composer.lock
 ###< composer ###
 
 ###> friendsofphp/php-cs-fixer ###
-.php_cs.cache
+/.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 
 ###> phpunit/phpunit ###

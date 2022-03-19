@@ -2,19 +2,25 @@
     "name": "vrok/doctrine-addons",
     "type": "library",
     "description": "Doctrine ORM type & helper classes",
-    "keywords": ["doctrine", "orm", "type", "utc", "test", "phpunit"],
+    "keywords": ["doctrine", "orm", "type", "utc", "test", "phpunit", "normalization"],
     "homepage": "https://vrok.de",
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
-        "doctrine/dbal": "^3.3.1",
-        "doctrine/lexer": "^1.2.2"
+        "doctrine/dbal": "^3.3.3",
+        "doctrine/lexer": "^1.2.3"
     },
     "require-dev": {
-        "doctrine/orm": "^2.11.1",
-        "friendsofphp/php-cs-fixer": "^3.5.0",
-        "phpunit/phpunit": "^9.5.13",
+        "ext-intl": "*",
+        "doctrine/orm": "^2.11.2",
+        "friendsofphp/php-cs-fixer": "^3.7.0",
+        "behat/transliterator": "^1.2",
+        "phpunit/phpunit": "^9.5.19",
         "roave/security-advisories": "dev-latest"
+    },
+    "suggest": {
+        "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",
+        "behat/transliterator": "For Util\\UmlautTransliterator"
     },
     "autoload": {
         "psr-4": {

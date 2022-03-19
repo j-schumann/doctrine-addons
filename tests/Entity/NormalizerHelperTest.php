@@ -119,4 +119,44 @@ class NormalizerHelperTest extends TestCase
         self::assertSame(1, NormalizerHelper::toNullableInt(1));
         self::assertSame(-99, NormalizerHelper::toNullableInt(-99));
     }
+
+    public function testToColor(): void
+    {
+        self::assertSame('', NormalizerHelper::toColor(''));
+        self::assertSame('', NormalizerHelper::toColor(null));
+        self::assertSame('', NormalizerHelper::toColor(' '));
+        self::assertSame('#abc', NormalizerHelper::toColor('#ABC'));
+        self::assertSame('#abc', NormalizerHelper::toColor('aBc'));
+        self::assertSame('#abc', NormalizerHelper::toColor(' aBc'));
+    }
+
+    public function testToNullableColor(): void
+    {
+        self::assertSame(null, NormalizerHelper::toNullableColor(''));
+        self::assertSame(null, NormalizerHelper::toNullableColor(null));
+        self::assertSame(null, NormalizerHelper::toNullableColor(' '));
+        self::assertSame('#abc', NormalizerHelper::toNullableColor('#ABC'));
+        self::assertSame('#abc', NormalizerHelper::toNullableColor('aBc'));
+        self::assertSame('#abc', NormalizerHelper::toNullableColor(' aBc'));
+    }
+
+    public function testToLocale(): void
+    {
+        self::assertSame('', NormalizerHelper::toLocale(''));
+        self::assertSame('', NormalizerHelper::toLocale(null));
+        self::assertSame('', NormalizerHelper::toLocale(' '));
+        self::assertSame('de_DE', NormalizerHelper::toLocale('de_DE'));
+        self::assertSame('fr_FR', NormalizerHelper::toLocale('FR-fr.utf8'));
+        self::assertSame('fr_FR', NormalizerHelper::toLocale(' FR-fr'));
+    }
+
+    public function testToNullableLocale(): void
+    {
+        self::assertSame(null, NormalizerHelper::toNullableLocale(''));
+        self::assertSame(null, NormalizerHelper::toNullableLocale(null));
+        self::assertSame(null, NormalizerHelper::toNullableLocale(' '));
+        self::assertSame('de_DE', NormalizerHelper::toNullableLocale('de_DE'));
+        self::assertSame('fr_FR', NormalizerHelper::toNullableLocale('FR-fr.utf8'));
+        self::assertSame('fr_FR', NormalizerHelper::toNullableLocale(' FR-fr'));
+    }
 }

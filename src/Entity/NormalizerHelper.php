@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Entity;
 
+use Locale;
+
 abstract class NormalizerHelper
 {
     /**
@@ -189,6 +191,9 @@ abstract class NormalizerHelper
         return count($cleaned) ? $cleaned : null;
     }
 
+    /**
+     * Returns null for null or 0.0, else the integer.
+     */
     public static function toNullableFloat(?float $value): ?float
     {
         if (null === $value) {
@@ -198,12 +203,73 @@ abstract class NormalizerHelper
         return 0 == $value ? null : $value;
     }
 
+    /**
+     * Returns null for null or 0, else the integer.
+     */
     public static function toNullableInt(?int $value): ?int
     {
         if (null === $value) {
             return null;
         }
 
-        return 0 == $value ? null : $value;
+        return 0 === $value ? null : $value;
+    }
+
+    /**
+     * Prefixes the value with # (if not already) if it is not empty.
+     */
+    public static function toColor(?string $value): string
+    {
+        if (null === $value) {
+            return '';
+        }
+
+        $value = strtolower(trim($value));
+        if ('' === $value) {
+            return '';
+        }
+
+        return str_starts_with($value, '#') ? $value : '#'.$value;
+    }
+
+    /**
+     * Prefixes non-empty values with # (if not already) or returns null
+     * for empty values (@see self::toNullableString).
+     */
+    public static function toNullableColor(?string $value): ?string
+    {
+        $value = self::toNullableString($value);
+
+        return null !== $value ? self::toColor($value) : null;
+    }
+
+    /**
+     * Tries to canonicalize the given string, e.g. convert FR-fr.utf8 to fr_FR,
+     * if it is not empty.
+     */
+    public static function toLocale(?string $value): string
+    {
+        if (null === $value) {
+            return '';
+        }
+
+        $value = trim($value);
+        if ('' === $value) {
+            // don't canonicalize empty string, it would be converted to "en_US_POSIX"
+            return '';
+        }
+
+        return Locale::canonicalize($value);
+    }
+
+    /**
+     * Tries to canonicalize the given non-empty value, e.g. convert FR-fr.utf8 to fr_FR
+     * or returns null for empty values (@see self::toNullableString).
+     */
+    public static function toNullableLocale(?string $value): ?string
+    {
+        $value = self::toNullableString($value);
+
+        return null !== $value ? self::toLocale($value) : null;
     }
 }

@@ -6,7 +6,6 @@ namespace Vrok\DoctrineAddons\DBAL\Driver;
 
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use PDO;
 use PDOException;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
