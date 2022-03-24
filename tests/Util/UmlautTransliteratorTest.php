@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Vrok\DoctrineAddons\Tests\Util;
+
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 

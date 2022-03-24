@@ -6,7 +6,7 @@
     "homepage": "https://vrok.de",
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.1",
         "doctrine/dbal": "^3.3.3",
         "doctrine/lexer": "^1.2.3"
     },
@@ -16,11 +16,13 @@
         "friendsofphp/php-cs-fixer": "^3.8.0",
         "behat/transliterator": "^1.3.0",
         "phpunit/phpunit": "^9.5.19",
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "symfony/property-access": "^6.0.5"
     },
     "suggest": {
         "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",
-        "behat/transliterator": "For Util\\UmlautTransliterator"
+        "behat/transliterator": "For Util\\UmlautTransliterator",
+        "symfony/property-access": "For ImportExport\\Helper"
     },
     "autoload": {
         "psr-4": {

@@ -6,6 +6,33 @@ Doctrine ORM.
 [![CI Status](https://github.com/j-schumann/doctrine-addons/actions/workflows/ci.yaml/badge.svg)](https://github.com/j-schumann/doctrine-addons/actions)
 [![Coverage Status](https://coveralls.io/repos/github/j-schumann/doctrine-addons/badge.svg?branch=master)](https://coveralls.io/github/j-schumann/doctrine-addons?branch=master)
 
+## Enable Postgres specific DQL functions
+`CAST` implements the corresponding function from Postgres to convert types:
+```php
+$queryBuilder->expr()->like('CAST(u.varchar, \'text\'))', ':parameterName')
+```
+
+`JSON_CONTAINS_TEXT` allows to use the [postgres-only "?" operator](https://www.postgresql.org/docs/9.5/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
+to search for strings within jsonb fields.
+This for example allows to filter Symfony users correctly by role,
+e.g. if you use role names that are part of others (ROLE_SUPER & ROLE_SUPER_ADMIN) where
+using `LIKE` would fail.
+```php
+$qb->andWhere("JSON_CONTAINS_TEXT(u.roles, :searchRole) = true")
+   ->setParameter('searchRole', 'ROLE_ADMIN');
+```
+
+Add to config/packages/doctrine.yaml:
+```yaml
+doctrine:
+    orm:
+        dql:
+            string_functions:
+                CAST: Vrok\DoctrineAddons\ORM\Query\AST\CastFunction
+                JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
+
+```
+
 ## Enable types in Symfony
 
 config/packages/doctrine.yaml
@@ -56,4 +83,61 @@ doctrine:
         # "driver" left blank intentionally
         driver:
         driver_class: Vrok\DoctrineAddons\DAL\Driver\PostgreSQLTestDriver
+```
+
+## Slugs with correct umlauts in Symfony
+
+Add this to your services.yaml to have ae, ue, oe in your slugs instead of
+a, u, o for ä, ü, ö.  
+This also handles some other chars, e.g. accents.
+```yaml
+    gedmo.listener.sluggable:
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+            - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
+```
+
+## Import / export entities from / to arrays
+
+Short Example, for more details see [ExportEntity](tests/Fixtures/ExportEntity.php) 
+/ [ImportEntity](tests/Fixtures/ImportEntity.php) and [ExportTest](tests/ImportExport/ExportTest.php)
+/ [ImportTest](tests/ImportExport/ImportTest.php) for all features.
+Allows to export referenced entities (or only their identifiers) and collections.
+
+```php
+use Vrok\DoctrineAddons\ImportExport\ExportableEntity;
+use Vrok\DoctrineAddons\ImportExport\ExportableProperty;
+use Vrok\DoctrineAddons\ImportExport\Helper;
+use Vrok\DoctrineAddons\ImportExport\ImportableEntity;
+use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
+
+#[ExportableEntity]
+#[ImportableEntity]
+class Entity
+{
+    #[ExportableProperty]
+    #[ImportableProperty]
+    public int $id = 0;
+
+    #[ExportableProperty]
+    #[ImportableProperty]
+    public ?DateTimeImmutable $timestamp = null;
+}
+
+$entity = new Entity();
+$entity->id = 1;
+$entity->timestamp = new Datetime();
+
+$helper = new Helper();
+$export = $helper->toArray($entity);
+
+// $export === [
+//     'id'        => 1,
+//     'timestamp' => '2022-03-23....',
+// ]
+
+$newInstance = $helper->fromArray($export, Entity::class);
 ```
