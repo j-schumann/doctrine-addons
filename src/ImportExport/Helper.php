@@ -88,6 +88,10 @@ class Helper
                 // c) the collection can be set as array at once
                 $value = [];
                 foreach ($data[$propName] as $element) {
+                    if (!is_object($element) && !is_array($element)) {
+                        // @todo implement byReference
+                        throw new \RuntimeException('Collections can only be populated with objects or arrays that will be transformed!');
+                    }
                     $value[] = is_object($element) ? $element : $this->fromArray($element);
                 }
             } elseif (is_a($propType, DateTimeInterface::class, true)) {
