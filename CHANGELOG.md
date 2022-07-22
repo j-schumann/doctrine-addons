@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2022-07-22
+### Added
+- `ORM\Query\AST\JsonFieldAsTextFunction` - to return a selected field within embedded JSON
+  as string or compare it to a value
+### Updated:
+- `ImportExport\Helper` to use static caches for im-/exportable classes & properties to
+  improve performance
+
 ## [2.4.0] - 2022-03-24
 ### Added
 - `ImportExport\Helper` - a class (together with corresponding PHP attributes) that allows
