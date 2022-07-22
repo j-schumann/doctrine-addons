@@ -22,6 +22,16 @@ $qb->andWhere("JSON_CONTAINS_TEXT(u.roles, :searchRole) = true")
    ->setParameter('searchRole', 'ROLE_ADMIN');
 ```
 
+`JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/9.5/functions-json.html#FUNCTIONS-JSON)
+to get JSON data within a jsonb fields as string.
+This for example allows to search for records that embed JSON,
+e.g. if you store metadata or addresses:
+```php
+$qb->andWhere("JSON_FIELD_AS_TEXT('u.address, :addrField) = :addrValue")
+    ->setParameter('addrField', 'city')
+    ->setParameter('addrValue', 'Dresden');
+```
+
 Add to config/packages/doctrine.yaml:
 ```yaml
 doctrine:
@@ -30,7 +40,7 @@ doctrine:
             string_functions:
                 CAST: Vrok\DoctrineAddons\ORM\Query\AST\CastFunction
                 JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
-
+                JSON_FIELD_AS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction
 ```
 
 ## Enable types in Symfony
