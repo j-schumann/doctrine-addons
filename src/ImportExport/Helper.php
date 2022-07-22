@@ -22,8 +22,13 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class Helper
 {
-    protected array $exportableProperties = [];
-    protected array $importableProperties = [];
+    // static caches to reduce Reflection calls when im-/exporting multiple
+    // objects of the same class
+    protected static array $exportableEntities = [];
+    protected static array $importableEntities = [];
+    protected static array $exportableProperties = [];
+    protected static array $importableProperties = [];
+
     protected PropertyAccessorInterface $propertyAccessor;
 
     public function __construct()
@@ -88,10 +93,6 @@ class Helper
                 // c) the collection can be set as array at once
                 $value = [];
                 foreach ($data[$propName] as $element) {
-                    if (!is_object($element) && !is_array($element)) {
-                        // @todo implement byReference
-                        throw new \RuntimeException('Collections can only be populated with objects or arrays that will be transformed!');
-                    }
                     $value[] = is_object($element) ? $element : $this->fromArray($element);
                 }
             } elseif (is_a($propType, DateTimeInterface::class, true)) {
@@ -173,40 +174,48 @@ class Helper
         return $data;
     }
 
+    /**
+     * We use a static cache here as the properties of classes won't change
+     * while the PHP instance is running and this method could be called
+     * multiple times, e.g. when importing many objects of the same class.
+     */
     protected function getImportableProperties(string $className): array
     {
-        $reflection = new ReflectionClass($className);
-
-        if (!array_key_exists($className, $this->importableProperties)) {
-            $this->importableProperties[$className] = [];
+        if (!isset(self::$importableProperties[$className])) {
+            $reflection = new ReflectionClass($className);
+            self::$importableProperties[$className] = [];
 
             $properties = $reflection->getProperties();
             foreach ($properties as $property) {
                 if ($this->isPropertyImportable($property)) {
-                    $this->importableProperties[$className][] = $property;
+                    self::$importableProperties[$className][] = $property;
                 }
             }
         }
 
-        return $this->importableProperties[$className];
+        return self::$importableProperties[$className];
     }
 
+    /**
+     * We use a static cache here as the properties of classes won't change
+     * while the PHP instance is running and this method could be called
+     * multiple times, e.g. when exporting many objects of the same class.
+     */
     protected function getExportableProperties(string $className): array
     {
-        $reflection = new ReflectionClass($className);
-
-        if (!array_key_exists($className, $this->exportableProperties)) {
-            $this->exportableProperties[$className] = [];
+        if (!isset(self::$exportableProperties[$className])) {
+            $reflection = new ReflectionClass($className);
+            self::$exportableProperties[$className] = [];
 
             $properties = $reflection->getProperties();
             foreach ($properties as $property) {
                 if ($this->isPropertyExportable($property)) {
-                    $this->exportableProperties[$className][] = $property;
+                    self::$exportableProperties[$className][] = $property;
                 }
             }
         }
 
-        return $this->exportableProperties[$className];
+        return self::$exportableProperties[$className];
     }
 
     protected function isPropertyExportable(ReflectionProperty $property): bool
@@ -221,17 +230,23 @@ class Helper
 
     protected function isImportableEntity(string $className): bool
     {
-        $reflection = new ReflectionClass($className);
-        $importable = $reflection->getAttributes(ImportableEntity::class);
+        if (!isset(self::$importableEntities[$className])) {
+            $reflection = new ReflectionClass($className);
+            $importable = $reflection->getAttributes(ImportableEntity::class);
+            self::$importableEntities[$className] = count($importable) > 0;
+        }
 
-        return count($importable) > 0;
+        return self::$importableEntities[$className];
     }
 
     protected function isExportableEntity(string $className): bool
     {
-        $reflection = new ReflectionClass($className);
-        $importable = $reflection->getAttributes(ExportableEntity::class);
+        if (!isset(self::$exportableEntities[$className])) {
+            $reflection = new ReflectionClass($className);
+            $exportable = $reflection->getAttributes(ExportableEntity::class);
+            self::$exportableEntities[$className] = count($exportable) > 0;
+        }
 
-        return count($importable) > 0;
+        return self::$exportableEntities[$className];
     }
 }
