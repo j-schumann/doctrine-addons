@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Vrok\DoctrineAddons\ImportExport\Helper;
 use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
+use Vrok\DoctrineAddons\Tests\Fixtures\TestDTO;
 
 class ImportTest extends TestCase
 {
@@ -187,6 +188,91 @@ class ImportTest extends TestCase
         self::assertSame('', $instance->getName());
         self::assertNull($instance->getParent());
         self::assertNull($instance->timestamp);
+    }
+
+    public function testImportOfList(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'list' => [
+                [
+                    'name' => 'element1',
+                ],
+                [
+                    'name' => 'element2',
+                ],
+            ],
+        ];
+
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertCount(2, $instance->list);
+
+        $element1 = $instance->list[0];
+        self::assertInstanceOf(TestDTO::class, $element1);
+        self::assertSame('element1', $element1->name);
+
+        $element2 = $instance->list[1];
+        self::assertInstanceOf(TestDTO::class, $element2);
+        self::assertSame('element2', $element2->name);
+    }
+
+    public function testImportOfEmptyList(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'list' => [],
+        ];
+
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertCount(0, $instance->list);
+    }
+
+    public function testImportOfNullList(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'list' => null,
+        ];
+
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertCount(0, $instance->list);
+    }
+
+    public function testImportOfListWithoutArrayFails(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'list' => 'string',
+        ];
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but it is no array: \"string\"!");
+        $helper->fromArray($data, ImportEntity::class);
+    }
+
+    public function testImportOfListWithInvalidEntryFails(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'list' => [
+                'string',
+            ],
+        ];
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but entry is no array: \"string\"!");
+        $helper->fromArray($data, ImportEntity::class);
     }
 
     public function testThrowsExceptionWithoutClassname()

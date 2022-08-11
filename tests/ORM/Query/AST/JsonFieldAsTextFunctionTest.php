@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
-use Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 

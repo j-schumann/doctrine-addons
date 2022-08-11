@@ -84,4 +84,7 @@ class ImportEntity
     {
         $this->collection = new ArrayCollection();
     }
+
+    #[ImportableProperty(listOf: TestDTO::class)]
+    public array $list = [];
 }

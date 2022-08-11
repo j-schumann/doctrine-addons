@@ -77,12 +77,17 @@ class Helper
 
             $value = null;
 
+            $importAttrib = $property->getAttributes(ImportableProperty::class)[0];
+            $listOf = $importAttrib->getArguments()['listOf'] ?? null;
+
             // simply set standard properties & already instantiated objects
             if ($property->getType()->isBuiltin()
                 || null === $data[$propName]
                 || $data[$propName] instanceof $propType
             ) {
-                $value = $data[$propName];
+                $value = $listOf
+                    ? $this->processList($data[$propName], $property, $listOf)
+                    : $data[$propName];
             } elseif ($this->isImportableEntity($propType)) {
                 $value = $this->fromArray($data[$propName], $propType);
             } elseif (is_a($propType, Collection::class, true)) {
@@ -109,6 +114,33 @@ class Helper
         }
 
         return $instance;
+    }
+
+    protected function processList(mixed $list, ReflectionProperty $property, string $listOf): array
+    {
+        if (null === $list) {
+            return [];
+        }
+
+        if (!$this->isExportableEntity($listOf)) {
+            throw new \LogicException("Property {$property->class}::{$property->name} is marked with ImportableProperty but its given listOf '$listOf' is no ImportableEntity!");
+        }
+
+        if (!is_array($list)) {
+            $json = json_encode($list);
+            throw new \RuntimeException("Property {$property->class}::{$property->name} is marked as list of '$listOf' but it is no array: $json!");
+        }
+
+        foreach ($list as $key => $entry) {
+            if (!is_array($entry)) {
+                $json = json_encode($entry);
+                throw new \RuntimeException("Property {$property->class}::{$property->name} is marked as list of '$listOf' but entry is no array: $json!");
+            }
+
+            $list[$key] = $this->fromArray($entry, $listOf);
+        }
+
+        return $list;
     }
 
     /**
