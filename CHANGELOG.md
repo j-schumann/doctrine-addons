@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2022-08-11
+### Added
+- `ImportExport\Helper` can now import lists of objects (e.g. an array of DTOs), by
+  using the new `listOf` property of the `ImportableProperty` attribute.
+
 ## [2.5.0] - 2022-07-22
 ### Added
 - `ORM\Query\AST\JsonFieldAsTextFunction` - to return a selected field within embedded JSON
