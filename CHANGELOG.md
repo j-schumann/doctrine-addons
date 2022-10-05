@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2022-10-05
+### Fixed
+- `ImportExport\Helper` handling of union types
+
 ## [2.6.0] - 2022-08-11
 ### Added
 - `ImportExport\Helper` can now import lists of objects (e.g. an array of DTOs), by

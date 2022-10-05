@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use ReflectionClass;
 use ReflectionProperty;
+use ReflectionUnionType;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -24,6 +25,7 @@ class Helper
 {
     // static caches to reduce Reflection calls when im-/exporting multiple
     // objects of the same class
+    protected static array $typeDetails = [];
     protected static array $exportableEntities = [];
     protected static array $importableEntities = [];
     protected static array $exportableProperties = [];
@@ -70,40 +72,50 @@ class Helper
                 continue;
             }
 
-            $propType = $property->getType()->getName();
-            if ('self' === $propType) {
-                $propType = $className;
-            }
-
             $value = null;
-
+            $typeDetails = $this->getTypeDetails($className, $property);
             $importAttrib = $property->getAttributes(ImportableProperty::class)[0];
             $listOf = $importAttrib->getArguments()['listOf'] ?? null;
 
-            // simply set standard properties & already instantiated objects
-            if ($property->getType()->isBuiltin()
-                || null === $data[$propName]
-                || $data[$propName] instanceof $propType
-            ) {
+            if (null === $data[$propName]) {
+                if (!$typeDetails['allowsNull']) {
+                    throw new RuntimeException("Found NULL for $className::$propName, but property is not nullable!");
+                }
+
+                $value = null;
+            }
+            // simply set standard properties
+            elseif ($typeDetails['isBuiltin']) {
+                // @todo compare value to $typeDetails['typename']
+
+                // check for listOf, the property could be an array of DTOs etc.
                 $value = $listOf
                     ? $this->processList($data[$propName], $property, $listOf)
                     : $data[$propName];
-            } elseif ($this->isImportableEntity($propType)) {
-                $value = $this->fromArray($data[$propName], $propType);
-            } elseif (is_a($propType, Collection::class, true)) {
+            }
+            // set already instantiated objects
+            elseif (is_a($data[$propName], $typeDetails['classname'], true)) {
+                $value = $data[$propName];
+            } elseif ($this->isImportableEntity($typeDetails['classname'])) {
+                $value = $this->fromArray($data[$propName], $typeDetails['classname']);
+            } elseif (is_a($typeDetails['classname'], Collection::class, true)) {
                 // @todo We simply assume here that
-                // a) each element contains the _entityClass of the collection members
-                // b) the collection members are importable
+                // a) the collection members are importable
                 // -> use Doctrine Schema data to determine the collection type
                 // c) the collection can be set as array at once
                 $value = [];
                 foreach ($data[$propName] as $element) {
-                    $value[] = is_object($element) ? $element : $this->fromArray($element);
+                    $value[] = is_object($element)
+                        // use objects directly...
+                        ? $element
+                        // ... or try to create, if listOf is not set than each
+                        // element must contain an _entityClass
+                        : $this->fromArray($element, $listOf);
                 }
-            } elseif (is_a($propType, DateTimeInterface::class, true)) {
-                $value = new $propType($data[$propName]);
+            } elseif (is_a($typeDetails['classname'], DateTimeInterface::class, true)) {
+                $value = new ($typeDetails['classname'])($data[$propName]);
             } else {
-                throw new RuntimeException("Don't know how to import '$propType $propName' for $className!");
+                throw new RuntimeException("Don't know how to import '$property' for $className!");
             }
 
             $this->propertyAccessor->setValue(
@@ -114,6 +126,58 @@ class Helper
         }
 
         return $instance;
+    }
+
+    // @todo: catch union types w/ multiple builtin types
+    protected function getTypeDetails(string $classname, ReflectionProperty $property): array
+    {
+        $propName = $property->getName();
+        if (isset(self::$typeDetails["$classname::$propName"])) {
+            return self::$typeDetails["$classname::$propName"];
+        }
+
+        $type = $property->getType();
+        $data = [
+            'allowsArray' => false,
+            'allowsNull'  => $type->allowsNull(), // also works for union types
+            'classname'   => null,
+            'typename'    => null,
+            'isBuiltin'   => false,
+            'isUnion'     => $type instanceof ReflectionUnionType,
+        ];
+
+        if ($data['isUnion']) {
+            foreach($type->getTypes() as $unionVariant) {
+                $variantName = $unionVariant->getName();
+                if ('array' === $variantName) {
+                    $data['allowsArray'] = true;
+                    continue;
+                }
+
+                if (!$unionVariant->isBuiltin()) {
+                    if (null !== $data['classname']) {
+                        throw new RuntimeException("Cannot import object, found ambigouus union type: $type");
+                    }
+                    $data['classname'] = $variantName;
+                }
+            }
+        }
+        elseif ($type->isBuiltin()) {
+            $data['isBuiltin'] = true;
+            $data['allowsNull'] = $type->allowsNull();
+            $data['typename'] = $type->getName();
+            if ('array' === $data['typename']) {
+                $data['allowsArray'] = true;
+            }
+        }
+        else {
+            $propClass = $type->getName();
+            $data['classname'] = 'self' === $propClass ? $classname : $propClass;
+        }
+
+        self::$typeDetails["$classname::$propName"] = $data;
+
+        return $data;
     }
 
     protected function processList(mixed $list, ReflectionProperty $property, string $listOf): array
