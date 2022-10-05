@@ -233,7 +233,7 @@ class ImportTest extends TestCase
         self::assertCount(0, $instance->list);
     }
 
-    public function testImportOfNullList(): void
+    public function testImportOfNullListFails(): void
     {
         $helper = new Helper();
 
@@ -241,10 +241,10 @@ class ImportTest extends TestCase
             'list' => null,
         ];
 
-        $instance = $helper->fromArray($data, ImportEntity::class);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Found NULL for Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list, but property is not nullable!");
 
-        self::assertInstanceOf(ImportEntity::class, $instance);
-        self::assertCount(0, $instance->list);
+        $helper->fromArray($data, ImportEntity::class);
     }
 
     public function testImportOfListWithoutArrayFails(): void
