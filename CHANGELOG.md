@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.2] - 2023-01-24
+### Updated
+- dependencies, mainly doctrine/lexer to ^2.1
+
 ## [2.6.1] - 2022-10-05
 ### Fixed
 - `ImportExport\Helper` handling of union types
