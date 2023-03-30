@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.3] - tbd
+### Fixed
+- deprecation with `PostgreSQLTestPlatform`
+
 ## [2.6.2] - 2023-01-24
 ### Updated
 - dependencies, mainly doctrine/lexer to ^2.1

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
-use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Schema\Identifier;
 
-class PostgreSQLTestPlatform extends PostgreSQL100Platform
+class PostgreSQLTestPlatform extends PostgreSQLPlatform
 {
     /**
      * {@inheritDoc}
