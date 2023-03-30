@@ -15,6 +15,6 @@ class TestEntity
     #[ORM\Column]
     public string $id = '';
 
-    #[ORM\Column(type: Types::JSON)
+    #[ORM\Column(type: Types::JSON)]
     public array $jsonColumn = [];
 }
