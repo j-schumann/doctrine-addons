@@ -6,6 +6,7 @@ namespace Vrok\DoctrineAddons\Tests\ORM;
 
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractOrmTestCase extends TestCase
@@ -16,13 +17,10 @@ abstract class AbstractOrmTestCase extends TestCase
     {
         parent::setUp();
 
-        $configuration = new Configuration();
+        $configuration = ORMSetup::createAttributeMetadataConfiguration([__DIR__.'/../Fixtures'], false);
         $configuration->setProxyDir(sys_get_temp_dir());
         $configuration->setProxyNamespace('Tests\Fixtures\Proxies');
         $configuration->setAutoGenerateProxyClasses(true);
-        $configuration->setMetadataDriverImpl($configuration->newDefaultAnnotationDriver(
-            [__DIR__.'/../Fixtures']
-        ));
 
         $this->configuration = $configuration;
     }

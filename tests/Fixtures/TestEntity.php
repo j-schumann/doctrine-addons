@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
-/**
- * @Entity()
- */
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
 class TestEntity
 {
-    /**
-     * @Id()
-     * @Column(type="string")
-     * @GeneratedValue()
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     public string $id = '';
 
-    /**
-     * @Column(type="json")
-     */
+    #[ORM\Column(type: Types::JSON)
     public array $jsonColumn = [];
 }
