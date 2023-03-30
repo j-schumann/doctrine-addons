@@ -17,6 +17,7 @@
         "behat/transliterator": "^v1.4.0",
         "phpunit/phpunit": "^9.5.28",
         "roave/security-advisories": "dev-latest",
+        "symfony/cache": "^6.2.0",
         "symfony/property-access": "^6.2.0"
     },
     "suggest": {
