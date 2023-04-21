@@ -3,7 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.6.3] - tbd
+## [2.7.0] - tbd
+### Added
+- ImportExport\Helper can fetch related entities by ID when importing
+
 ### Fixed
 - deprecation with `PostgreSQLTestPlatform`
 

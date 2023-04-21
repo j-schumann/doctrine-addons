@@ -6,6 +6,7 @@ namespace Vrok\DoctrineAddons\ImportExport;
 
 use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Persistence\ObjectManager;
 use ReflectionClass;
 use ReflectionProperty;
 use ReflectionUnionType;
@@ -33,11 +34,18 @@ class Helper
 
     protected PropertyAccessorInterface $propertyAccessor;
 
+    protected ?ObjectManager $objectManager = null;
+
     public function __construct()
     {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->enableExceptionOnInvalidIndex()
             ->getPropertyAccessor();
+    }
+
+    public function setObjectManager(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -97,7 +105,18 @@ class Helper
             elseif (is_a($data[$propName], $typeDetails['classname'], true)) {
                 $value = $data[$propName];
             } elseif ($this->isImportableEntity($typeDetails['classname'])) {
-                $value = $this->fromArray($data[$propName], $typeDetails['classname']);
+                if (is_int($data[$propName])) {
+                    if (!$this->objectManager) {
+                        throw new RuntimeException("Found ID for $className::$propName, but objectManager is not set to find object!");
+                    }
+                    $value = $this->objectManager->find(
+                        $typeDetails['classname'],
+                        $data[$propName]
+                    );
+                }
+                else {
+                    $value = $this->fromArray($data[$propName], $typeDetails['classname']);
+                }
             } elseif (is_a($typeDetails['classname'], Collection::class, true)) {
                 // @todo We simply assume here that
                 // a) the collection members are importable
@@ -186,7 +205,7 @@ class Helper
             return [];
         }
 
-        if (!$this->isExportableEntity($listOf)) {
+        if (!$this->isImportableEntity($listOf)) {
             throw new \LogicException("Property {$property->class}::{$property->name} is marked with ImportableProperty but its given listOf '$listOf' is no ImportableEntity!");
         }
 
