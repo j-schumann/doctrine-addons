@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2023-06-04
+### Added
+- ImportExport\Helper allow string IDs for imports referencing existing entities
+
 ## [2.7.0] - 2023-04-21
 ### Added
 - ImportExport\Helper can fetch related entities by ID when importing
