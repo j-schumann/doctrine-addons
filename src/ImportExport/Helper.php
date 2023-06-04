@@ -10,7 +10,6 @@ use Doctrine\Persistence\ObjectManager;
 use ReflectionClass;
 use ReflectionProperty;
 use ReflectionUnionType;
-use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -67,7 +66,7 @@ class Helper
 
         if (empty($className)) {
             $encoded = json_encode($data, JSON_THROW_ON_ERROR);
-            throw new RuntimeException("No entityClass given to instantiate the data: $encoded");
+            throw new \RuntimeException("No entityClass given to instantiate the data: $encoded");
         }
 
         // let the defined _entityClass take precedence over the (possibly inferred)
@@ -87,7 +86,7 @@ class Helper
 
             if (null === $data[$propName]) {
                 if (!$typeDetails['allowsNull']) {
-                    throw new RuntimeException("Found NULL for $className::$propName, but property is not nullable!");
+                    throw new \RuntimeException("Found NULL for $className::$propName, but property is not nullable!");
                 }
 
                 $value = null;
@@ -105,10 +104,11 @@ class Helper
             elseif (is_a($data[$propName], $typeDetails['classname'], true)) {
                 $value = $data[$propName];
             } elseif ($this->isImportableEntity($typeDetails['classname'])) {
-                if (is_int($data[$propName])) {
+                if (is_int($data[$propName]) || is_string($data[$propName])) {
                     if (!$this->objectManager) {
-                        throw new RuntimeException("Found ID for $className::$propName, but objectManager is not set to find object!");
+                        throw new \RuntimeException("Found ID for $className::$propName, but objectManager is not set to find object!");
                     }
+
                     $value = $this->objectManager->find(
                         $typeDetails['classname'],
                         $data[$propName]
@@ -124,6 +124,10 @@ class Helper
                 // c) the collection can be set as array at once
                 $value = [];
                 foreach ($data[$propName] as $element) {
+                    if (!is_array($element) && !is_object($element)) {
+                        throw new \RuntimeException("Elements imported for $className::$propName should be either an object or an array!");
+                    }
+
                     $value[] = is_object($element)
                         // use objects directly...
                         ? $element
@@ -134,7 +138,7 @@ class Helper
             } elseif (is_a($typeDetails['classname'], DateTimeInterface::class, true)) {
                 $value = new ($typeDetails['classname'])($data[$propName]);
             } else {
-                throw new RuntimeException("Don't know how to import '$property' for $className!");
+                throw new \RuntimeException("Don't know how to import '$property' for $className!");
             }
 
             $this->propertyAccessor->setValue(
@@ -175,8 +179,9 @@ class Helper
 
                 if (!$unionVariant->isBuiltin()) {
                     if (null !== $data['classname']) {
-                        throw new RuntimeException("Cannot import object, found ambigouus union type: $type");
+                        throw new \RuntimeException("Cannot import object, found ambigouus union type: $type");
                     }
+
                     $data['classname'] = $variantName;
                 }
             }
@@ -240,7 +245,7 @@ class Helper
     {
         $className = $object::class;
         if (!$this->isExportableEntity($className)) {
-            throw new RuntimeException("Don't know how to export instance of $className!");
+            throw new \RuntimeException("Don't know how to export instance of $className!");
         }
 
         $data = [];
@@ -282,7 +287,7 @@ class Helper
                     $data[$propName] = $this->toArray($propValue);
                 }
             } else {
-                throw new RuntimeException("Don't know how to export $className::$propName!");
+                throw new \RuntimeException("Don't know how to export $className::$propName!");
             }
         }
 
