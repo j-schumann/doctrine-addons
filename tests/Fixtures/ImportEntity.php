@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping as ORM;
+use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\ImportExport\ImportableEntity;
 use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
 
 #[ImportableEntity]
+#[ORM\Entity]
 class ImportEntity
 {
     #[ImportableProperty]
+    #[ORM\Id]
+    #[ORM\Column]
     private ?string $name = '';
 
     public function getName(): ?string
@@ -58,6 +63,7 @@ class ImportEntity
     }
 
     #[ImportableProperty]
+    #[ORM\Column(nullable: true)]
     private ?self $parent = null;
 
     public function getParent(): ?self
@@ -73,7 +79,8 @@ class ImportEntity
     }
 
     #[ImportableProperty]
-    public ?DateTimeImmutable $timestamp = null;
+    #[ORM\Column(nullable: true)]
+    public ?\DateTimeImmutable $timestamp = null;
 
     #[ImportableProperty]
     public ?TestEntity $otherReference = null;
@@ -86,5 +93,9 @@ class ImportEntity
     }
 
     #[ImportableProperty(listOf: TestDTO::class)]
+    #[ORM\Column]
     public array $list = [];
+
+    #[ImportableProperty]
+    public TestCase|EntityManager|null $union = null;
 }

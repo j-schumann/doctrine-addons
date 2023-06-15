@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Vrok\DoctrineAddons\ImportExport\ExportableEntity;
@@ -120,7 +119,7 @@ class ExportEntity
     }
 
     #[ExportableProperty]
-    public ?DateTimeImmutable $timestamp = null;
+    public ?\DateTimeImmutable $timestamp = null;
 
     public string $notExported = 'hidden';
 

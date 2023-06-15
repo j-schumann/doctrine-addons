@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\ImportExport;
 
-use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Vrok\DoctrineAddons\ImportExport\Helper;
 use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestDTO;
+use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-class ImportTest extends TestCase
+class ImportTest extends AbstractOrmTestCase
 {
     public function testImportWithSetter(): void
     {
@@ -45,9 +43,9 @@ class ImportTest extends TestCase
         $instance = $helper->fromArray($data, ImportEntity::class);
 
         self::assertInstanceOf(ImportEntity::class, $instance);
-        self::assertInstanceOf(DateTimeImmutable::class, $instance->timestamp);
+        self::assertInstanceOf(\DateTimeImmutable::class, $instance->timestamp);
 
-        $now = new DateTimeImmutable();
+        $now = new \DateTimeImmutable();
         self::assertGreaterThan($now, $instance->timestamp);
     }
 
@@ -112,6 +110,34 @@ class ImportTest extends TestCase
             'parent' => $parent,
         ];
 
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertInstanceOf(ImportEntity::class, $instance->getParent());
+        self::assertSame('parent via setter', $instance->getParent()->getName());
+
+        self::assertSame('', $instance->getName());
+        self::assertCount(0, $instance->getCollection());
+        self::assertNull($instance->timestamp);
+    }
+
+    public function testReferencingExistingRecord(): void
+    {
+        $em = $this->buildEntityManager();
+        $this->setupSchema();
+
+        $parent = new ImportEntity();
+        $parent->setName('parent');
+        $em->persist($parent);
+        $em->flush();
+        $em->clear();
+
+        $data = [
+            'parent' => $parent->getName(),
+        ];
+
+        $helper = new Helper();
+        $helper->setObjectManager($em);
         $instance = $helper->fromArray($data, ImportEntity::class);
 
         self::assertInstanceOf(ImportEntity::class, $instance);
@@ -241,7 +267,7 @@ class ImportTest extends TestCase
             'list' => null,
         ];
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Found NULL for Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list, but property is not nullable!");
 
         $helper->fromArray($data, ImportEntity::class);
@@ -255,7 +281,7 @@ class ImportTest extends TestCase
             'list' => 'string',
         ];
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but it is no array: \"string\"!");
         $helper->fromArray($data, ImportEntity::class);
     }
@@ -270,7 +296,7 @@ class ImportTest extends TestCase
             ],
         ];
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but entry is no array: \"string\"!");
         $helper->fromArray($data, ImportEntity::class);
     }
@@ -283,7 +309,7 @@ class ImportTest extends TestCase
             'name' => 'test',
         ];
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $helper->fromArray($data);
     }
 
@@ -299,7 +325,7 @@ class ImportTest extends TestCase
             ],
         ];
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $helper->fromArray($data, ImportEntity::class);
     }
 
@@ -311,7 +337,44 @@ class ImportTest extends TestCase
             'otherReference' => ['test'],
         ];
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $helper->fromArray($data);
+    }
+
+    public function testThrowsExceptionWithoutObjectManager(): void
+    {
+        $em = $this->buildEntityManager();
+        $this->setupSchema();
+
+        $parent = new ImportEntity();
+        $parent->setName('parent');
+        $em->persist($parent);
+        $em->flush();
+        $em->clear();
+
+        $data = [
+            'parent' => $parent->getName(),
+        ];
+
+        // no objectManager set -> exception when referencing by identifier
+        $helper = new Helper();
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('objectManager is not set to find object!');
+        $helper->fromArray($data, ImportEntity::class);
+    }
+
+    public function testThrowsExceptionForAmbiguousUnionType(): void
+    {
+        $data = [
+            'union' => $this,
+        ];
+
+        // no objectManager set -> exception when referencing by identifier
+        $helper = new Helper();
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot import object, found ambiguous union type');
+        $helper->fromArray($data, ImportEntity::class);
     }
 }

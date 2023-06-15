@@ -19,17 +19,11 @@ use Doctrine\DBAL\Types\StringType;
  */
 class SmallJsonType extends StringType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (null === $value) {
@@ -45,9 +39,6 @@ class SmallJsonType extends StringType
         return $encoded;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         if (null === $value || '' === $value) {
@@ -67,9 +58,6 @@ class SmallJsonType extends StringType
         return $val;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'small_json';

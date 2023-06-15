@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Entity;
 
-use Locale;
-
 abstract class NormalizerHelper
 {
     /**
@@ -259,7 +257,7 @@ abstract class NormalizerHelper
             return '';
         }
 
-        return Locale::canonicalize($value);
+        return \Locale::canonicalize($value);
     }
 
     /**

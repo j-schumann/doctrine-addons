@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\ImportExport;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Vrok\DoctrineAddons\ImportExport\Helper;
 use Vrok\DoctrineAddons\Tests\Fixtures\ExportEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
@@ -55,7 +53,7 @@ class ExportTest extends TestCase
     {
         $helper = new Helper();
 
-        $now = new DateTimeImmutable();
+        $now = new \DateTimeImmutable();
         $entity = new ExportEntity();
         $entity->timestamp = $now;
 
@@ -160,7 +158,7 @@ class ExportTest extends TestCase
         $helper = new Helper();
         $entity = new ImportEntity();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $helper->toArray($entity);
     }
 }

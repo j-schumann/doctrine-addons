@@ -7,7 +7,6 @@ namespace Vrok\DoctrineAddons\DBAL\Driver;
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
 use PDO;
-use PDOException;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
 
 /**
@@ -21,17 +20,12 @@ use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
  */
 class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
 {
-    /**
-     * {@inheritdoc}
-     */
     public function createDatabasePlatformForVersion($version): PostgreSQLTestPlatform
     {
         return new PostgreSQLTestPlatform();
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return Connection
      */
     public function connect(array $params)
@@ -39,25 +33,25 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
         $driverOptions = $params['driverOptions'] ?? [];
 
         if (!empty($params['persistent'])) {
-            $driverOptions[PDO::ATTR_PERSISTENT] = true;
+            $driverOptions[\PDO::ATTR_PERSISTENT] = true;
         }
 
         try {
-            $pdo = new PDO(
+            $pdo = new \PDO(
                 $this->constructPdoDsn($params),
                 $params['user'] ?? '',
                 $params['password'] ?? '',
                 $driverOptions
             );
-        } catch (PDOException $exception) {
+        } catch (\PDOException $exception) {
             throw \Doctrine\DBAL\Driver\PDO\Exception::new($exception);
         }
 
         if (
-            !isset($driverOptions[PDO::PGSQL_ATTR_DISABLE_PREPARES])
-            || true === $driverOptions[PDO::PGSQL_ATTR_DISABLE_PREPARES]
+            !isset($driverOptions[\PDO::PGSQL_ATTR_DISABLE_PREPARES])
+            || true === $driverOptions[\PDO::PGSQL_ATTR_DISABLE_PREPARES]
         ) {
-            $pdo->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
+            $pdo->setAttribute(\PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
         }
 
         $connection = new Connection($pdo);

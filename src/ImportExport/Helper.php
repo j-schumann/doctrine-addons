@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\ImportExport;
 
-use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ObjectManager;
-use ReflectionClass;
-use ReflectionProperty;
-use ReflectionUnionType;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -113,8 +109,7 @@ class Helper
                         $typeDetails['classname'],
                         $data[$propName]
                     );
-                }
-                else {
+                } else {
                     $value = $this->fromArray($data[$propName], $typeDetails['classname']);
                 }
             } elseif (is_a($typeDetails['classname'], Collection::class, true)) {
@@ -135,7 +130,7 @@ class Helper
                         // element must contain an _entityClass
                         : $this->fromArray($element, $listOf);
                 }
-            } elseif (is_a($typeDetails['classname'], DateTimeInterface::class, true)) {
+            } elseif (is_a($typeDetails['classname'], \DateTimeInterface::class, true)) {
                 $value = new ($typeDetails['classname'])($data[$propName]);
             } else {
                 throw new \RuntimeException("Don't know how to import '$property' for $className!");
@@ -152,7 +147,7 @@ class Helper
     }
 
     // @todo: catch union types w/ multiple builtin types
-    protected function getTypeDetails(string $classname, ReflectionProperty $property): array
+    protected function getTypeDetails(string $classname, \ReflectionProperty $property): array
     {
         $propName = $property->getName();
         if (isset(self::$typeDetails["$classname::$propName"])) {
@@ -166,11 +161,11 @@ class Helper
             'classname'   => null,
             'typename'    => null,
             'isBuiltin'   => false,
-            'isUnion'     => $type instanceof ReflectionUnionType,
+            'isUnion'     => $type instanceof \ReflectionUnionType,
         ];
 
         if ($data['isUnion']) {
-            foreach($type->getTypes() as $unionVariant) {
+            foreach ($type->getTypes() as $unionVariant) {
                 $variantName = $unionVariant->getName();
                 if ('array' === $variantName) {
                     $data['allowsArray'] = true;
@@ -179,22 +174,20 @@ class Helper
 
                 if (!$unionVariant->isBuiltin()) {
                     if (null !== $data['classname']) {
-                        throw new \RuntimeException("Cannot import object, found ambigouus union type: $type");
+                        throw new \RuntimeException("Cannot import object, found ambiguous union type: $type");
                     }
 
                     $data['classname'] = $variantName;
                 }
             }
-        }
-        elseif ($type->isBuiltin()) {
+        } elseif ($type->isBuiltin()) {
             $data['isBuiltin'] = true;
             $data['allowsNull'] = $type->allowsNull();
             $data['typename'] = $type->getName();
             if ('array' === $data['typename']) {
                 $data['allowsArray'] = true;
             }
-        }
-        else {
+        } else {
             $propClass = $type->getName();
             $data['classname'] = 'self' === $propClass ? $classname : $propClass;
         }
@@ -204,7 +197,7 @@ class Helper
         return $data;
     }
 
-    protected function processList(mixed $list, ReflectionProperty $property, string $listOf): array
+    protected function processList(mixed $list, \ReflectionProperty $property, string $listOf): array
     {
         if (null === $list) {
             return [];
@@ -241,7 +234,7 @@ class Helper
      * @param array|null $propertyFilter if an array: only properties with the given names
      *                                   are returned
      */
-    public function toArray(object $object, ?array $propertyFilter = null): array
+    public function toArray(object $object, array $propertyFilter = null): array
     {
         $className = $object::class;
         if (!$this->isExportableEntity($className)) {
@@ -249,7 +242,7 @@ class Helper
         }
 
         $data = [];
-        /** @var ReflectionProperty $property */
+        /** @var \ReflectionProperty $property */
         foreach ($this->getExportableProperties($className) as $property) {
             $propName = $property->getName();
             if (null !== $propertyFilter && !in_array($propName, $propertyFilter)) {
@@ -264,8 +257,8 @@ class Helper
                 || null === $propValue
             ) {
                 $data[$propName] = $propValue;
-            } elseif ($propValue instanceof DateTimeInterface) {
-                /* @var DateTimeInterface $propValue */
+            } elseif ($propValue instanceof \DateTimeInterface) {
+                /* @var \DateTimeInterface $propValue */
                 $data[$propName] = $propValue->format(DATE_ATOM);
             } elseif ($propValue instanceof Collection) {
                 $data[$propName] = [];
@@ -302,7 +295,7 @@ class Helper
     protected function getImportableProperties(string $className): array
     {
         if (!isset(self::$importableProperties[$className])) {
-            $reflection = new ReflectionClass($className);
+            $reflection = new \ReflectionClass($className);
             self::$importableProperties[$className] = [];
 
             $properties = $reflection->getProperties();
@@ -324,7 +317,7 @@ class Helper
     protected function getExportableProperties(string $className): array
     {
         if (!isset(self::$exportableProperties[$className])) {
-            $reflection = new ReflectionClass($className);
+            $reflection = new \ReflectionClass($className);
             self::$exportableProperties[$className] = [];
 
             $properties = $reflection->getProperties();
@@ -338,12 +331,12 @@ class Helper
         return self::$exportableProperties[$className];
     }
 
-    protected function isPropertyExportable(ReflectionProperty $property): bool
+    protected function isPropertyExportable(\ReflectionProperty $property): bool
     {
         return count($property->getAttributes(ExportableProperty::class)) > 0;
     }
 
-    protected function isPropertyImportable(ReflectionProperty $property): bool
+    protected function isPropertyImportable(\ReflectionProperty $property): bool
     {
         return count($property->getAttributes(ImportableProperty::class)) > 0;
     }
@@ -351,7 +344,7 @@ class Helper
     protected function isImportableEntity(string $className): bool
     {
         if (!isset(self::$importableEntities[$className])) {
-            $reflection = new ReflectionClass($className);
+            $reflection = new \ReflectionClass($className);
             $importable = $reflection->getAttributes(ImportableEntity::class);
             self::$importableEntities[$className] = count($importable) > 0;
         }
@@ -362,7 +355,7 @@ class Helper
     protected function isExportableEntity(string $className): bool
     {
         if (!isset(self::$exportableEntities[$className])) {
-            $reflection = new ReflectionClass($className);
+            $reflection = new \ReflectionClass($className);
             $exportable = $reflection->getAttributes(ExportableEntity::class);
             self::$exportableEntities[$className] = count($exportable) > 0;
         }

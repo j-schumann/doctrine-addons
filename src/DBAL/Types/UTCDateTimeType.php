@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\DBAL\Types;
 
 use DateTimeImmutable;
-use DateTimeInterface;
-use DateTimeZone;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\DateTimeImmutableType;
@@ -23,10 +21,6 @@ class UTCDateTimeType extends DateTimeImmutableType
     private static $utcDateTimezone;
 
     /**
-     * @param mixed $value
-     *
-     * @return mixed
-     *
      * @throws ConversionException
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
@@ -35,12 +29,12 @@ class UTCDateTimeType extends DateTimeImmutableType
             return $value;
         }
 
-        if (!($value instanceof DateTimeInterface)) {
+        if (!($value instanceof \DateTimeInterface)) {
             throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['DateTime', 'DateTimeImmutable', 'DateTimeInterface']);
         }
 
-        if (!($value instanceof DateTimeImmutable)) {
-            $value = DateTimeImmutable::createFromMutable($value);
+        if (!($value instanceof \DateTimeImmutable)) {
+            $value = \DateTimeImmutable::createFromMutable($value);
         }
 
         self::$utcDateTimezone = self::$utcDateTimezone ?: new \DateTimeZone('UTC');
@@ -53,15 +47,13 @@ class UTCDateTimeType extends DateTimeImmutableType
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return DateTimeImmutable|null
+     * @return \DateTimeImmutable|null
      *
      * @throws ConversionException
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if (null === $value || $value instanceof DateTimeImmutable) {
+        if (null === $value || $value instanceof \DateTimeImmutable) {
             return $value;
         }
 
@@ -69,9 +61,9 @@ class UTCDateTimeType extends DateTimeImmutableType
             throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['string']);
         }
 
-        self::$utcDateTimezone = self::$utcDateTimezone ?: new DateTimeZone('UTC');
+        self::$utcDateTimezone = self::$utcDateTimezone ?: new \DateTimeZone('UTC');
 
-        $converted = DateTimeImmutable::createFromFormat(
+        $converted = \DateTimeImmutable::createFromFormat(
             $platform->getDateTimeFormatString(),
             $value,
             self::$utcDateTimezone

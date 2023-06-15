@@ -12,9 +12,6 @@ use Doctrine\DBAL\Platforms\MariaDBPlatform;
  */
 class MariadbTestPlatform extends MariaDBPlatform
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getTruncateTableSQL($tableName, $cascade = false): string
     {
         return sprintf('SET foreign_key_checks = 0;TRUNCATE %s;SET foreign_key_checks = 1;', $tableName);

@@ -9,9 +9,6 @@ use Doctrine\DBAL\Schema\Identifier;
 
 class PostgreSQLTestPlatform extends PostgreSQLPlatform
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getTruncateTableSQL($tableName, $cascade = false): string
     {
         $tableIdentifier = new Identifier($tableName);

@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\DBAL\Driver;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
-use PDO;
-use PDOException;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
 /**
@@ -29,11 +26,6 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
  */
 class MariadbTestDriver extends AbstractMySQLDriver
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws DBALException
-     */
     public function createDatabasePlatformForVersion($version): MySQLPlatform
     {
         $mariadb = false !== stripos($version, 'mariadb');
@@ -110,8 +102,6 @@ class MariadbTestDriver extends AbstractMySQLDriver
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return Connection
      */
     public function connect(array $params)
@@ -119,17 +109,17 @@ class MariadbTestDriver extends AbstractMySQLDriver
         $driverOptions = $params['driverOptions'] ?? [];
 
         if (!empty($params['persistent'])) {
-            $driverOptions[PDO::ATTR_PERSISTENT] = true;
+            $driverOptions[\PDO::ATTR_PERSISTENT] = true;
         }
 
         try {
-            $pdo = new PDO(
+            $pdo = new \PDO(
                 $this->constructPdoDsn($params),
                 $params['user'] ?? '',
                 $params['password'] ?? '',
                 $driverOptions
             );
-        } catch (PDOException $exception) {
+        } catch (\PDOException $exception) {
             throw \Doctrine\DBAL\Driver\PDO\Exception::new($exception);
         }
 
