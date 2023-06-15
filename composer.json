@@ -13,10 +13,10 @@
     },
     "require-dev": {
         "ext-intl": "*",
-        "doctrine/orm": "^2.14.1",
-        "friendsofphp/php-cs-fixer": "^3.7.0",
-        "behat/transliterator": "^v1.4.0",
-        "phpunit/phpunit": "^9.6.9",
+        "doctrine/orm": "^2.15.2",
+        "friendsofphp/php-cs-fixer": "^3.17.0",
+        "behat/transliterator": "^v1.5.0",
+        "phpunit/phpunit": "^10.2.2",
         "roave/security-advisories": "dev-latest",
         "symfony/cache": "^6.3.0",
         "symfony/property-access": "^6.3.0"
