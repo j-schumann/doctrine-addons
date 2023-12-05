@@ -14,12 +14,12 @@
     "require-dev": {
         "ext-intl": "*",
         "doctrine/orm": "^2.15.2",
-        "friendsofphp/php-cs-fixer": "^3.17.0",
-        "behat/transliterator": "^v1.5.0",
-        "phpunit/phpunit": "^10.2.2",
+        "friendsofphp/php-cs-fixer": "^3.40.2",
+        "behat/transliterator": "^1.5.0",
+        "phpunit/phpunit": "^10.5.1",
         "roave/security-advisories": "dev-latest",
-        "symfony/cache": "^6.3.0",
-        "symfony/property-access": "^6.3.0"
+        "symfony/cache": "^6.3.0|^7.0.0",
+        "symfony/property-access": "^6.3.0|^7.0.0"
     },
     "suggest": {
         "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",

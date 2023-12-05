@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - TBD
+### Added
+- Support for Symfony v7 (only relevant for dev)
+
 ## [2.8.0] - 2023-06-04
 ### Added
 - ImportExport\Helper allow string IDs for imports referencing existing entities
