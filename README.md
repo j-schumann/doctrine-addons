@@ -95,6 +95,17 @@ doctrine:
         driver_class: Vrok\DoctrineAddons\DAL\Driver\PostgreSQLTestDriver
 ```
 
+## Lockable entities
+
+Implementing a simple `LockableInterface` allows unified handling of different
+entities that can be locked/unlocked by admins etc. The provided interface
+makes very little assumptions about your code, except that each entity can
+be locked/unlocked at any time (regardless of other states the entity might have).
+
+The `LockableTrait` provides an opinionated implementation of that interface,
+by specifying a boolean property `locked` that defaults to false and that has
+a Symfony group attribute of `default:read`. 
+
 ## Slugs with correct umlauts in Symfony
 
 Add this to your services.yaml to have ae, ue, oe in your slugs instead of
@@ -106,7 +117,7 @@ This also handles some other chars, e.g. accents.
         tags:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
-            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+            - [ setAnnotationReader, [ "@annotation_reader" ] ] # only if you still use annotations
             - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
 ```
 

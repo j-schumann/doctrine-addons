@@ -6,25 +6,26 @@
     "homepage": "https://vrok.de",
     "license": "MIT",
     "require": {
-        "ext-pdo": "*",
         "php": "^8.1",
         "doctrine/dbal": "^3.4.0",
         "doctrine/lexer": "^2.1.0"
     },
     "require-dev": {
         "ext-intl": "*",
-        "doctrine/orm": "^2.15.2",
-        "friendsofphp/php-cs-fixer": "^3.40.2",
-        "behat/transliterator": "^1.5.0",
-        "phpunit/phpunit": "^10.5.1",
+        "doctrine/orm": "^2.14.1",
+        "friendsofphp/php-cs-fixer": "^3.45.0",
+        "behat/transliterator": "^v1.4.0",
+        "phpunit/phpunit": "^10.5.5",
         "roave/security-advisories": "dev-latest",
-        "symfony/cache": "^6.3.0|^7.0.0",
-        "symfony/property-access": "^6.3.0|^7.0.0"
+        "symfony/cache": "^6.2.0|^7.0.0",
+        "symfony/property-access": "^6.2.0|^7.0.0",
+        "symfony/serializer": "^6.2.0|^7.0.0"
     },
     "suggest": {
         "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",
         "behat/transliterator": "For Util\\UmlautTransliterator",
-        "symfony/property-access": "For ImportExport\\Helper"
+        "symfony/property-access": "For ImportExport\\Helper",
+        "symfony/serializer": "For Entity\\LockableTrait"
     },
     "autoload": {
         "psr-4": {
