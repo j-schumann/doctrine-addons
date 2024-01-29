@@ -35,7 +35,7 @@ abstract class NormalizerHelper
      */
     public static function toHtml(?string $value): string
     {
-        return 0 === NormalizerHelper::getTextLength($value) ? '' : trim($value);
+        return 0 === self::getTextLength($value) ? '' : trim($value);
     }
 
     /**
@@ -45,7 +45,7 @@ abstract class NormalizerHelper
      */
     public static function toNullableHtml(?string $value): ?string
     {
-        return 0 === NormalizerHelper::getTextLength($value) ? null : trim($value);
+        return 0 === self::getTextLength($value) ? null : trim($value);
     }
 
     /**
@@ -68,7 +68,7 @@ abstract class NormalizerHelper
      * Checks if the string is empty after trimming,
      * if yes NULL is returned, else the trimmed value.
      */
-    public static function toNullableString(?string $value)
+    public static function toNullableString(?string $value): ?string
     {
         if (null === $value) {
             return null;
@@ -159,7 +159,7 @@ abstract class NormalizerHelper
         }
 
         $newCount = count($cleaned);
-        if (!$keepIndices && $newCount != count($values)) {
+        if (!$keepIndices && $newCount !== count($values)) {
             $cleaned = array_values($cleaned);
         }
 
@@ -194,11 +194,11 @@ abstract class NormalizerHelper
      */
     public static function toNullableFloat(?float $value): ?float
     {
-        if (null === $value) {
+        if (null === $value || 0.0 === $value) {
             return null;
         }
 
-        return 0 == $value ? null : $value;
+        return $value;
     }
 
     /**

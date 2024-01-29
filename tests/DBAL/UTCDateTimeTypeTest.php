@@ -6,18 +6,18 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType;
 
 class UTCDateTimeTypeTest extends TestCase
 {
-    protected MySqlPlatform $platform;
+    protected MySQLPlatform $platform;
 
     public function setUp(): void
     {
-        $this->platform = new MySqlPlatform();
+        $this->platform = new MySQLPlatform();
     }
 
     public function testConvertToDatabaseValueAllowsNull(): void

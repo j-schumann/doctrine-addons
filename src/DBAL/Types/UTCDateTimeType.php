@@ -14,7 +14,7 @@ use Doctrine\DBAL\Types\DateTimeImmutableType;
  */
 class UTCDateTimeType extends DateTimeImmutableType
 {
-    private static ?\DateTimezone $utcDateTimezone = null;
+    private static ?\DateTimeZone $utcDateTimezone = null;
 
     /**
      * @throws ConversionException

@@ -108,6 +108,7 @@ class NormalizerHelperTest extends TestCase
     {
         self::assertNull(NormalizerHelper::toNullableFloat(null));
         self::assertNull(NormalizerHelper::toNullableFloat(0));
+        self::assertNull(NormalizerHelper::toNullableFloat(0.0));
         self::assertSame(1.2, NormalizerHelper::toNullableFloat(1.2));
         self::assertSame(-99.3, NormalizerHelper::toNullableFloat(-99.3));
     }
