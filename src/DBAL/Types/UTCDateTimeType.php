@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\DBAL\Types;
 
-use DateTimeImmutable;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\DateTimeImmutableType;
@@ -15,18 +14,15 @@ use Doctrine\DBAL\Types\DateTimeImmutableType;
  */
 class UTCDateTimeType extends DateTimeImmutableType
 {
-    /**
-     * @var \DateTimezone
-     */
-    private static $utcDateTimezone;
+    private static ?\DateTimezone $utcDateTimezone = null;
 
     /**
      * @throws ConversionException
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (null === $value) {
-            return $value;
+            return null;
         }
 
         if (!($value instanceof \DateTimeInterface)) {
@@ -47,11 +43,9 @@ class UTCDateTimeType extends DateTimeImmutableType
     }
 
     /**
-     * @return \DateTimeImmutable|null
-     *
      * @throws ConversionException
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?\DateTimeImmutable
     {
         if (null === $value || $value instanceof \DateTimeImmutable) {
             return $value;

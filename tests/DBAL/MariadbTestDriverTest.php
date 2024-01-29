@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\DBAL;
@@ -10,7 +12,7 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
 class MariadbTestDriverTest extends TestCase
 {
-    public function testReturnsCorrectPlatform()
+    public function testReturnsCorrectPlatform(): void
     {
         $driver = new MariadbTestDriver();
         $platform = $driver->createDatabasePlatformForVersion('mariadb-10.4.8');

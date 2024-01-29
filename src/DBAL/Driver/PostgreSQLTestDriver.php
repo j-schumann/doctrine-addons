@@ -25,10 +25,7 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
         return new PostgreSQLTestPlatform();
     }
 
-    /**
-     * @return Connection
-     */
-    public function connect(array $params)
+    public function connect(array $params): Connection
     {
         $driverOptions = $params['driverOptions'] ?? [];
 

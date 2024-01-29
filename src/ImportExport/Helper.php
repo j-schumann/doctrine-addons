@@ -38,7 +38,7 @@ class Helper
             ->getPropertyAccessor();
     }
 
-    public function setObjectManager(ObjectManager $objectManager)
+    public function setObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
@@ -204,18 +204,18 @@ class Helper
         }
 
         if (!$this->isImportableEntity($listOf)) {
-            throw new \LogicException("Property {$property->class}::{$property->name} is marked with ImportableProperty but its given listOf '$listOf' is no ImportableEntity!");
+            throw new \LogicException("Property $property->class::$property->name is marked with ImportableProperty but its given listOf '$listOf' is no ImportableEntity!");
         }
 
         if (!is_array($list)) {
             $json = json_encode($list);
-            throw new \RuntimeException("Property {$property->class}::{$property->name} is marked as list of '$listOf' but it is no array: $json!");
+            throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but it is no array: $json!");
         }
 
         foreach ($list as $key => $entry) {
             if (!is_array($entry)) {
                 $json = json_encode($entry);
-                throw new \RuntimeException("Property {$property->class}::{$property->name} is marked as list of '$listOf' but entry is no array: $json!");
+                throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but entry is no array: $json!");
             }
 
             $list[$key] = $this->fromArray($entry, $listOf);
@@ -253,12 +253,9 @@ class Helper
             $exportAttrib = $property->getAttributes(ExportableProperty::class)[0];
             $referenceByIdentifier = $exportAttrib->getArguments()['referenceByIdentifier'] ?? null;
 
-            if ($property->getType()->isBuiltin()
-                || null === $propValue
-            ) {
+            if (null === $propValue || $property->getType()->isBuiltin()) {
                 $data[$propName] = $propValue;
             } elseif ($propValue instanceof \DateTimeInterface) {
-                /* @var \DateTimeInterface $propValue */
                 $data[$propName] = $propValue->format(DATE_ATOM);
             } elseif ($propValue instanceof Collection) {
                 $data[$propName] = [];

@@ -11,7 +11,7 @@ class NormalizerHelperTest extends TestCase
 {
     public function testStripHtml(): void
     {
-        self::assertSame(null, NormalizerHelper::stripHtml(null));
+        self::assertNull(NormalizerHelper::stripHtml(null));
         self::assertSame('', NormalizerHelper::stripHtml(''));
         self::assertSame('', NormalizerHelper::stripHtml(' '));
         self::assertSame('test', NormalizerHelper::stripHtml("\ttest\r\n"));
@@ -44,10 +44,10 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableHtml(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableHtml(null));
-        self::assertSame(null, NormalizerHelper::toNullableHtml(''));
-        self::assertSame(null, NormalizerHelper::toNullableHtml(' '));
-        self::assertSame(null, NormalizerHelper::toNullableHtml('<br />'));
+        self::assertNull(NormalizerHelper::toNullableHtml(null));
+        self::assertNull(NormalizerHelper::toNullableHtml(''));
+        self::assertNull(NormalizerHelper::toNullableHtml(' '));
+        self::assertNull(NormalizerHelper::toNullableHtml('<br />'));
         self::assertSame('test', NormalizerHelper::toNullableHtml("\ttest\r\n"));
 
         self::assertSame('abc<br>123', NormalizerHelper::toNullableHtml('abc<br>123'));
@@ -66,9 +66,9 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableString(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableString(null));
-        self::assertSame(null, NormalizerHelper::toNullableString(''));
-        self::assertSame(null, NormalizerHelper::toNullableString(' '));
+        self::assertNull(NormalizerHelper::toNullableString(null));
+        self::assertNull(NormalizerHelper::toNullableString(''));
+        self::assertNull(NormalizerHelper::toNullableString(' '));
         self::assertSame('<br />', NormalizerHelper::toNullableString('<br />'));
         self::assertSame('test', NormalizerHelper::toNullableString("\ttest\r\n"));
 
@@ -87,9 +87,9 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableStringArray(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableStringArray(null));
-        self::assertSame(null, NormalizerHelper::toNullableStringArray([]));
-        self::assertSame(null, NormalizerHelper::toNullableStringArray([' ', null, '']));
+        self::assertNull(NormalizerHelper::toNullableStringArray(null));
+        self::assertNull(NormalizerHelper::toNullableStringArray([]));
+        self::assertNull(NormalizerHelper::toNullableStringArray([' ', null, '']));
         self::assertEquals([new \stdClass()], NormalizerHelper::toNullableStringArray([new \stdClass()]));
         self::assertSame(['<br />'], NormalizerHelper::toNullableStringArray(['<br />']));
         self::assertSame(['test'], NormalizerHelper::toNullableStringArray(["\ttest\r\n"]));
@@ -97,8 +97,8 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableArray(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableArray(null));
-        self::assertSame(null, NormalizerHelper::toNullableArray([]));
+        self::assertNull(NormalizerHelper::toNullableArray(null));
+        self::assertNull(NormalizerHelper::toNullableArray([]));
         self::assertSame([0 => ' ', 5 => true], NormalizerHelper::toNullableArray([' ', null, '', '0', false, true]));
         self::assertEquals([new \stdClass()], NormalizerHelper::toNullableArray([new \stdClass()]));
         self::assertSame(['<br />', 77], NormalizerHelper::toNullableArray(['<br />', 77, false]));
@@ -106,16 +106,16 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableFloat(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableFloat(null));
-        self::assertSame(null, NormalizerHelper::toNullableFloat(0));
+        self::assertNull(NormalizerHelper::toNullableFloat(null));
+        self::assertNull(NormalizerHelper::toNullableFloat(0));
         self::assertSame(1.2, NormalizerHelper::toNullableFloat(1.2));
         self::assertSame(-99.3, NormalizerHelper::toNullableFloat(-99.3));
     }
 
     public function testToNullableInt(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableInt(null));
-        self::assertSame(null, NormalizerHelper::toNullableInt(0));
+        self::assertNull(NormalizerHelper::toNullableInt(null));
+        self::assertNull(NormalizerHelper::toNullableInt(0));
         self::assertSame(1, NormalizerHelper::toNullableInt(1));
         self::assertSame(-99, NormalizerHelper::toNullableInt(-99));
     }
@@ -132,9 +132,9 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableColor(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableColor(''));
-        self::assertSame(null, NormalizerHelper::toNullableColor(null));
-        self::assertSame(null, NormalizerHelper::toNullableColor(' '));
+        self::assertNull(NormalizerHelper::toNullableColor(''));
+        self::assertNull(NormalizerHelper::toNullableColor(null));
+        self::assertNull(NormalizerHelper::toNullableColor(' '));
         self::assertSame('#abc', NormalizerHelper::toNullableColor('#ABC'));
         self::assertSame('#abc', NormalizerHelper::toNullableColor('aBc'));
         self::assertSame('#abc', NormalizerHelper::toNullableColor(' aBc'));
@@ -152,9 +152,9 @@ class NormalizerHelperTest extends TestCase
 
     public function testToNullableLocale(): void
     {
-        self::assertSame(null, NormalizerHelper::toNullableLocale(''));
-        self::assertSame(null, NormalizerHelper::toNullableLocale(null));
-        self::assertSame(null, NormalizerHelper::toNullableLocale(' '));
+        self::assertNull(NormalizerHelper::toNullableLocale(''));
+        self::assertNull(NormalizerHelper::toNullableLocale(null));
+        self::assertNull(NormalizerHelper::toNullableLocale(' '));
         self::assertSame('de_DE', NormalizerHelper::toNullableLocale('de_DE'));
         self::assertSame('fr_FR', NormalizerHelper::toNullableLocale('FR-fr.utf8'));
         self::assertSame('fr_FR', NormalizerHelper::toNullableLocale(' FR-fr'));

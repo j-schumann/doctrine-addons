@@ -9,7 +9,7 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
 class MariadbTestPlatformTest extends TestCase
 {
-    public function testGetTruncateTableSQL()
+    public function testGetTruncateTableSQL(): void
     {
         $platform = new MariadbTestPlatform();
         $sql = $platform->getTruncateTableSQL('the-table');

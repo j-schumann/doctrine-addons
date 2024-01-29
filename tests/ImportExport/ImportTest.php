@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\ImportExport;
@@ -301,7 +303,7 @@ class ImportTest extends AbstractOrmTestCase
         $helper->fromArray($data, ImportEntity::class);
     }
 
-    public function testThrowsExceptionWithoutClassname()
+    public function testThrowsExceptionWithoutClassname(): void
     {
         $helper = new Helper();
 
@@ -329,7 +331,7 @@ class ImportTest extends AbstractOrmTestCase
         $helper->fromArray($data, ImportEntity::class);
     }
 
-    public function testThrowsExceptionForUnannotatedReference()
+    public function testThrowsExceptionForUnannotatedReference(): void
     {
         $helper = new Helper();
 

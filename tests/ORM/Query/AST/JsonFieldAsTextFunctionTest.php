@@ -9,7 +9,7 @@ use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
 class JsonFieldAsTextFunctionTest extends AbstractOrmTestCase
 {
-    public function testFunction()
+    public function testFunction(): void
     {
         $this->configuration->addCustomStringFunction('JSON_AS_TEXT', JsonFieldAsTextFunction::class);
 

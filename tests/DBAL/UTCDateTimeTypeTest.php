@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\DBAL;
@@ -18,22 +20,22 @@ class UTCDateTimeTypeTest extends TestCase
         $this->platform = new MySqlPlatform();
     }
 
-    public function testConvertToDatabaseValueAllowsNull()
+    public function testConvertToDatabaseValueAllowsNull(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToDatabaseValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToDatabaseValueRequiresDateTime()
+    public function testConvertToDatabaseValueRequiresDateTime(): void
     {
         $type = new UTCDateTimeType();
 
         $this->expectException(ConversionException::class);
-        $result = $type->convertToDatabaseValue(new \stdClass(), $this->platform);
+        $type->convertToDatabaseValue(new \stdClass(), $this->platform);
     }
 
-    public function testConvertToDatabaseValueReturnsString()
+    public function testConvertToDatabaseValueReturnsString(): void
     {
         $tz = new \DateTimeZone('Europe/Berlin'); // GMT+1
         $type = new UTCDateTimeType();
@@ -42,7 +44,7 @@ class UTCDateTimeTypeTest extends TestCase
         $this->assertSame('2019-12-31 23:00:00', $result);
     }
 
-    public function testConvertToPHPValue()
+    public function testConvertToPHPValue(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToPHPValue('2019-01-01 00:00:00', $this->platform);
@@ -52,26 +54,26 @@ class UTCDateTimeTypeTest extends TestCase
         $this->assertSame('UTC', $result->getTimezone()->getName());
     }
 
-    public function testConvertToPHPValueAllowsNull()
+    public function testConvertToPHPValueAllowsNull(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToPHPValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToPHPValueRequiresString()
+    public function testConvertToPHPValueRequiresString(): void
     {
         $type = new UTCDateTimeType();
 
         $this->expectException(ConversionException::class);
-        $result = $type->convertToPHPValue(new \stdClass(), $this->platform);
+        $type->convertToPHPValue(new \stdClass(), $this->platform);
     }
 
-    public function testConvertToPHPValueRequiresValidDateTime()
+    public function testConvertToPHPValueRequiresValidDateTime(): void
     {
         $type = new UTCDateTimeType();
 
         $this->expectException(ConversionException::class);
-        $result = $type->convertToPHPValue('not valid', $this->platform);
+        $type->convertToPHPValue('not valid', $this->platform);
     }
 }

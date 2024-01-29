@@ -9,7 +9,7 @@ use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
 class CastFunctionTest extends AbstractOrmTestCase
 {
-    public function testFunction()
+    public function testFunction(): void
     {
         $this->configuration->addCustomStringFunction('CAST', CastFunction::class);
 

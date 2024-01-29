@@ -101,10 +101,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
         return $versionParts['major'].'.'.$versionParts['minor'].'.'.$versionParts['patch'];
     }
 
-    /**
-     * @return Connection
-     */
-    public function connect(array $params)
+    public function connect(array $params): Connection
     {
         $driverOptions = $params['driverOptions'] ?? [];
 

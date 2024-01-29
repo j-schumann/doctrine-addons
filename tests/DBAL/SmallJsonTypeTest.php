@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\DBAL;
@@ -18,29 +20,29 @@ class SmallJsonTypeTest extends TestCase
         $this->platform = new MySqlPlatform();
     }
 
-    public function testConvertToDatabaseValueAllowsNull()
+    public function testConvertToDatabaseValueAllowsNull(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToDatabaseValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToDatabaseValueRequiresConvertibleValue()
+    public function testConvertToDatabaseValueRequiresConvertibleValue(): void
     {
         $type = new SmallJsonType();
 
         $this->expectException(ConversionException::class);
-        $result = $type->convertToDatabaseValue(NAN, $this->platform);
+        $type->convertToDatabaseValue(NAN, $this->platform);
     }
 
-    public function testConvertToDatabaseValueReturnsString()
+    public function testConvertToDatabaseValueReturnsString(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToDatabaseValue(['key' => 'index'], $this->platform);
         $this->assertSame('{"key":"index"}', $result);
     }
 
-    public function testConvertToPHPValue()
+    public function testConvertToPHPValue(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToPHPValue('{"key":"index"}', $this->platform);
@@ -50,17 +52,17 @@ class SmallJsonTypeTest extends TestCase
         $this->assertSame('index', $result['key']);
     }
 
-    public function testConvertToPHPValueAllowsNull()
+    public function testConvertToPHPValueAllowsNull(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToPHPValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToPHPValueRequiresValidJson()
+    public function testConvertToPHPValueRequiresValidJson(): void
     {
         $type = new SmallJsonType();
         $this->expectException(ConversionException::class);
-        $result = $type->convertToPHPValue('{not: valid}', $this->platform);
+        $type->convertToPHPValue('{not: valid}', $this->platform);
     }
 }

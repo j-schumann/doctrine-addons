@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\ORM\Query\AST;
 
+use Doctrine\ORM\Query\AST\ArithmeticExpression;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
@@ -16,8 +18,8 @@ use Doctrine\ORM\Query\SqlWalker;
  */
 class CastFunction extends FunctionNode
 {
-    private $expr1;
-    private $expr2;
+    private ArithmeticExpression $expr1;
+    private Node $expr2;
 
     public function parse(Parser $parser): void
     {
