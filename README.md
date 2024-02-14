@@ -112,6 +112,18 @@ Add this to your services.yaml to have ae, ue, oe in your slugs instead of
 a, u, o for ä, ü, ö.  
 This also handles some other chars, e.g. accents.
 ```yaml
+    # Symfony 7.x
+    gedmo.listener.sluggable:
+      class: Gedmo\Sluggable\SluggableListener
+      tags:
+        - { name: doctrine.event_listener, event: 'prePersist' }
+        - { name: doctrine.event_listener, event: 'onFlush' }
+        - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+      calls:
+        - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
+
+
+    # Symfony 6.x
     gedmo.listener.sluggable:
         class: Gedmo\Sluggable\SluggableListener
         tags:
