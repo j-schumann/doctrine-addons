@@ -6,10 +6,14 @@ namespace Vrok\DoctrineAddons\DBAL\Driver;
 
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Platforms\MySQL57Platform;
+use Doctrine\DBAL\Driver\PDO\Exception;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\Exception\InvalidPlatformVersion;
+use Doctrine\DBAL\Platforms\MariaDB1052Platform;
+use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\ServerVersionProvider;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
 /**
@@ -26,56 +30,30 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
  */
 class MariadbTestDriver extends AbstractMySQLDriver
 {
-    public function createDatabasePlatformForVersion($version): MySQLPlatform
-    {
-        $mariadb = false !== stripos($version, 'mariadb');
-        if ($mariadb && version_compare($this->getMariaDbMysqlVersionNumber($version), '10.2.7', '>=')) {
-            return new MariadbTestPlatform();
-        }
-
-        if (!$mariadb) {
-            $oracleMysqlVersion = $this->getOracleMysqlVersionNumber($version);
-            if (version_compare($oracleMysqlVersion, '8', '>=')) {
-                return new MySQL80Platform();
-            }
-
-            if (version_compare($oracleMysqlVersion, '5.7.9', '>=')) {
-                return new MySQL57Platform();
-            }
-        }
-
-        return $this->getDatabasePlatform();
-    }
-
     /**
-     * Get a normalized 'version number' from the server string
-     * returned by Oracle MySQL servers.
-     *
-     * @param string $versionString Version string returned by the driver, i.e. '5.7.10'
-     *
-     * @throws Exception
+     * @throws InvalidPlatformVersion|\Doctrine\DBAL\Exception
      */
-    private function getOracleMysqlVersionNumber(string $versionString): string
+    public function getDatabasePlatform(ServerVersionProvider $versionProvider): AbstractMySQLPlatform
     {
-        if (
-            0 === preg_match(
-                '/^(?P<major>\d+)(?:\.(?P<minor>\d+)(?:\.(?P<patch>\d+))?)?/',
-                $versionString,
-                $versionParts
-            )
-        ) {
-            throw Exception::invalidPlatformVersionSpecified($versionString, '<major_version>.<minor_version>.<patch_version>');
+        $version = $versionProvider->getServerVersion();
+        if (false !== stripos($version, 'mariadb')) {
+            $mariaDbVersion = $this->getMariaDbMysqlVersionNumber($version);
+            if (version_compare($mariaDbVersion, '10.6.0', '>=')) {
+                return new MariadbTestPlatform();
+            }
+
+            if (version_compare($mariaDbVersion, '10.5.2', '>=')) {
+                return new MariaDB1052Platform();
+            }
+
+            return new MariaDBPlatform();
         }
 
-        $majorVersion = $versionParts['major'];
-        $minorVersion = $versionParts['minor'] ?? 0;
-        $patchVersion = $versionParts['patch'] ?? null;
-
-        if ('5' === $majorVersion && '7' === $minorVersion && null === $patchVersion) {
-            $patchVersion = '9';
+        if (version_compare($version, '8.0.0', '>=')) {
+            return new MySQL80Platform();
         }
 
-        return $majorVersion.'.'.$minorVersion.'.'.$patchVersion;
+        return new MySQLPlatform();
     }
 
     /**
@@ -84,7 +62,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
      *
      * @param string $versionString Version string as returned by mariadb server, i.e. '5.5.5-Mariadb-10.0.8-xenial'
      *
-     * @throws Exception
+     * @throws InvalidPlatformVersion
      */
     private function getMariaDbMysqlVersionNumber(string $versionString): string
     {
@@ -92,32 +70,40 @@ class MariadbTestDriver extends AbstractMySQLDriver
             0 === preg_match(
                 '/^(?:5\.5\.5-)?(mariadb-)?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)/i',
                 $versionString,
-                $versionParts
+                $versionParts,
             )
         ) {
-            throw Exception::invalidPlatformVersionSpecified($versionString, '^(?:5\.5\.5-)?(mariadb-)?<major_version>.<minor_version>.<patch_version>');
+            throw InvalidPlatformVersion::new($versionString, '^(?:5\.5\.5-)?(mariadb-)?<major_version>.<minor_version>.<patch_version>');
         }
 
         return $versionParts['major'].'.'.$versionParts['minor'].'.'.$versionParts['patch'];
     }
 
-    public function connect(array $params): Connection
-    {
+    /**
+     * @throws Exception
+     */
+    public function connect(
+        #[\SensitiveParameter]
+        array $params
+    ): Connection {
         $driverOptions = $params['driverOptions'] ?? [];
 
         if (!empty($params['persistent'])) {
             $driverOptions[\PDO::ATTR_PERSISTENT] = true;
         }
 
+        $safeParams = $params;
+        unset($safeParams['password'], $safeParams['url']);
+
         try {
             $pdo = new \PDO(
-                $this->constructPdoDsn($params),
+                $this->constructPdoDsn($safeParams),
                 $params['user'] ?? '',
                 $params['password'] ?? '',
-                $driverOptions
+                $driverOptions,
             );
         } catch (\PDOException $exception) {
-            throw \Doctrine\DBAL\Driver\PDO\Exception::new($exception);
+            throw Exception::new($exception);
         }
 
         return new Connection($pdo);
@@ -125,8 +111,6 @@ class MariadbTestDriver extends AbstractMySQLDriver
 
     /**
      * Constructs the MySQL PDO DSN.
-     *
-     * @param mixed[] $params
      */
     private function constructPdoDsn(array $params): string
     {

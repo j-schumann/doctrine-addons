@@ -7,6 +7,8 @@ namespace Vrok\DoctrineAddons\DBAL\Types;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\DateTimeImmutableType;
+use Doctrine\DBAL\Types\Exception\InvalidFormat;
+use Doctrine\DBAL\Types\Exception\InvalidType;
 
 /**
  * Stores a DateTime value in UTC in the database, returnes DateTimeImmutable
@@ -26,7 +28,7 @@ class UTCDateTimeType extends DateTimeImmutableType
         }
 
         if (!($value instanceof \DateTimeInterface)) {
-            throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['DateTime', 'DateTimeImmutable', 'DateTimeInterface']);
+            throw InvalidType::new($value, static::class, ['DateTime', 'DateTimeImmutable', 'DateTimeInterface']);
         }
 
         if (!($value instanceof \DateTimeImmutable)) {
@@ -52,7 +54,7 @@ class UTCDateTimeType extends DateTimeImmutableType
         }
 
         if (!is_string($value)) {
-            throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['string']);
+            throw InvalidType::new($value, static::class, ['string']);
         }
 
         self::$utcDateTimezone = self::$utcDateTimezone ?: new \DateTimeZone('UTC');
@@ -64,7 +66,7 @@ class UTCDateTimeType extends DateTimeImmutableType
         );
 
         if (!$converted) {
-            throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateTimeFormatString());
+            throw InvalidFormat::new($value, static::class, $platform->getDateTimeFormatString());
         }
 
         return $converted;

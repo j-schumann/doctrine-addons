@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\Exception\SerializationFailed;
+use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
 use Doctrine\DBAL\Types\StringType;
 
 /**
@@ -30,13 +31,11 @@ class SmallJsonType extends StringType
             return null;
         }
 
-        $encoded = json_encode($value);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw ConversionException::conversionFailedSerialization($value, 'json', json_last_error_msg());
+        try {
+            return json_encode($value, JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION);
+        } catch (\JsonException $e) {
+            throw SerializationFailed::new($value, 'json', $e->getMessage(), $e);
         }
-
-        return $encoded;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): mixed
@@ -49,17 +48,10 @@ class SmallJsonType extends StringType
             $value = stream_get_contents($value);
         }
 
-        $val = json_decode($value, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw ConversionException::conversionFailed($value, $this->getName());
+        try {
+            return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw ValueNotConvertible::new($value, 'json', $e->getMessage(), $e);
         }
-
-        return $val;
-    }
-
-    public function getName(): string
-    {
-        return 'small_json';
     }
 }

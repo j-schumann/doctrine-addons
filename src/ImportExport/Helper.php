@@ -54,11 +54,11 @@ class Helper
      * is used. Can infer the entityClass from the property's type for classes that
      * are tagged with #[ImportableEntity].
      *
-     * @throws \JsonException
+     * @throws \JsonException|\ReflectionException
      */
-    public function fromArray(array $data, string $enityClass = null): object
+    public function fromArray(array $data, ?string $entityClass = null): object
     {
-        $className = $data['_entityClass'] ?? $enityClass;
+        $className = $data['_entityClass'] ?? $entityClass;
 
         if (empty($className)) {
             $encoded = json_encode($data, JSON_THROW_ON_ERROR);
@@ -197,6 +197,9 @@ class Helper
         return $data;
     }
 
+    /**
+     * @throws \JsonException|\RuntimeException|\ReflectionException
+     */
     protected function processList(mixed $list, \ReflectionProperty $property, string $listOf): array
     {
         if (null === $list) {
@@ -208,13 +211,13 @@ class Helper
         }
 
         if (!is_array($list)) {
-            $json = json_encode($list);
+            $json = json_encode($list, JSON_THROW_ON_ERROR);
             throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but it is no array: $json!");
         }
 
         foreach ($list as $key => $entry) {
             if (!is_array($entry)) {
-                $json = json_encode($entry);
+                $json = json_encode($entry, JSON_THROW_ON_ERROR);
                 throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but entry is no array: $json!");
             }
 
@@ -233,8 +236,10 @@ class Helper
      * @param object     $object         the entity to export, must be tagged with #[ExportableEntity]
      * @param array|null $propertyFilter if an array: only properties with the given names
      *                                   are returned
+     *
+     * @throws \ReflectionException
      */
-    public function toArray(object $object, array $propertyFilter = null): array
+    public function toArray(object $object, ?array $propertyFilter = null): array
     {
         $className = $object::class;
         if (!$this->isExportableEntity($className)) {
@@ -245,7 +250,7 @@ class Helper
         /** @var \ReflectionProperty $property */
         foreach ($this->getExportableProperties($className) as $property) {
             $propName = $property->getName();
-            if (null !== $propertyFilter && !in_array($propName, $propertyFilter)) {
+            if (null !== $propertyFilter && !in_array($propName, $propertyFilter, true)) {
                 continue;
             }
 
@@ -288,6 +293,8 @@ class Helper
      * We use a static cache here as the properties of classes won't change
      * while the PHP instance is running and this method could be called
      * multiple times, e.g. when importing many objects of the same class.
+     *
+     * @throws \ReflectionException
      */
     protected function getImportableProperties(string $className): array
     {
@@ -310,6 +317,8 @@ class Helper
      * We use a static cache here as the properties of classes won't change
      * while the PHP instance is running and this method could be called
      * multiple times, e.g. when exporting many objects of the same class.
+     *
+     * @throws \ReflectionException
      */
     protected function getExportableProperties(string $className): array
     {
@@ -338,6 +347,9 @@ class Helper
         return count($property->getAttributes(ImportableProperty::class)) > 0;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     protected function isImportableEntity(string $className): bool
     {
         if (!isset(self::$importableEntities[$className])) {
@@ -349,6 +361,9 @@ class Helper
         return self::$importableEntities[$className];
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     protected function isExportableEntity(string $className): bool
     {
         if (!isset(self::$exportableEntities[$className])) {

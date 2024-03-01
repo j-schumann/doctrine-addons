@@ -122,7 +122,6 @@ This also handles some other chars, e.g. accents.
       calls:
         - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
 
-
     # Symfony 6.x
     gedmo.listener.sluggable:
         class: Gedmo\Sluggable\SluggableListener
