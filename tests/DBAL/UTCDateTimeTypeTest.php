@@ -44,7 +44,7 @@ class UTCDateTimeTypeTest extends TestCase
         $this->assertSame('2019-12-31 23:00:00', $result);
     }
 
-    public function testConvertToPHPValue(): void
+    public function testConvertToPhpValue(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToPHPValue('2019-01-01 00:00:00', $this->platform);
@@ -54,14 +54,14 @@ class UTCDateTimeTypeTest extends TestCase
         $this->assertSame('UTC', $result->getTimezone()->getName());
     }
 
-    public function testConvertToPHPValueAllowsNull(): void
+    public function testConvertToPhpValueAllowsNull(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToPHPValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToPHPValueRequiresString(): void
+    public function testConvertToPhpValueRequiresString(): void
     {
         $type = new UTCDateTimeType();
 
@@ -69,7 +69,7 @@ class UTCDateTimeTypeTest extends TestCase
         $type->convertToPHPValue(new \stdClass(), $this->platform);
     }
 
-    public function testConvertToPHPValueRequiresValidDateTime(): void
+    public function testConvertToPhpValueRequiresValidDateTime(): void
     {
         $type = new UTCDateTimeType();
 

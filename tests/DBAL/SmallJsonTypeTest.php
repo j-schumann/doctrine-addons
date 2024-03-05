@@ -42,7 +42,7 @@ class SmallJsonTypeTest extends TestCase
         $this->assertSame('{"key":"index"}', $result);
     }
 
-    public function testConvertToPHPValue(): void
+    public function testConvertToPhpValue(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToPHPValue('{"key":"index"}', $this->platform);
@@ -52,14 +52,14 @@ class SmallJsonTypeTest extends TestCase
         $this->assertSame('index', $result['key']);
     }
 
-    public function testConvertToPHPValueAllowsNull(): void
+    public function testConvertToPhpValueAllowsNull(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToPHPValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToPHPValueRequiresValidJson(): void
+    public function testConvertToPhpValueRequiresValidJson(): void
     {
         $type = new SmallJsonType();
         $this->expectException(ConversionException::class);

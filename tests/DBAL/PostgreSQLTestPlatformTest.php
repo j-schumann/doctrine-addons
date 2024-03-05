@@ -9,7 +9,7 @@ use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
 
 class PostgreSQLTestPlatformTest extends TestCase
 {
-    public function testGetTruncateTableSQL(): void
+    public function testGetTruncateTableSql(): void
     {
         $platform = new PostgreSQLTestPlatform();
         $sql = $platform->getTruncateTableSQL('the-table', true);
