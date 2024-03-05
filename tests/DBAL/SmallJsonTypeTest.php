@@ -6,18 +6,18 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Types\ConversionException;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\SmallJsonType;
 
 class SmallJsonTypeTest extends TestCase
 {
-    protected MySqlPlatform $platform;
+    protected MySQL80Platform $platform;
 
     public function setUp(): void
     {
-        $this->platform = new MySqlPlatform();
+        $this->platform = new MySQL80Platform();
     }
 
     public function testConvertToDatabaseValueAllowsNull(): void
