@@ -54,11 +54,11 @@ class Helper
      * is used. Can infer the entityClass from the property's type for classes that
      * are tagged with #[ImportableEntity].
      *
-     * @throws \JsonException|\ReflectionException
+     * @throws \JsonException
      */
-    public function fromArray(array $data, ?string $entityClass = null): object
+    public function fromArray(array $data, string $enityClass = null): object
     {
-        $className = $data['_entityClass'] ?? $entityClass;
+        $className = $data['_entityClass'] ?? $enityClass;
 
         if (empty($className)) {
             $encoded = json_encode($data, JSON_THROW_ON_ERROR);
@@ -86,18 +86,30 @@ class Helper
                 }
 
                 $value = null;
-            }
-            // simply set standard properties
-            elseif ($typeDetails['isBuiltin']) {
-                // @todo compare value to $typeDetails['typename']
-
+            } elseif ($typeDetails['isBuiltin']) {
                 // check for listOf, the property could be an array of DTOs etc.
                 $value = $listOf
                     ? $this->processList($data[$propName], $property, $listOf)
+                    // simply set standard properties, the propertyAccessor will throw
+                    // an exception if the types don't match.
                     : $data[$propName];
-            }
-            // set already instantiated objects
-            elseif (is_a($data[$propName], $typeDetails['classname'], true)) {
+            } elseif (is_object($data[$propName])) {
+                // set already instantiated objects, we cannot modify/convert those,
+                // and the may have different classes, e.g. when the type is a union.
+                // If the object type is not allowed the propertyAccessor will throw
+                // an exception.
+                $value = $data[$propName];
+            } elseif (is_array($data[$propName]) && !$typeDetails['classname']) {
+                // if we have an array & no classname & are this deep in the IFs
+                // it means it this is a uniontype which does not allow arrays ->
+                // assume the field allows multiple classes -> the data array needs to
+                // have an _entityClass anyway to differentiate -> simply try to
+                // instantiate
+                $value = $this->fromArray($data[$propName]);
+            } elseif (!$typeDetails['classname']) {
+                // if we are this deep in the IFs it means the data is no array and this
+                // is a uniontype with no classes (e.g. int|string) -> let the
+                // propertyAccessor try to set the value as is.
                 $value = $data[$propName];
             } elseif ($this->isImportableEntity($typeDetails['classname'])) {
                 if (is_int($data[$propName]) || is_string($data[$propName])) {
@@ -146,7 +158,6 @@ class Helper
         return $instance;
     }
 
-    // @todo: catch union types w/ multiple builtin types
     protected function getTypeDetails(string $classname, \ReflectionProperty $property): array
     {
         $propName = $property->getName();
@@ -166,7 +177,9 @@ class Helper
 
         if ($data['isUnion']) {
             foreach ($type->getTypes() as $unionVariant) {
+                /** @var \ReflectionNamedType $unionVariant */
                 $variantName = $unionVariant->getName();
+                $data['unionTypes'][] = $variantName;
                 if ('array' === $variantName) {
                     $data['allowsArray'] = true;
                     continue;
@@ -197,9 +210,6 @@ class Helper
         return $data;
     }
 
-    /**
-     * @throws \JsonException|\RuntimeException|\ReflectionException
-     */
     protected function processList(mixed $list, \ReflectionProperty $property, string $listOf): array
     {
         if (null === $list) {
@@ -211,13 +221,13 @@ class Helper
         }
 
         if (!is_array($list)) {
-            $json = json_encode($list, JSON_THROW_ON_ERROR);
+            $json = json_encode($list);
             throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but it is no array: $json!");
         }
 
         foreach ($list as $key => $entry) {
             if (!is_array($entry)) {
-                $json = json_encode($entry, JSON_THROW_ON_ERROR);
+                $json = json_encode($entry);
                 throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but entry is no array: $json!");
             }
 
@@ -236,10 +246,8 @@ class Helper
      * @param object     $object         the entity to export, must be tagged with #[ExportableEntity]
      * @param array|null $propertyFilter if an array: only properties with the given names
      *                                   are returned
-     *
-     * @throws \ReflectionException
      */
-    public function toArray(object $object, ?array $propertyFilter = null): array
+    public function toArray(object $object, array $propertyFilter = null): array
     {
         $className = $object::class;
         if (!$this->isExportableEntity($className)) {
@@ -250,7 +258,7 @@ class Helper
         /** @var \ReflectionProperty $property */
         foreach ($this->getExportableProperties($className) as $property) {
             $propName = $property->getName();
-            if (null !== $propertyFilter && !in_array($propName, $propertyFilter, true)) {
+            if (null !== $propertyFilter && !in_array($propName, $propertyFilter)) {
                 continue;
             }
 
@@ -293,8 +301,6 @@ class Helper
      * We use a static cache here as the properties of classes won't change
      * while the PHP instance is running and this method could be called
      * multiple times, e.g. when importing many objects of the same class.
-     *
-     * @throws \ReflectionException
      */
     protected function getImportableProperties(string $className): array
     {
@@ -317,8 +323,6 @@ class Helper
      * We use a static cache here as the properties of classes won't change
      * while the PHP instance is running and this method could be called
      * multiple times, e.g. when exporting many objects of the same class.
-     *
-     * @throws \ReflectionException
      */
     protected function getExportableProperties(string $className): array
     {
@@ -347,9 +351,6 @@ class Helper
         return count($property->getAttributes(ImportableProperty::class)) > 0;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     protected function isImportableEntity(string $className): bool
     {
         if (!isset(self::$importableEntities[$className])) {
@@ -361,9 +362,6 @@ class Helper
         return self::$importableEntities[$className];
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     protected function isExportableEntity(string $className): bool
     {
         if (!isset(self::$exportableEntities[$className])) {
