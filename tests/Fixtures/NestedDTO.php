@@ -11,20 +11,13 @@ use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
 
 #[ExportableEntity]
 #[ImportableEntity]
-class TestDTO implements DtoInterface
+class NestedDTO implements DtoInterface
 {
     #[ExportableProperty]
     #[ImportableProperty]
-    public string $name = '';
+    public string $description = '';
 
     #[ExportableProperty]
     #[ImportableProperty]
-    public ?DtoInterface $nestedInterface = null;
-
-    /**
-     * @var array|DtoInterface[]
-     */
-    #[ExportableProperty]
-    #[ImportableProperty(listOf: DtoInterface::class)]
-    public array $nestedInterfaceList = [];
+    public int|string $mixedProp = 0;
 }

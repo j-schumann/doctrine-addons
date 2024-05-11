@@ -11,11 +11,11 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Helper to convert arrays to (Doctrine) entities and export entities as arrays.
- * Uses Reflection to determine property types and check for properties tagged with
- * #[ImportableProperty] or #[ExportableProperty] and entity classes tagged with
- * #[ImportableEntity].
- * Uses Symfony's PropertyAccess to get/set properties using the correct getters/setters
- * (which also supports hassers and issers).
+ * Uses Reflection to determine property types and check for properties tagged
+ * with #[ImportableProperty] or #[ExportableProperty] and entity classes tagged
+ * with #[ImportableEntity].
+ * Uses Symfony's PropertyAccess to get/set properties using the correct
+ * getters/setters (which also supports hassers and issers).
  */
 class Helper
 {
@@ -44,29 +44,50 @@ class Helper
     }
 
     /**
-     * Creates an instance of the given entityClass and populates it with the data
-     * given as array.
-     * Alternatively the entityClass can be given as additional array element with
-     * index _entityClass.
-     * Can recurse over properties that themselves are entities or collections of entities.
+     * Creates an instance of the given entityClass and populates it with the
+     * data given as array.
+     * Alternatively the entityClass can be given as additional array element
+     * with index _entityClass.
+     * Can recurse over properties that themselves are entities or collections
+     * of entities.
      * Also instantiates Datetime[Immutable] properties from strings.
-     * To determine which properties to populate the attribute #[ImportableProperty]
-     * is used. Can infer the entityClass from the property's type for classes that
-     * are tagged with #[ImportableEntity].
+     * To determine which properties to populate the attribute
+     * #[ImportableProperty] is used. Can infer the entityClass from the
+     * property's type for classes that are tagged with #[ImportableEntity].
      *
-     * @throws \JsonException
+     * @throws \JsonException|\ReflectionException
      */
-    public function fromArray(array $data, string $enityClass = null): object
+    public function fromArray(array $data, ?string $entityClass = null): object
     {
-        $className = $data['_entityClass'] ?? $enityClass;
+        // let the defined _entityClass take precedence over the (possibly
+        // inferred) $entityClass from a property type, which may be an abstract
+        // superclass or an interface
+        $className = $data['_entityClass'] ?? $entityClass;
 
         if (empty($className)) {
             $encoded = json_encode($data, JSON_THROW_ON_ERROR);
             throw new \RuntimeException("No entityClass given to instantiate the data: $encoded");
         }
 
-        // let the defined _entityClass take precedence over the (possibly inferred)
-        // $enityClass from a property type, which maybe an abstract superclass
+        if (interface_exists($className)) {
+            throw new \RuntimeException("Cannot create instance of the interface $className, concrete class needed!");
+        }
+
+        if (!class_exists($className)) {
+            throw new \RuntimeException("Class $className does not exist!");
+        }
+
+        if ($entityClass && isset($data['_entityClass'])
+            && !is_a($data['_entityClass'], $entityClass, true)
+        ) {
+            throw new \RuntimeException("Given '_entityClass' {$data['_entityClass']} is not a subclass/implementation of $entityClass!");
+        }
+
+        $classReflection = new \ReflectionClass($className);
+        if ($classReflection->isAbstract()) {
+            throw new \RuntimeException("Cannot create instance of the abstract class $className, concrete class needed!");
+        }
+
         $instance = new $className();
 
         foreach ($this->getImportableProperties($className) as $property) {
@@ -100,12 +121,14 @@ class Helper
                 // an exception.
                 $value = $data[$propName];
             } elseif (is_array($data[$propName]) && !$typeDetails['classname']) {
-                // if we have an array & no classname & are this deep in the IFs
-                // it means it this is a uniontype which does not allow arrays ->
-                // assume the field allows multiple classes -> the data array needs to
-                // have an _entityClass anyway to differentiate -> simply try to
-                // instantiate
-                $value = $this->fromArray($data[$propName]);
+                // We have an array but no type information -> the target property
+                // could be a unionType that allows multiple classes or it could
+                // be untyped. So if the importer expects us to create an instance
+                // ('_entityClass' is set) try to create & set it, else use the
+                // value as is.
+                $value = isset($data[$propName]['_entityClass'])
+                    ? $this->fromArray($data[$propName])
+                    : $data[$propName];
             } elseif (!$typeDetails['classname']) {
                 // if we are this deep in the IFs it means the data is no array and this
                 // is a uniontype with no classes (e.g. int|string) -> let the
@@ -158,6 +181,7 @@ class Helper
         return $instance;
     }
 
+    // @todo: catch union types w/ multiple builtin types
     protected function getTypeDetails(string $classname, \ReflectionProperty $property): array
     {
         $propName = $property->getName();
@@ -167,19 +191,25 @@ class Helper
 
         $type = $property->getType();
         $data = [
-            'allowsArray' => false,
-            'allowsNull'  => $type->allowsNull(), // also works for union types
+            'allowsArray' => null === $type, // untyped allows arrays of course
+            'allowsNull'  => $type?->allowsNull() ?? true, // also works for union types
             'classname'   => null,
             'typename'    => null,
             'isBuiltin'   => false,
             'isUnion'     => $type instanceof \ReflectionUnionType,
         ];
 
+        if (null === $type) {
+            self::$typeDetails["$classname::$propName"] = $data;
+
+            return $data;
+        }
+
         if ($data['isUnion']) {
             foreach ($type->getTypes() as $unionVariant) {
                 /** @var \ReflectionNamedType $unionVariant */
+
                 $variantName = $unionVariant->getName();
-                $data['unionTypes'][] = $variantName;
                 if ('array' === $variantName) {
                     $data['allowsArray'] = true;
                     continue;
@@ -187,6 +217,8 @@ class Helper
 
                 if (!$unionVariant->isBuiltin()) {
                     if (null !== $data['classname']) {
+                        // @todo Improve this. We could store a list of classnames
+                        // to check against in fromArray()
                         throw new \RuntimeException("Cannot import object, found ambiguous union type: $type");
                     }
 
@@ -210,6 +242,9 @@ class Helper
         return $data;
     }
 
+    /**
+     * @throws \JsonException|\RuntimeException|\ReflectionException
+     */
     protected function processList(mixed $list, \ReflectionProperty $property, string $listOf): array
     {
         if (null === $list) {
@@ -221,13 +256,13 @@ class Helper
         }
 
         if (!is_array($list)) {
-            $json = json_encode($list);
+            $json = json_encode($list, JSON_THROW_ON_ERROR);
             throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but it is no array: $json!");
         }
 
         foreach ($list as $key => $entry) {
             if (!is_array($entry)) {
-                $json = json_encode($entry);
+                $json = json_encode($entry, JSON_THROW_ON_ERROR);
                 throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but entry is no array: $json!");
             }
 
@@ -246,8 +281,10 @@ class Helper
      * @param object     $object         the entity to export, must be tagged with #[ExportableEntity]
      * @param array|null $propertyFilter if an array: only properties with the given names
      *                                   are returned
+     *
+     * @throws \ReflectionException
      */
-    public function toArray(object $object, array $propertyFilter = null): array
+    public function toArray(object $object, ?array $propertyFilter = null): array
     {
         $className = $object::class;
         if (!$this->isExportableEntity($className)) {
@@ -258,7 +295,7 @@ class Helper
         /** @var \ReflectionProperty $property */
         foreach ($this->getExportableProperties($className) as $property) {
             $propName = $property->getName();
-            if (null !== $propertyFilter && !in_array($propName, $propertyFilter)) {
+            if (null !== $propertyFilter && !in_array($propName, $propertyFilter, true)) {
                 continue;
             }
 
@@ -266,8 +303,37 @@ class Helper
             $exportAttrib = $property->getAttributes(ExportableProperty::class)[0];
             $referenceByIdentifier = $exportAttrib->getArguments()['referenceByIdentifier'] ?? null;
 
-            if (null === $propValue || $property->getType()->isBuiltin()) {
-                $data[$propName] = $propValue;
+            $t = $property->getType();
+            // WIP: handle ReflectionUnionType (which does not has isBuiltin())
+            if (null === $propValue || $property->getType()?->isBuiltin()) {
+                // @todo hacky solution. Maybe merge with collection handling
+                // or determine if nested export is intended by another option
+                // on the exportAttrib, or if the importAttrib has "listOf"
+                if (is_array($propValue)) {
+                    $data[$propName] = [];
+                    foreach ($propValue as $key => $element) {
+                        if (is_object($element)) {
+                            if (null !== $referenceByIdentifier) {
+                                $identifier = $this->toArray($element, (array) $referenceByIdentifier);
+                                $data[$propName][$key] = $identifier[$referenceByIdentifier];
+                            } elseif ($this->isExportableEntity($element::class)) {
+                                    $elementData = $this->toArray($element);
+                                    $elementData['_entityClass'] = $element::class;
+                                    $data[$propName][$key] = $elementData;
+                            } else {
+                                // any other object is kept as-is
+                                $data[$propName][$key] = $element;
+                            }
+                        }
+                        else {
+                            // any other type is kept as-is
+                            $data[$propName][$key] = $element;
+                        }
+                    }
+                }
+                else {
+                    $data[$propName] = $propValue;
+                }
             } elseif ($propValue instanceof \DateTimeInterface) {
                 $data[$propName] = $propValue->format(DATE_ATOM);
             } elseif ($propValue instanceof Collection) {
@@ -301,6 +367,8 @@ class Helper
      * We use a static cache here as the properties of classes won't change
      * while the PHP instance is running and this method could be called
      * multiple times, e.g. when importing many objects of the same class.
+     *
+     * @throws \ReflectionException
      */
     protected function getImportableProperties(string $className): array
     {
@@ -323,6 +391,8 @@ class Helper
      * We use a static cache here as the properties of classes won't change
      * while the PHP instance is running and this method could be called
      * multiple times, e.g. when exporting many objects of the same class.
+     *
+     * @throws \ReflectionException
      */
     protected function getExportableProperties(string $className): array
     {
@@ -351,6 +421,9 @@ class Helper
         return count($property->getAttributes(ImportableProperty::class)) > 0;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     protected function isImportableEntity(string $className): bool
     {
         if (!isset(self::$importableEntities[$className])) {
@@ -362,6 +435,9 @@ class Helper
         return self::$importableEntities[$className];
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     protected function isExportableEntity(string $className): bool
     {
         if (!isset(self::$exportableEntities[$className])) {

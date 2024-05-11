@@ -8,13 +8,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Vrok\DoctrineAddons\ImportExport\ExportableEntity;
 use Vrok\DoctrineAddons\ImportExport\ExportableProperty;
+use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
 
 #[ExportableEntity]
 class ExportEntity
 {
+    //region builtin-typed property w/o getter
     #[ExportableProperty]
     public int $id = 0;
+    //endregion
 
+    //region nullable, builtin-typed property w/ getter
     #[ExportableProperty]
     private ?string $name = null;
 
@@ -29,7 +33,9 @@ class ExportEntity
 
         return $this;
     }
+    //endregion
 
+    //region Collection property
     #[ExportableProperty]
     private Collection $collection;
 
@@ -58,7 +64,9 @@ class ExportEntity
 
         return $this;
     }
+    //endregion
 
+    //region Collection property w/ referenceByIdentifier
     #[ExportableProperty(referenceByIdentifier: 'id')]
     private Collection $refCollection;
 
@@ -87,7 +95,9 @@ class ExportEntity
 
         return $this;
     }
+    //endregion
 
+    //region self-referencing, nullable object property
     #[ExportableProperty]
     private ?self $parent = null;
 
@@ -102,7 +112,9 @@ class ExportEntity
 
         return $this;
     }
+    //endregion
 
+    //region self-referencing, nullable object property w/ referenceByIdentifier
     #[ExportableProperty(referenceByIdentifier: 'name')]
     private ?self $reference = null;
 
@@ -117,9 +129,17 @@ class ExportEntity
 
         return $this;
     }
+    //endregion
 
+    //region DateTime property
     #[ExportableProperty]
     public ?\DateTimeImmutable $timestamp = null;
+    //endregion
+
+    //region array property
+    #[ExportableProperty]
+    public array $dtoList = [];
+    //endregion
 
     public string $notExported = 'hidden';
 

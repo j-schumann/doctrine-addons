@@ -8,7 +8,9 @@ namespace Vrok\DoctrineAddons\Tests\ImportExport;
 
 use Vrok\DoctrineAddons\ImportExport\Helper;
 use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
+use Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestDTO;
+use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
 class ImportTest extends AbstractOrmTestCase
@@ -51,23 +53,6 @@ class ImportTest extends AbstractOrmTestCase
         self::assertGreaterThan($now, $instance->timestamp);
     }
 
-    public function testImportOfReference(): void
-    {
-        $helper = new Helper();
-
-        $data = [
-            'parent' => [
-                'name' => 'parentEntity',
-            ],
-        ];
-
-        $instance = $helper->fromArray($data, ImportEntity::class);
-
-        self::assertInstanceOf(ImportEntity::class, $instance);
-        self::assertInstanceOf(ImportEntity::class, $instance->getParent());
-        self::assertSame('parentEntity via setter', $instance->getParent()->getName());
-    }
-
     public function testImportOfNull(): void
     {
         $helper = new Helper();
@@ -99,6 +84,71 @@ class ImportTest extends AbstractOrmTestCase
         self::assertInstanceOf(ImportEntity::class, $instance);
         self::assertSame('test via setter', $instance->getName());
         self::assertSame('initial', $instance->notImported);
+    }
+
+    public function testImportUntypedProperty(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'untypedProp' => 77,
+        ];
+        $instance = $helper->fromArray($data, ImportEntity::class);
+        self::assertSame(77, $instance->untypedProp);
+
+        $data = [
+            'untypedProp' => '66',
+        ];
+        $instance = $helper->fromArray($data, ImportEntity::class);
+        self::assertSame('66', $instance->untypedProp);
+
+        $data = [
+            'untypedProp' => [1, 2, 3],
+        ];
+        $instance = $helper->fromArray($data, ImportEntity::class);
+        self::assertSame([1, 2, 3], $instance->untypedProp);
+
+        $data = [
+            'untypedProp' => [
+                '_entityClass' => TestDTO::class,
+                'name' => 'Number 4',
+            ],
+        ];
+        $instance = $helper->fromArray($data, ImportEntity::class);
+        self::assertInstanceOf(TestDTO::class, $instance->untypedProp);
+        self::assertSame('Number 4', $instance->untypedProp->name);
+
+        $dto = new TestDTO();
+        $dto->name = 'Number 5';
+        $data = [
+            'untypedProp' => $dto,
+        ];
+        $instance = $helper->fromArray($data, ImportEntity::class);
+        self::assertInstanceOf(TestDTO::class, $instance->untypedProp);
+        self::assertSame('Number 5', $instance->untypedProp->name);
+
+        $data = [
+            'untypedProp' => null,
+        ];
+        $instance = $helper->fromArray($data, ImportEntity::class);
+        self::assertNull($instance->untypedProp);
+    }
+
+    public function testImportOfReference(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'parent' => [
+                'name' => 'parentEntity',
+            ],
+        ];
+
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertInstanceOf(ImportEntity::class, $instance->getParent());
+        self::assertSame('parentEntity via setter', $instance->getParent()->getName());
     }
 
     public function testImportOfReferenceInstance(): void
@@ -218,12 +268,12 @@ class ImportTest extends AbstractOrmTestCase
         self::assertNull($instance->timestamp);
     }
 
-    public function testImportOfList(): void
+    public function testImportOfDtoList(): void
     {
         $helper = new Helper();
 
         $data = [
-            'list' => [
+            'dtoList' => [
                 [
                     'name' => 'element1',
                 ],
@@ -236,15 +286,162 @@ class ImportTest extends AbstractOrmTestCase
         $instance = $helper->fromArray($data, ImportEntity::class);
 
         self::assertInstanceOf(ImportEntity::class, $instance);
-        self::assertCount(2, $instance->list);
+        self::assertCount(2, $instance->dtoList);
 
-        $element1 = $instance->list[0];
+        $element1 = $instance->dtoList[0];
         self::assertInstanceOf(TestDTO::class, $element1);
         self::assertSame('element1', $element1->name);
 
-        $element2 = $instance->list[1];
+        $element2 = $instance->dtoList[1];
         self::assertInstanceOf(TestDTO::class, $element2);
         self::assertSame('element2', $element2->name);
+    }
+
+    public function testImportOfDtoListFailsWithInvalidElement(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'dtoList' => [
+                [
+                    'name' => 'element1',
+                ],
+                [
+                    '_entityClass' => NestedDTO::class,
+                    'description' => 'element2',
+                ],
+            ],
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Given '_entityClass' Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO is not a subclass/implementation of Vrok\DoctrineAddons\Tests\Fixtures\TestDTO!");
+
+        $helper->fromArray($data, ImportEntity::class);
+    }
+
+    public function testImportOfInterfaceList(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'interfaceList' => [
+                [
+                    '_entityClass' => NestedDTO::class,
+                    'description' => 'element1',
+                    'mixedProp' => 'string',
+                ],
+                [
+                    '_entityClass' => NestedDTO::class,
+                    'description' => 'element2',
+                    'mixedProp' => 111,
+                ],
+                [
+                    '_entityClass' => TestDTO::class,
+                    'name' => 'element3',
+                ],
+            ],
+        ];
+
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertCount(3, $instance->interfaceList);
+
+        $element1 = $instance->interfaceList[0];
+        self::assertInstanceOf(NestedDTO::class, $element1);
+        self::assertSame('element1', $element1->description);
+        self::assertSame('string', $element1->mixedProp);
+
+        $element2 = $instance->interfaceList[1];
+        self::assertInstanceOf(NestedDTO::class, $element2);
+        self::assertSame('element2', $element2->description);
+        self::assertSame(111, $element2->mixedProp);
+
+        $element3 = $instance->interfaceList[2];
+        self::assertInstanceOf(TestDTO::class, $element3);
+        self::assertSame('element3', $element3->name);
+    }
+
+    public function testImportOfInterfaceListFailsWithInvalidElement(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'interfaceList' => [
+                [
+                    '_entityClass' => TestDTO::class,
+                    'name' => 'element1',
+                ],
+                [
+                    '_entityClass' => TestEntity::class,
+                    'description' => 'element2',
+                ],
+            ],
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Given '_entityClass' Vrok\DoctrineAddons\Tests\Fixtures\TestEntity is not a subclass/implementation of Vrok\DoctrineAddons\Tests\Fixtures\DtoInterface!");
+
+        $helper->fromArray($data, ImportEntity::class);
+    }
+
+    public function testImportOfNestedDtos(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'interfaceList' => [
+                [
+                    '_entityClass' => TestDTO::class,
+                    'name' => 'element1',
+                    'nestedInterface' => [
+                        '_entityClass' => NestedDTO::class,
+                        'description' => 'element a',
+                        'mixedProp' => 111,
+                    ],
+                    'nestedInterfaceList' => [
+                        [
+                            '_entityClass' => NestedDTO::class,
+                            'description' => 'element b',
+                            'mixedProp' => 'string',
+                        ],
+                        [
+                            '_entityClass' => NestedDTO::class,
+                            'description' => 'element c',
+                        ],
+                        [
+                            '_entityClass' => TestDTO::class,
+                            'name' => 'element d',
+                        ],
+                    ]
+                ],
+            ],
+        ];
+
+        $instance = $helper->fromArray($data, ImportEntity::class);
+
+        self::assertInstanceOf(ImportEntity::class, $instance);
+        self::assertCount(1, $instance->interfaceList);
+
+        $element1 = $instance->interfaceList[0];
+        self::assertInstanceOf(TestDTO::class, $element1);
+        self::assertSame('element1', $element1->name);
+
+        self::assertInstanceOf(NestedDTO::class, $element1->nestedInterface);
+        self::assertSame('element a', $element1->nestedInterface->description);
+        self::assertSame(111, $element1->nestedInterface->mixedProp);
+
+        self::assertCount(3, $element1->nestedInterfaceList);
+
+        self::assertInstanceOf(NestedDTO::class, $element1->nestedInterfaceList[0]);
+        self::assertSame('element b', $element1->nestedInterfaceList[0]->description);
+        self::assertSame('string', $element1->nestedInterfaceList[0]->mixedProp);
+
+        self::assertInstanceOf(NestedDTO::class, $element1->nestedInterfaceList[1]);
+        self::assertSame('element c', $element1->nestedInterfaceList[1]->description);
+
+        self::assertInstanceOf(TestDTO::class, $element1->nestedInterfaceList[2]);
+        self::assertSame('element d', $element1->nestedInterfaceList[2]->name);
     }
 
     public function testImportOfEmptyList(): void
@@ -252,13 +449,13 @@ class ImportTest extends AbstractOrmTestCase
         $helper = new Helper();
 
         $data = [
-            'list' => [],
+            'dtoList' => [],
         ];
 
         $instance = $helper->fromArray($data, ImportEntity::class);
 
         self::assertInstanceOf(ImportEntity::class, $instance);
-        self::assertCount(0, $instance->list);
+        self::assertCount(0, $instance->dtoList);
     }
 
     public function testImportOfNullListFails(): void
@@ -266,11 +463,11 @@ class ImportTest extends AbstractOrmTestCase
         $helper = new Helper();
 
         $data = [
-            'list' => null,
+            'dtoList' => null,
         ];
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Found NULL for Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list, but property is not nullable!");
+        $this->expectExceptionMessage("Found NULL for Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::dtoList, but property is not nullable!");
 
         $helper->fromArray($data, ImportEntity::class);
     }
@@ -280,11 +477,11 @@ class ImportTest extends AbstractOrmTestCase
         $helper = new Helper();
 
         $data = [
-            'list' => 'string',
+            'dtoList' => 'string',
         ];
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but it is no array: \"string\"!");
+        $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::dtoList is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but it is no array: \"string\"!");
         $helper->fromArray($data, ImportEntity::class);
     }
 
@@ -293,13 +490,32 @@ class ImportTest extends AbstractOrmTestCase
         $helper = new Helper();
 
         $data = [
-            'list' => [
+            'dtoList' => [
                 'string',
             ],
         ];
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::list is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but entry is no array: \"string\"!");
+        $this->expectExceptionMessage("Property Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity::dtoList is marked as list of 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO' but entry is no array: \"string\"!");
+        $helper->fromArray($data, ImportEntity::class);
+    }
+
+    public function testImportOfInterfaceListFailsWithoutEntityClass(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'interfaceList' => [
+                [
+                    'description' => 'element1',
+                    'mixedProp' => 'string',
+                ],
+            ],
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot create instance of the interface Vrok\DoctrineAddons\Tests\Fixtures\DtoInterface, concrete class needed!');
+
         $helper->fromArray($data, ImportEntity::class);
     }
 
@@ -313,6 +529,64 @@ class ImportTest extends AbstractOrmTestCase
 
         $this->expectException(\RuntimeException::class);
         $helper->fromArray($data);
+    }
+
+    public function testThrowsExceptionWithUnknownClass(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'name' => 'test',
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Class Fake\Class does not exist!');
+
+        $helper->fromArray($data, 'Fake\Class');
+    }
+
+    public function testThrowsExceptionWithAbstractClass(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            'name' => 'test',
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot create instance of the abstract class Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase, concrete class needed!');
+
+        $helper->fromArray($data, AbstractOrmTestCase::class);
+    }
+
+    public function testThrowsExceptionWithAbstractEntityClass(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            '_entityClass' => AbstractOrmTestCase::class,
+            'name' => 'test',
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot create instance of the abstract class Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase, concrete class needed!');
+
+        $helper->fromArray($data, ImportEntity::class);
+    }
+
+    public function testThrowsExceptionWithInvalidChildClass(): void
+    {
+        $helper = new Helper();
+
+        $data = [
+            '_entityClass' => NestedDTO::class,
+            'name' => 'test',
+        ];
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Given '_entityClass' Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO is not a subclass/implementation of Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity!");
+
+        $helper->fromArray($data, ImportEntity::class);
     }
 
     public function testThrowsExceptionWithoutReferenceClassname(): void
