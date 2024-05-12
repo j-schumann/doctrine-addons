@@ -208,7 +208,6 @@ class Helper
         if ($data['isUnion']) {
             foreach ($type->getTypes() as $unionVariant) {
                 /** @var \ReflectionNamedType $unionVariant */
-
                 $variantName = $unionVariant->getName();
                 if ('array' === $variantName) {
                     $data['allowsArray'] = true;
@@ -303,37 +302,8 @@ class Helper
             $exportAttrib = $property->getAttributes(ExportableProperty::class)[0];
             $referenceByIdentifier = $exportAttrib->getArguments()['referenceByIdentifier'] ?? null;
 
-            $t = $property->getType();
-            // WIP: handle ReflectionUnionType (which does not has isBuiltin())
-            if (null === $propValue || $property->getType()?->isBuiltin()) {
-                // @todo hacky solution. Maybe merge with collection handling
-                // or determine if nested export is intended by another option
-                // on the exportAttrib, or if the importAttrib has "listOf"
-                if (is_array($propValue)) {
-                    $data[$propName] = [];
-                    foreach ($propValue as $key => $element) {
-                        if (is_object($element)) {
-                            if (null !== $referenceByIdentifier) {
-                                $identifier = $this->toArray($element, (array) $referenceByIdentifier);
-                                $data[$propName][$key] = $identifier[$referenceByIdentifier];
-                            } elseif ($this->isExportableEntity($element::class)) {
-                                    $elementData = $this->toArray($element);
-                                    $elementData['_entityClass'] = $element::class;
-                                    $data[$propName][$key] = $elementData;
-                            } else {
-                                // any other object is kept as-is
-                                $data[$propName][$key] = $element;
-                            }
-                        }
-                        else {
-                            // any other type is kept as-is
-                            $data[$propName][$key] = $element;
-                        }
-                    }
-                }
-                else {
-                    $data[$propName] = $propValue;
-                }
+            if (null === $propValue) {
+                $data[$propName] = null;
             } elseif ($propValue instanceof \DateTimeInterface) {
                 $data[$propName] = $propValue->format(DATE_ATOM);
             } elseif ($propValue instanceof Collection) {
@@ -348,13 +318,39 @@ class Helper
                         $data[$propName][] = $elementData;
                     }
                 }
-            } elseif (is_object($propValue)) {
+            } elseif (is_object($propValue) && $this->isExportableEntity($propValue::class)) {
                 if (null !== $referenceByIdentifier) {
                     $identifier = $this->toArray($propValue, (array) $referenceByIdentifier);
                     $data[$propName] = $identifier[$referenceByIdentifier];
                 } else {
                     $data[$propName] = $this->toArray($propValue);
+                    $data[$propName]['_entityClass'] = $propValue::class;
                 }
+            } elseif (is_array($propValue)) {
+                // @todo hacky solution. Maybe merge with collection handling
+                // or determine if nested export is intended by another option
+                // on the exportAttrib, or if the importAttrib has "listOf"
+                $data[$propName] = [];
+                foreach ($propValue as $key => $element) {
+                    if (is_object($element)) {
+                        if (null !== $referenceByIdentifier) {
+                            $identifier = $this->toArray($element, (array) $referenceByIdentifier);
+                            $data[$propName][$key] = $identifier[$referenceByIdentifier];
+                        } elseif ($this->isExportableEntity($element::class)) {
+                            $elementData = $this->toArray($element);
+                            $elementData['_entityClass'] = $element::class;
+                            $data[$propName][$key] = $elementData;
+                        } else {
+                            // any other object is kept as-is
+                            $data[$propName][$key] = $element;
+                        }
+                    } else {
+                        // any other type is kept as-is
+                        $data[$propName][$key] = $element;
+                    }
+                }
+            } elseif (is_int($propValue) || is_float($propValue) || is_bool($propValue) || is_string($propValue)) {
+                $data[$propName] = $propValue;
             } else {
                 throw new \RuntimeException("Don't know how to export $className::$propName!");
             }

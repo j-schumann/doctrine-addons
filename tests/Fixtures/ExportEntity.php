@@ -8,17 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Vrok\DoctrineAddons\ImportExport\ExportableEntity;
 use Vrok\DoctrineAddons\ImportExport\ExportableProperty;
-use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
 
 #[ExportableEntity]
 class ExportEntity
 {
-    //region builtin-typed property w/o getter
+    // region builtin-typed property w/o getter
     #[ExportableProperty]
     public int $id = 0;
-    //endregion
+    // endregion
 
-    //region nullable, builtin-typed property w/ getter
+    // region nullable, builtin-typed property w/ getter
     #[ExportableProperty]
     private ?string $name = null;
 
@@ -33,9 +32,9 @@ class ExportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region Collection property
+    // region Collection property
     #[ExportableProperty]
     private Collection $collection;
 
@@ -64,9 +63,9 @@ class ExportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region Collection property w/ referenceByIdentifier
+    // region Collection property w/ referenceByIdentifier
     #[ExportableProperty(referenceByIdentifier: 'id')]
     private Collection $refCollection;
 
@@ -95,9 +94,9 @@ class ExportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region self-referencing, nullable object property
+    // region self-referencing, nullable object property
     #[ExportableProperty]
     private ?self $parent = null;
 
@@ -112,9 +111,9 @@ class ExportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region self-referencing, nullable object property w/ referenceByIdentifier
+    // region self-referencing, nullable object property w/ referenceByIdentifier
     #[ExportableProperty(referenceByIdentifier: 'name')]
     private ?self $reference = null;
 
@@ -129,17 +128,17 @@ class ExportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region DateTime property
+    // region DateTime property
     #[ExportableProperty]
     public ?\DateTimeImmutable $timestamp = null;
-    //endregion
+    // endregion
 
-    //region array property
+    // region array property
     #[ExportableProperty]
     public array $dtoList = [];
-    //endregion
+    // endregion
 
     public string $notExported = 'hidden';
 

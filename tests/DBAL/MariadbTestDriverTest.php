@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
-use Doctrine\DBAL\ServerVersionProvider;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;

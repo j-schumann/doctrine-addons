@@ -26,11 +26,11 @@ class PostgreSQLTestDriverTest extends TestCase
 
         $driver = new PostgreSQLTestDriver();
         $driver->connect([
-            'dbname' => 'db',
+            'dbname'        => 'db',
             'driverOptions' => ['driver' => 'pdo_sqlite', 'memory' => true],
-            'host' => 'localhost',
-            'port' => '5432',
-            'user' => 'user',
+            'host'          => 'localhost',
+            'port'          => '5432',
+            'user'          => 'user',
         ]);
     }
 }

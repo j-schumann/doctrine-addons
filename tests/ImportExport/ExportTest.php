@@ -92,7 +92,7 @@ class ExportTest extends TestCase
             'collection'    => [
                 [
                     'id'            => 1,
-                    'name'          =>'element1 via getter',
+                    'name'          => 'element1 via getter',
                     'collection'    => [],
                     'refCollection' => [],
                     'parent'        => null,
@@ -102,7 +102,7 @@ class ExportTest extends TestCase
                 ],
                 [
                     'id'            => 2,
-                    'name'          =>'element2 via getter',
+                    'name'          => 'element2 via getter',
                     'collection'    => [],
                     'refCollection' => [],
                     'parent'        => null,
@@ -143,7 +143,7 @@ class ExportTest extends TestCase
             'refCollection' => [],
             'parent'        => [
                 'id'            => 1,
-                'name'          =>'parent via getter',
+                'name'          => 'parent via getter',
                 'collection'    => [],
                 'refCollection' => [],
                 'parent'        => null,
@@ -173,24 +173,24 @@ class ExportTest extends TestCase
         $data = $helper->toArray($entity);
         self::assertSame([
             'id'            => 3,
-            'name' => ' via getter',
-            'collection' => [],
+            'name'          => ' via getter',
+            'collection'    => [],
             'refCollection' => [],
-            'parent' => null,
-            'reference' => null,
-            'timestamp' => null,
-            'dtoList' => [
+            'parent'        => null,
+            'reference'     => null,
+            'timestamp'     => null,
+            'dtoList'       => [
                 0 => [
-                    'name'         => 'element 1',
-                    'nestedInterface' => null,
+                    'name'                => 'element 1',
+                    'nestedInterface'     => null,
                     'nestedInterfaceList' => [],
-                    '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+                    '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
                 ],
                 1 => [
-                    'name'         => 'element 2',
-                    'nestedInterface' => null,
+                    'name'                => 'element 2',
+                    'nestedInterface'     => null,
                     'nestedInterfaceList' => [],
-                    '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+                    '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
                 ],
             ],
         ], $data);
@@ -213,10 +213,10 @@ class ExportTest extends TestCase
         self::assertSame(3, $data['id']);
         self::assertCount(2, $data['dtoList']);
         self::assertSame([
-            'name'         => 'element 1',
-            'nestedInterface' => null,
+            'name'                => 'element 1',
+            'nestedInterface'     => null,
             'nestedInterfaceList' => [],
-            '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+            '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
         ], $data['dtoList'][0]);
 
         self::assertInstanceOf(\DateTimeImmutable::class, $data['dtoList'][1]);
@@ -256,32 +256,32 @@ class ExportTest extends TestCase
         self::assertSame(3, $data['id']);
         self::assertCount(1, $data['dtoList']);
         self::assertSame([
-            'name'         => 'element 1',
-            'nestedInterface' => [
-                'description' => 'element a',
-                'mixedProp' => 0,
+            'name'                => 'element 1',
+            'nestedInterface'     => [
+                'description'  => 'element a',
+                'mixedProp'    => 0,
                 '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO',
             ],
             'nestedInterfaceList' => [
                 [
-                    'description' => 'element b',
-                    'mixedProp' => 'string',
+                    'description'  => 'element b',
+                    'mixedProp'    => 'string',
                     '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO',
                 ],
                 [
-                    'description' => 'element c',
-                    'mixedProp' => 999,
+                    'description'  => 'element c',
+                    'mixedProp'    => 999,
                     '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO',
                 ],
                 [
-                    'name' => 'element d',
-                    '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
-                ]
+                    'name'                => 'element d',
+                    'nestedInterface'     => null,
+                    'nestedInterfaceList' => [],
+                    '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+                ],
             ],
-            '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+            '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
         ], $data['dtoList'][0]);
-
-        self::assertInstanceOf(\DateTimeImmutable::class, $data['dtoList'][1]);
     }
 
     public function testThrowsExceptionWithNonexportableEntity(): void

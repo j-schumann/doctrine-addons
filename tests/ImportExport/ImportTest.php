@@ -20,7 +20,7 @@ class ImportTest extends AbstractOrmTestCase
         $helper = new Helper();
 
         $data = [
-            'name' => 'test',
+            'name'      => 'test',
 
             // will be ignored and throws no error
             'something' => 'else',
@@ -111,7 +111,7 @@ class ImportTest extends AbstractOrmTestCase
         $data = [
             'untypedProp' => [
                 '_entityClass' => TestDTO::class,
-                'name' => 'Number 4',
+                'name'         => 'Number 4',
             ],
         ];
         $instance = $helper->fromArray($data, ImportEntity::class);
@@ -308,7 +308,7 @@ class ImportTest extends AbstractOrmTestCase
                 ],
                 [
                     '_entityClass' => NestedDTO::class,
-                    'description' => 'element2',
+                    'description'  => 'element2',
                 ],
             ],
         ];
@@ -327,17 +327,17 @@ class ImportTest extends AbstractOrmTestCase
             'interfaceList' => [
                 [
                     '_entityClass' => NestedDTO::class,
-                    'description' => 'element1',
-                    'mixedProp' => 'string',
+                    'description'  => 'element1',
+                    'mixedProp'    => 'string',
                 ],
                 [
                     '_entityClass' => NestedDTO::class,
-                    'description' => 'element2',
-                    'mixedProp' => 111,
+                    'description'  => 'element2',
+                    'mixedProp'    => 111,
                 ],
                 [
                     '_entityClass' => TestDTO::class,
-                    'name' => 'element3',
+                    'name'         => 'element3',
                 ],
             ],
         ];
@@ -370,11 +370,11 @@ class ImportTest extends AbstractOrmTestCase
             'interfaceList' => [
                 [
                     '_entityClass' => TestDTO::class,
-                    'name' => 'element1',
+                    'name'         => 'element1',
                 ],
                 [
                     '_entityClass' => TestEntity::class,
-                    'description' => 'element2',
+                    'description'  => 'element2',
                 ],
             ],
         ];
@@ -392,28 +392,28 @@ class ImportTest extends AbstractOrmTestCase
         $data = [
             'interfaceList' => [
                 [
-                    '_entityClass' => TestDTO::class,
-                    'name' => 'element1',
-                    'nestedInterface' => [
+                    '_entityClass'        => TestDTO::class,
+                    'name'                => 'element1',
+                    'nestedInterface'     => [
                         '_entityClass' => NestedDTO::class,
-                        'description' => 'element a',
-                        'mixedProp' => 111,
+                        'description'  => 'element a',
+                        'mixedProp'    => 111,
                     ],
                     'nestedInterfaceList' => [
                         [
                             '_entityClass' => NestedDTO::class,
-                            'description' => 'element b',
-                            'mixedProp' => 'string',
+                            'description'  => 'element b',
+                            'mixedProp'    => 'string',
                         ],
                         [
                             '_entityClass' => NestedDTO::class,
-                            'description' => 'element c',
+                            'description'  => 'element c',
                         ],
                         [
                             '_entityClass' => TestDTO::class,
-                            'name' => 'element d',
+                            'name'         => 'element d',
                         ],
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -508,7 +508,7 @@ class ImportTest extends AbstractOrmTestCase
             'interfaceList' => [
                 [
                     'description' => 'element1',
-                    'mixedProp' => 'string',
+                    'mixedProp'   => 'string',
                 ],
             ],
         ];
@@ -565,7 +565,7 @@ class ImportTest extends AbstractOrmTestCase
 
         $data = [
             '_entityClass' => AbstractOrmTestCase::class,
-            'name' => 'test',
+            'name'         => 'test',
         ];
 
         $this->expectException(\RuntimeException::class);
@@ -580,7 +580,7 @@ class ImportTest extends AbstractOrmTestCase
 
         $data = [
             '_entityClass' => NestedDTO::class,
-            'name' => 'test',
+            'name'         => 'test',
         ];
 
         $this->expectException(\RuntimeException::class);

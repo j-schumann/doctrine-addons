@@ -16,7 +16,7 @@ use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
 #[ORM\Entity]
 class ImportEntity
 {
-    //region typed (builtin), nullable property with getter/setter
+    // region typed (builtin), nullable property with getter/setter
     #[ImportableProperty]
     #[ORM\Id]
     #[ORM\Column]
@@ -33,9 +33,9 @@ class ImportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region untyped Collection property
+    // region untyped Collection property
     #[ImportableProperty]
     private Collection $collection;
 
@@ -64,9 +64,9 @@ class ImportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region typed (object), nullable property with getter/setter
+    // region typed (object), nullable property with getter/setter
     #[ImportableProperty]
     #[ORM\Column(nullable: true)]
     private ?self $parent = null;
@@ -82,44 +82,44 @@ class ImportEntity
 
         return $this;
     }
-    //endregion
+    // endregion
 
-    //region DateTime nullable property w/o getter/setter
+    // region DateTime nullable property w/o getter/setter
     #[ImportableProperty]
     #[ORM\Column(nullable: true)]
     public ?\DateTimeImmutable $timestamp = null;
-    //endregion
+    // endregion
 
-    //region typed (object), nullable property w/o getter/setter
+    // region typed (object), nullable property w/o getter/setter
     #[ImportableProperty]
     public ?TestEntity $otherReference = null;
-    //endregion
+    // endregion
 
-    //region property without Importable attribute
+    // region property without Importable attribute
     public string $notImported = 'initial';
-    //endregion
+    // endregion
 
-    //region array property with listof Attribute for a DTO
+    // region array property with listof Attribute for a DTO
     #[ImportableProperty(listOf: TestDTO::class)]
     #[ORM\Column]
     public array $dtoList = [];
-    //endregion
+    // endregion
 
-    //region array property with listof Attribute for an Interface
+    // region array property with listof Attribute for an Interface
     #[ImportableProperty(listOf: DtoInterface::class)]
     #[ORM\Column]
     public array $interfaceList = [];
-    //endregion
+    // endregion
 
-    //region union-typed, nullable property
+    // region union-typed, nullable property
     #[ImportableProperty]
     public TestCase|EntityManager|null $union = null;
-    //endregion
+    // endregion
 
-    //region untyped property
+    // region untyped property
     #[ImportableProperty]
     public $untypedProp;
-    //endregion
+    // endregion
 
     public function __construct()
     {
