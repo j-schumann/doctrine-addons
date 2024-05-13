@@ -571,7 +571,7 @@ class ImportTest extends AbstractOrmTestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Cannot create instance of the abstract class Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase, concrete class needed!');
 
-        $helper->fromArray($data, ImportEntity::class);
+        $helper->fromArray($data);
     }
 
     public function testThrowsExceptionWithInvalidChildClass(): void

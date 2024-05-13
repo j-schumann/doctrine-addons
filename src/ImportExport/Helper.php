@@ -324,7 +324,9 @@ class Helper
                     $data[$propName] = $identifier[$referenceByIdentifier];
                 } else {
                     $data[$propName] = $this->toArray($propValue);
-                    $data[$propName]['_entityClass'] = $propValue::class;
+                    if ($propValue::class !== $property->class) {
+                        $data[$propName]['_entityClass'] = $propValue::class;
+                    }
                 }
             } elseif (is_array($propValue)) {
                 // @todo hacky solution. Maybe merge with collection handling

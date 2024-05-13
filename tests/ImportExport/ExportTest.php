@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\ImportExport;
@@ -31,6 +33,7 @@ class ExportTest extends TestCase
             'parent'        => null,
             'reference'     => null,
             'timestamp'     => null,
+            'dtoList'       => [],
             // notExported is NOT in the array
         ], $data);
     }
@@ -98,7 +101,8 @@ class ExportTest extends TestCase
                     'parent'        => null,
                     'reference'     => null,
                     'timestamp'     => null,
-                    '_entityClass'  => 'Vrok\DoctrineAddons\Tests\Fixtures\ExportEntity',
+                    'dtoList'       => [],
+                    '_entityClass'  => ExportEntity::class,
                 ],
                 [
                     'id'            => 2,
@@ -108,13 +112,15 @@ class ExportTest extends TestCase
                     'parent'        => null,
                     'reference'     => null,
                     'timestamp'     => null,
-                    '_entityClass'  => 'Vrok\DoctrineAddons\Tests\Fixtures\ExportEntity',
+                    'dtoList'       => [],
+                    '_entityClass'  => ExportEntity::class,
                 ],
             ],
             'refCollection' => [3, 4],
             'parent'        => null,
             'reference'     => null,
             'timestamp'     => null,
+            'dtoList'       => [],
         ], $data);
     }
 
@@ -149,9 +155,11 @@ class ExportTest extends TestCase
                 'parent'        => null,
                 'reference'     => null,
                 'timestamp'     => null,
+                'dtoList'       => [],
             ],
             'reference'     => 'reference via getter',
             'timestamp'     => null,
+            'dtoList'       => [],
         ], $data);
     }
 
@@ -184,13 +192,13 @@ class ExportTest extends TestCase
                     'name'                => 'element 1',
                     'nestedInterface'     => null,
                     'nestedInterfaceList' => [],
-                    '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+                    '_entityClass'        => TestDTO::class,
                 ],
                 1 => [
                     'name'                => 'element 2',
                     'nestedInterface'     => null,
                     'nestedInterfaceList' => [],
-                    '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+                    '_entityClass'        => TestDTO::class,
                 ],
             ],
         ], $data);
@@ -216,7 +224,7 @@ class ExportTest extends TestCase
             'name'                => 'element 1',
             'nestedInterface'     => null,
             'nestedInterfaceList' => [],
-            '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+            '_entityClass'        => TestDTO::class,
         ], $data['dtoList'][0]);
 
         self::assertInstanceOf(\DateTimeImmutable::class, $data['dtoList'][1]);
@@ -260,31 +268,31 @@ class ExportTest extends TestCase
             'nestedInterface'     => [
                 'description'  => 'element a',
                 'mixedProp'    => 0,
-                '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO',
+                '_entityClass' => NestedDTO::class,
             ],
             'nestedInterfaceList' => [
                 [
                     'description'  => 'element b',
                     'mixedProp'    => 'string',
-                    '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO',
+                    '_entityClass' => NestedDTO::class,
                 ],
                 [
                     'description'  => 'element c',
                     'mixedProp'    => 999,
-                    '_entityClass' => 'Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO',
+                    '_entityClass' => NestedDTO::class,
                 ],
                 [
                     'name'                => 'element d',
                     'nestedInterface'     => null,
                     'nestedInterfaceList' => [],
-                    '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+                    '_entityClass'        => TestDTO::class,
                 ],
             ],
-            '_entityClass'        => 'Vrok\DoctrineAddons\Tests\Fixtures\TestDTO',
+            '_entityClass'        => TestDTO::class,
         ], $data['dtoList'][0]);
     }
 
-    public function testThrowsExceptionWithNonexportableEntity(): void
+    public function testThrowsExceptionWithNonExportableEntity(): void
     {
         $helper = new Helper();
         $entity = new ImportEntity();
