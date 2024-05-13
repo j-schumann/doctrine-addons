@@ -16,6 +16,7 @@ use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
 #[ORM\Entity]
 class ImportEntity
 {
+    // region typed (builtin), nullable property with getter/setter
     #[ImportableProperty]
     #[ORM\Id]
     #[ORM\Column]
@@ -32,7 +33,9 @@ class ImportEntity
 
         return $this;
     }
+    // endregion
 
+    // region untyped Collection property
     #[ImportableProperty]
     private Collection $collection;
 
@@ -61,7 +64,9 @@ class ImportEntity
 
         return $this;
     }
+    // endregion
 
+    // region typed (object), nullable property with getter/setter
     #[ImportableProperty]
     #[ORM\Column(nullable: true)]
     private ?self $parent = null;
@@ -77,25 +82,47 @@ class ImportEntity
 
         return $this;
     }
+    // endregion
 
+    // region DateTime nullable property w/o getter/setter
     #[ImportableProperty]
     #[ORM\Column(nullable: true)]
     public ?\DateTimeImmutable $timestamp = null;
+    // endregion
 
+    // region typed (object), nullable property w/o getter/setter
     #[ImportableProperty]
     public ?TestEntity $otherReference = null;
+    // endregion
 
+    // region property without Importable attribute
     public string $notImported = 'initial';
+    // endregion
+
+    // region array property with listof Attribute for a DTO
+    #[ImportableProperty(listOf: TestDTO::class)]
+    #[ORM\Column]
+    public array $dtoList = [];
+    // endregion
+
+    // region array property with listof Attribute for an Interface
+    #[ImportableProperty(listOf: DtoInterface::class)]
+    #[ORM\Column]
+    public array $interfaceList = [];
+    // endregion
+
+    // region union-typed, nullable property
+    #[ImportableProperty]
+    public TestCase|EntityManager|null $union = null;
+    // endregion
+
+    // region untyped property
+    #[ImportableProperty]
+    public $untypedProp;
+    // endregion
 
     public function __construct()
     {
         $this->collection = new ArrayCollection();
     }
-
-    #[ImportableProperty(listOf: TestDTO::class)]
-    #[ORM\Column]
-    public array $list = [];
-
-    #[ImportableProperty]
-    public TestCase|EntityManager|null $union = null;
 }

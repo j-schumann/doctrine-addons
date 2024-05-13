@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2024-05-13
+### Updated
+- ImportExport\Helper to allow nested (lists of) DTOs to be (de)serialized
+
 ## [2.9.1] - 2024-01-29
 ### Fixed
 - deprecations & return typehints
