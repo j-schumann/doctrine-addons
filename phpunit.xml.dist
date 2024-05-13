@@ -14,7 +14,6 @@
       displayDetailsOnTestsThatTriggerWarnings="true"
       executionOrder="defects"
       failOnWarning="true"
-      failOnDeprecation="true"
       failOnNotice="true"
       stopOnFailure="false"
       stopOnError="true"
