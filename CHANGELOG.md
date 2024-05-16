@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2024-05-16
+### Added
+- `ORM\Query\AST\ContainsFunction` - to check if JSON / an array contains a
+  given value
+
 ## [2.10.0] - 2024-05-13
 ### Updated
 - ImportExport\Helper to allow nested (lists of) DTOs to be (de)serialized
