@@ -12,7 +12,15 @@ Doctrine ORM.
 $queryBuilder->expr()->like('CAST(u.varchar, \'text\'))', ':parameterName')
 ```
 
-`JSON_CONTAINS_TEXT` allows to use the [postgres-only "?" operator](https://www.postgresql.org/docs/9.5/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
+`CONTAINS` allows to use the [postgres-only "@>" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
+to search for values within jsonb fields or arrays.
+
+```php
+$qb->andWhere("CONTAINS(u.numbers, :number) = true")
+   ->setParameter('number', 3);
+```
+
+`JSON_CONTAINS_TEXT` allows to use the [postgres-only "?" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
 to search for strings within jsonb fields.
 This for example allows to filter Symfony users correctly by role,
 e.g. if you use role names that are part of others (ROLE_SUPER & ROLE_SUPER_ADMIN) where
@@ -39,6 +47,7 @@ doctrine:
         dql:
             string_functions:
                 CAST: Vrok\DoctrineAddons\ORM\Query\AST\CastFunction
+                CONTAINS: Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction
                 JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
                 JSON_FIELD_AS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction
 ```
