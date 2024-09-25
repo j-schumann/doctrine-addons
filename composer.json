@@ -6,7 +6,7 @@
     "homepage": "https://vrok.de",
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "doctrine/dbal": "^3.4.0"
     },
     "require-dev": {
