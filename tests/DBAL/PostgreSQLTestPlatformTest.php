@@ -13,9 +13,6 @@ class PostgreSQLTestPlatformTest extends TestCase
     {
         $platform = new PostgreSQLTestPlatform();
         $sql = $platform->getTruncateTableSQL('the-table', true);
-        $this->assertSame(
-            'TRUNCATE the-table RESTART IDENTITY CASCADE',
-            $sql
-        );
+        self::assertSame('TRUNCATE the-table RESTART IDENTITY CASCADE', $sql);
     }
 }

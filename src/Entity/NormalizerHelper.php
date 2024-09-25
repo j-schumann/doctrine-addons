@@ -35,7 +35,7 @@ abstract class NormalizerHelper
      */
     public static function toHtml(?string $value): string
     {
-        return 0 === self::getTextLength($value) ? '' : trim($value);
+        return 0 === self::getTextLength($value) ? '' : trim((string) $value);
     }
 
     /**
@@ -45,7 +45,7 @@ abstract class NormalizerHelper
      */
     public static function toNullableHtml(?string $value): ?string
     {
-        return 0 === self::getTextLength($value) ? null : trim($value);
+        return 0 === self::getTextLength($value) ? null : trim((string) $value);
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class NormalizerHelper
      */
     public static function toStringArray(?array $values): array
     {
-        if (null === $values || 0 === count($values)) {
+        if (null === $values || [] === $values) {
             return [];
         }
 
@@ -128,7 +128,7 @@ abstract class NormalizerHelper
      */
     public static function toNullableStringArray(?array $values, bool $keepIndices = false): ?array
     {
-        if (null === $values || 0 === count($values)) {
+        if (null === $values || [] === $values) {
             return null;
         }
 
@@ -163,7 +163,7 @@ abstract class NormalizerHelper
             $cleaned = array_values($cleaned);
         }
 
-        return $newCount ? $cleaned : null;
+        return 0 !== $newCount ? $cleaned : null;
     }
 
     /**
@@ -172,7 +172,7 @@ abstract class NormalizerHelper
      */
     public static function toNullableArray(?array $values): ?array
     {
-        if (null === $values || 0 === count($values)) {
+        if (null === $values || [] === $values) {
             return null;
         }
 

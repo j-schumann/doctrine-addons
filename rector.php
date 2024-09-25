@@ -17,7 +17,6 @@ use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector
 // @see https://getrector.com/blog/5-common-mistakes-in-rector-config-and-how-to-avoid-them
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        __DIR__.'/config',
         __DIR__.'/src',
         __DIR__.'/tests',
     ]);

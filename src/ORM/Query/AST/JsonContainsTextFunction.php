@@ -45,7 +45,7 @@ class JsonContainsTextFunction extends FunctionNode
     public function getSql(SqlWalker $sqlWalker): string
     {
         return sprintf(
-        // double ? to escape it, else interpreted as param placeholder
+            // double ? to escape it, else interpreted as param placeholder
             '(%s ?? %s)',
             $this->expr1->dispatch($sqlWalker),
             $this->expr2->dispatch($sqlWalker)

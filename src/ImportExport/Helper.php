@@ -136,7 +136,7 @@ class Helper
                 $value = $data[$propName];
             } elseif ($this->isImportableEntity($typeDetails['classname'])) {
                 if (is_int($data[$propName]) || is_string($data[$propName])) {
-                    if (!$this->objectManager) {
+                    if (null === $this->objectManager) {
                         throw new \RuntimeException("Found ID for $className::$propName, but objectManager is not set to find object!");
                     }
 
@@ -411,12 +411,12 @@ class Helper
 
     protected function isPropertyExportable(\ReflectionProperty $property): bool
     {
-        return count($property->getAttributes(ExportableProperty::class)) > 0;
+        return [] !== $property->getAttributes(ExportableProperty::class);
     }
 
     protected function isPropertyImportable(\ReflectionProperty $property): bool
     {
-        return count($property->getAttributes(ImportableProperty::class)) > 0;
+        return [] !== $property->getAttributes(ImportableProperty::class);
     }
 
     /**
@@ -427,7 +427,7 @@ class Helper
         if (!isset(self::$importableEntities[$className])) {
             $reflection = new \ReflectionClass($className);
             $importable = $reflection->getAttributes(ImportableEntity::class);
-            self::$importableEntities[$className] = count($importable) > 0;
+            self::$importableEntities[$className] = [] !== $importable;
         }
 
         return self::$importableEntities[$className];
@@ -441,7 +441,7 @@ class Helper
         if (!isset(self::$exportableEntities[$className])) {
             $reflection = new \ReflectionClass($className);
             $exportable = $reflection->getAttributes(ExportableEntity::class);
-            self::$exportableEntities[$className] = count($exportable) > 0;
+            self::$exportableEntities[$className] = [] !== $exportable;
         }
 
         return self::$exportableEntities[$className];

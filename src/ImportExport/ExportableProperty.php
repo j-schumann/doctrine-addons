@@ -13,10 +13,7 @@ namespace Vrok\DoctrineAddons\ImportExport;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class ExportableProperty
 {
-    public ?string $referenceByIdentifier;
-
-    public function __construct($referenceByIdentifier = null)
+    public function __construct(public ?string $referenceByIdentifier = null)
     {
-        $this->referenceByIdentifier = $referenceByIdentifier;
     }
 }

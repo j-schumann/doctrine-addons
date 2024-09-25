@@ -12,10 +12,7 @@ namespace Vrok\DoctrineAddons\ImportExport;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class ImportableProperty
 {
-    public ?string $listOf;
-
-    public function __construct($listOf = null)
+    public function __construct(public ?string $listOf = null)
     {
-        $this->listOf = $listOf;
     }
 }
