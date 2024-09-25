@@ -16,7 +16,7 @@ class PostgreSQLTestDriverTest extends TestCase
     {
         $driver = new PostgreSQLTestDriver();
         $platform = $driver->createDatabasePlatformForVersion('14');
-        $this->assertInstanceOf(PostgreSQLTestPlatform::class, $platform);
+        self::assertInstanceOf(PostgreSQLTestPlatform::class, $platform);
     }
 
     public function testConnectInterpretsParams(): void

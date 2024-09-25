@@ -13,9 +13,6 @@ class MariadbTestPlatformTest extends TestCase
     {
         $platform = new MariadbTestPlatform();
         $sql = $platform->getTruncateTableSQL('the-table');
-        $this->assertSame(
-            'SET foreign_key_checks = 0;TRUNCATE the-table;SET foreign_key_checks = 1;',
-            $sql
-        );
+        self::assertSame('SET foreign_key_checks = 0;TRUNCATE the-table;SET foreign_key_checks = 1;', $sql);
     }
 }

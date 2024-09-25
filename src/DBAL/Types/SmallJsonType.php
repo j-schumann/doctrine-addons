@@ -49,7 +49,7 @@ class SmallJsonType extends StringType
             $value = stream_get_contents($value);
         }
 
-        $val = json_decode($value, true);
+        $val = json_decode((string) $value, true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw ConversionException::conversionFailed($value, $this->getName());
