@@ -17,6 +17,6 @@ class MariadbTestDriverTest extends TestCase
     {
         $driver = new MariadbTestDriver();
         $platform = $driver->getDatabasePlatform(new StaticServerVersionProvider('mariadb-10.6.8'));
-        $this->assertInstanceOf(MariadbTestPlatform::class, $platform);
+        self::assertInstanceOf(MariadbTestPlatform::class, $platform);
     }
 }

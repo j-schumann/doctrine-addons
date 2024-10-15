@@ -24,7 +24,7 @@ class SmallJsonTypeTest extends TestCase
     {
         $type = new SmallJsonType();
         $result = $type->convertToDatabaseValue(null, $this->platform);
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testConvertToDatabaseValueRequiresConvertibleValue(): void
@@ -39,7 +39,7 @@ class SmallJsonTypeTest extends TestCase
     {
         $type = new SmallJsonType();
         $result = $type->convertToDatabaseValue(['key' => 'index'], $this->platform);
-        $this->assertSame('{"key":"index"}', $result);
+        self::assertSame('{"key":"index"}', $result);
     }
 
     public function testConvertToPhpValue(): void
@@ -47,16 +47,16 @@ class SmallJsonTypeTest extends TestCase
         $type = new SmallJsonType();
         $result = $type->convertToPHPValue('{"key":"index"}', $this->platform);
 
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('key', $result);
-        $this->assertSame('index', $result['key']);
+        self::assertIsArray($result);
+        self::assertArrayHasKey('key', $result);
+        self::assertSame('index', $result['key']);
     }
 
     public function testConvertToPhpValueAllowsNull(): void
     {
         $type = new SmallJsonType();
         $result = $type->convertToPHPValue(null, $this->platform);
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testConvertToPhpValueRequiresValidJson(): void

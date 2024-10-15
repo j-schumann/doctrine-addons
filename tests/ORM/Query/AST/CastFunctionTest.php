@@ -14,6 +14,6 @@ class CastFunctionTest extends AbstractOrmTestCase
         $this->configuration->addCustomStringFunction('CAST', CastFunction::class);
 
         $query = $this->buildEntityManager()->createQuery('SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE CAST(t.jsonColumn, \'text\') = true');
-        $this->assertEquals('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE CAST(t0_.jsonColumn as text) = 1', $query->getSQL());
+        self::assertSame('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE CAST(t0_.jsonColumn as text) = 1', $query->getSQL());
     }
 }

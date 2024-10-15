@@ -36,7 +36,7 @@ class ExportEntity
 
     // region Collection property
     #[ExportableProperty]
-    private Collection $collection;
+    private readonly Collection $collection;
 
     public function getCollection(): Collection
     {
@@ -67,7 +67,7 @@ class ExportEntity
 
     // region Collection property w/ referenceByIdentifier
     #[ExportableProperty(referenceByIdentifier: 'id')]
-    private Collection $refCollection;
+    private readonly Collection $refCollection;
 
     public function getRefCollection(): Collection
     {

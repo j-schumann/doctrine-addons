@@ -14,6 +14,6 @@ class ContainsFunctionTest extends AbstractOrmTestCase
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
 
         $query = $this->buildEntityManager()->createQuery('SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE CONTAINS(t.jsonColumn, :para) = true');
-        $this->assertEquals('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE (t0_.jsonColumn @> ?) = 1', $query->getSQL());
+        self::assertSame('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE (t0_.jsonColumn @> ?) = 1', $query->getSQL());
     }
 }
