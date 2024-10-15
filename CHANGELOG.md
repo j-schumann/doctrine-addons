@@ -3,11 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.13.0] - TBD
+## [2.13.0] - 2024-10-15
 ### Updated
-- support for DBAL 4.0
-- removed support for ORM 2.x / DBAL 3.x
-- removed support for PHP 8.1
+- support for DBAL 4.0 
+- removed supportfor DBAL 3.x
 
 ## [2.12.0] - 2024-09-25
 ### Updated
