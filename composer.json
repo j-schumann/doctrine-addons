@@ -14,7 +14,7 @@
         "doctrine/orm": "^3.0.2",
         "friendsofphp/php-cs-fixer": "^3.64.0",
         "behat/transliterator": "^v1.4.0",
-        "phpunit/phpunit": "^11.3.6",
+        "phpunit/phpunit": "^11.4.1",
         "rector/rector": "^1.2.7",
         "roave/security-advisories": "dev-latest",
         "symfony/cache": "^7.0.0",
