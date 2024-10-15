@@ -49,7 +49,7 @@ class SmallJsonType extends StringType
         }
 
         try {
-            return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             throw ValueNotConvertible::new($value, 'json', $e->getMessage(), $e);
         }
