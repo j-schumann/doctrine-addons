@@ -9,11 +9,12 @@ use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\Exception\InvalidPlatformVersion;
-use Doctrine\DBAL\Platforms\MariaDB1052Platform;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
+use Doctrine\DBAL\Platforms\MySQL84Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\ServerVersionProvider;
+use Doctrine\Deprecations\Deprecation;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
 /**
@@ -30,28 +31,37 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
  */
 class MariadbTestDriver extends AbstractMySQLDriver
 {
-    /**
-     * @throws InvalidPlatformVersion|\Doctrine\DBAL\Exception
-     */
     public function getDatabasePlatform(ServerVersionProvider $versionProvider): AbstractMySQLPlatform
     {
         $version = $versionProvider->getServerVersion();
         if (false !== stripos($version, 'mariadb')) {
             $mariaDbVersion = $this->getMariaDbMysqlVersionNumber($version);
-            if (version_compare($mariaDbVersion, '10.6.0', '>=')) {
+            if (version_compare($mariaDbVersion, '10.5.2', '>=')) {
                 return new MariadbTestPlatform();
             }
 
-            if (version_compare($mariaDbVersion, '10.5.2', '>=')) {
-                return new MariaDB1052Platform();
-            }
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6343',
+                'Support for MariaDB < 10.5.2 is deprecated and will be removed in DBAL 5',
+            );
 
             return new MariaDBPlatform();
+        }
+
+        if (version_compare($version, '8.4.0', '>=')) {
+            return new MySQL84Platform();
         }
 
         if (version_compare($version, '8.0.0', '>=')) {
             return new MySQL80Platform();
         }
+
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6343',
+            'Support for MySQL < 8 is deprecated and will be removed in DBAL 5',
+        );
 
         return new MySQLPlatform();
     }
@@ -67,7 +77,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
     private function getMariaDbMysqlVersionNumber(string $versionString): string
     {
         if (
-            0 === preg_match(
+            1 !== preg_match(
                 '/^(?:5\.5\.5-)?(mariadb-)?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)/i',
                 $versionString,
                 $versionParts,
@@ -84,7 +94,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
      */
     public function connect(
         #[\SensitiveParameter]
-        array $params
+        array $params,
     ): Connection {
         $driverOptions = $params['driverOptions'] ?? [];
 

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
-use Doctrine\DBAL\Platforms\MariaDBPlatform;
+use Doctrine\DBAL\Platforms\MariaDB1052Platform;
 
 /**
  * We just want to override the getTruncateTableSQL() to ignore foreign keys,
  * see MariadbTestDriver.
  */
-class MariadbTestPlatform extends MariaDBPlatform
+class MariadbTestPlatform extends MariaDB1052Platform
 {
     public function getTruncateTableSQL($tableName, $cascade = false): string
     {
