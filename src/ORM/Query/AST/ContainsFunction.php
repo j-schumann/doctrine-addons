@@ -34,7 +34,7 @@ class ContainsFunction extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return sprintf(
+        return \sprintf(
             '(%s @> %s)',
             $this->expr1->dispatch($sqlWalker),
             $this->expr2->dispatch($sqlWalker)

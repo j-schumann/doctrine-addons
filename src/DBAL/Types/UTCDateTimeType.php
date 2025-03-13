@@ -53,7 +53,7 @@ class UTCDateTimeType extends DateTimeImmutableType
             return $value;
         }
 
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             throw InvalidType::new($value, static::class, ['string']);
         }
 

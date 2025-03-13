@@ -65,7 +65,7 @@ class Helper
         $className = $data['_entityClass'] ?? $entityClass;
 
         if (empty($className)) {
-            $encoded = json_encode($data, JSON_THROW_ON_ERROR);
+            $encoded = json_encode($data, \JSON_THROW_ON_ERROR);
             throw new \RuntimeException("No entityClass given to instantiate the data: $encoded");
         }
 
@@ -92,7 +92,7 @@ class Helper
 
         foreach ($this->getImportableProperties($className) as $property) {
             $propName = $property->getName();
-            if (!array_key_exists($propName, $data)) {
+            if (!\array_key_exists($propName, $data)) {
                 continue;
             }
 
@@ -114,13 +114,13 @@ class Helper
                     // simply set standard properties, the propertyAccessor will throw
                     // an exception if the types don't match.
                     : $data[$propName];
-            } elseif (is_object($data[$propName])) {
+            } elseif (\is_object($data[$propName])) {
                 // set already instantiated objects, we cannot modify/convert those,
                 // and the may have different classes, e.g. when the type is a union.
                 // If the object type is not allowed the propertyAccessor will throw
                 // an exception.
                 $value = $data[$propName];
-            } elseif (is_array($data[$propName]) && !$typeDetails['classname']) {
+            } elseif (\is_array($data[$propName]) && !$typeDetails['classname']) {
                 // We have an array but no type information -> the target property
                 // could be a unionType that allows multiple classes or it could
                 // be untyped. So if the importer expects us to create an instance
@@ -135,7 +135,7 @@ class Helper
                 // propertyAccessor try to set the value as is.
                 $value = $data[$propName];
             } elseif ($this->isImportableEntity($typeDetails['classname'])) {
-                if (is_int($data[$propName]) || is_string($data[$propName])) {
+                if (\is_int($data[$propName]) || \is_string($data[$propName])) {
                     if (null === $this->objectManager) {
                         throw new \RuntimeException("Found ID for $className::$propName, but objectManager is not set to find object!");
                     }
@@ -154,11 +154,11 @@ class Helper
                 // c) the collection can be set as array at once
                 $value = [];
                 foreach ($data[$propName] as $element) {
-                    if (!is_array($element) && !is_object($element)) {
+                    if (!\is_array($element) && !\is_object($element)) {
                         throw new \RuntimeException("Elements imported for $className::$propName should be either an object or an array!");
                     }
 
-                    $value[] = is_object($element)
+                    $value[] = \is_object($element)
                         // use objects directly...
                         ? $element
                         // ... or try to create, if listOf is not set than each
@@ -254,14 +254,14 @@ class Helper
             throw new \LogicException("Property $property->class::$property->name is marked with ImportableProperty but its given listOf '$listOf' is no ImportableEntity!");
         }
 
-        if (!is_array($list)) {
-            $json = json_encode($list, JSON_THROW_ON_ERROR);
+        if (!\is_array($list)) {
+            $json = json_encode($list, \JSON_THROW_ON_ERROR);
             throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but it is no array: $json!");
         }
 
         foreach ($list as $key => $entry) {
-            if (!is_array($entry)) {
-                $json = json_encode($entry, JSON_THROW_ON_ERROR);
+            if (!\is_array($entry)) {
+                $json = json_encode($entry, \JSON_THROW_ON_ERROR);
                 throw new \RuntimeException("Property $property->class::$property->name is marked as list of '$listOf' but entry is no array: $json!");
             }
 
@@ -294,7 +294,7 @@ class Helper
         /** @var \ReflectionProperty $property */
         foreach ($this->getExportableProperties($className) as $property) {
             $propName = $property->getName();
-            if (null !== $propertyFilter && !in_array($propName, $propertyFilter, true)) {
+            if (null !== $propertyFilter && !\in_array($propName, $propertyFilter, true)) {
                 continue;
             }
 
@@ -305,7 +305,7 @@ class Helper
             if (null === $propValue) {
                 $data[$propName] = null;
             } elseif ($propValue instanceof \DateTimeInterface) {
-                $data[$propName] = $propValue->format(DATE_ATOM);
+                $data[$propName] = $propValue->format(\DATE_ATOM);
             } elseif ($propValue instanceof Collection) {
                 $data[$propName] = [];
                 foreach ($propValue as $element) {
@@ -318,7 +318,7 @@ class Helper
                         $data[$propName][] = $elementData;
                     }
                 }
-            } elseif (is_object($propValue) && $this->isExportableEntity($propValue::class)) {
+            } elseif (\is_object($propValue) && $this->isExportableEntity($propValue::class)) {
                 if (null !== $referenceByIdentifier) {
                     $identifier = $this->toArray($propValue, (array) $referenceByIdentifier);
                     $data[$propName] = $identifier[$referenceByIdentifier];
@@ -328,13 +328,13 @@ class Helper
                         $data[$propName]['_entityClass'] = $propValue::class;
                     }
                 }
-            } elseif (is_array($propValue)) {
+            } elseif (\is_array($propValue)) {
                 // @todo hacky solution. Maybe merge with collection handling
                 // or determine if nested export is intended by another option
                 // on the exportAttrib, or if the importAttrib has "listOf"
                 $data[$propName] = [];
                 foreach ($propValue as $key => $element) {
-                    if (is_object($element)) {
+                    if (\is_object($element)) {
                         if (null !== $referenceByIdentifier) {
                             $identifier = $this->toArray($element, (array) $referenceByIdentifier);
                             $data[$propName][$key] = $identifier[$referenceByIdentifier];
@@ -351,7 +351,7 @@ class Helper
                         $data[$propName][$key] = $element;
                     }
                 }
-            } elseif (is_int($propValue) || is_float($propValue) || is_bool($propValue) || is_string($propValue)) {
+            } elseif (\is_int($propValue) || \is_float($propValue) || \is_bool($propValue) || \is_string($propValue)) {
                 $data[$propName] = $propValue;
             } else {
                 throw new \RuntimeException("Don't know how to export $className::$propName!");

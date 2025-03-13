@@ -65,7 +65,7 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
         }
 
         foreach (['user', 'password'] as $key) {
-            if (isset($params[$key]) && !is_string($params[$key])) {
+            if (isset($params[$key]) && !\is_string($params[$key])) {
                 throw InvalidConfiguration::notAStringOrNull($key, $params[$key]);
             }
         }

@@ -15,7 +15,7 @@ class UTCDateTimeTypeTest extends TestCase
 {
     protected MySQL80Platform $platform;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->platform = new MySQL80Platform();
     }

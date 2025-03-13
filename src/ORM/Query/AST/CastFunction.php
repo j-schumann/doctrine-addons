@@ -35,7 +35,7 @@ class CastFunction extends FunctionNode
     {
         $type = trim($this->expr2->dispatch($sqlWalker), "'");
 
-        return sprintf(
+        return \sprintf(
             'CAST(%s as %s)',
             $this->expr1->dispatch($sqlWalker),
             $type

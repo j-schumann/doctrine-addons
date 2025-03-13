@@ -17,7 +17,7 @@ class NormalizerHelperTest extends TestCase
         self::assertSame('test', NormalizerHelper::stripHtml("\ttest\r\n"));
 
         self::assertSame('a"bc123', NormalizerHelper::stripHtml('a&quot;bc<br>123'));
-        self::assertSame('a bc123', NormalizerHelper::stripHtml('<span>a&nbsp;bc<br>123</span>'));
+        self::assertSame("a\u{a0}bc123", NormalizerHelper::stripHtml('<span>a&nbsp;bc<br>123</span>'));
     }
 
     public function testGetTextLength(): void

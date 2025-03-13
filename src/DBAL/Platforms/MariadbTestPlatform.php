@@ -14,6 +14,6 @@ class MariadbTestPlatform extends MariaDB1052Platform
 {
     public function getTruncateTableSQL($tableName, $cascade = false): string
     {
-        return sprintf('SET foreign_key_checks = 0;TRUNCATE %s;SET foreign_key_checks = 1;', $tableName);
+        return \sprintf('SET foreign_key_checks = 0;TRUNCATE %s;SET foreign_key_checks = 1;', $tableName);
     }
 }

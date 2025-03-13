@@ -15,7 +15,7 @@ class SmallJsonTypeTest extends TestCase
 {
     protected MySQL80Platform $platform;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->platform = new MySQL80Platform();
     }
@@ -32,7 +32,7 @@ class SmallJsonTypeTest extends TestCase
         $type = new SmallJsonType();
 
         $this->expectException(ConversionException::class);
-        $type->convertToDatabaseValue(NAN, $this->platform);
+        $type->convertToDatabaseValue(\NAN, $this->platform);
     }
 
     public function testConvertToDatabaseValueReturnsString(): void

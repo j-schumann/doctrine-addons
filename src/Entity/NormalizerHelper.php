@@ -99,7 +99,7 @@ abstract class NormalizerHelper
                 continue;
             }
 
-            if (!is_string($value)) {
+            if (!\is_string($value)) {
                 // this method is used in a setter, before validation occurs,
                 // keep the invalid value for the type(string) validator.
                 $cleaned[] = $value;
@@ -138,7 +138,7 @@ abstract class NormalizerHelper
                 continue;
             }
 
-            if (!is_string($value)) {
+            if (!\is_string($value)) {
                 // this method is used in a setter, before validation occurs,
                 // keep the invalid value for the type(string) validator.
                 $cleaned[$key] = $value;
@@ -158,8 +158,8 @@ abstract class NormalizerHelper
             }
         }
 
-        $newCount = count($cleaned);
-        if (!$keepIndices && $newCount !== count($values)) {
+        $newCount = \count($cleaned);
+        if (!$keepIndices && $newCount !== \count($values)) {
             $cleaned = array_values($cleaned);
         }
 
@@ -186,7 +186,7 @@ abstract class NormalizerHelper
             }
         }
 
-        return count($cleaned) ? $cleaned : null;
+        return \count($cleaned) ? $cleaned : null;
     }
 
     /**
