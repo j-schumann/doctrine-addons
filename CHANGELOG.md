@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   was used separately from Gedmo\DoctrineExtensions and also when Cyrillic 
   words/letters are used.
 
+### Deprecated
+- `ImportExport\Helper` and it's corresponding PHP attributes will be removed in
+  3.0, please use the standalone package `vrok\import-export` instead, it has 
+  improved functionality & usability (less attributes to use).
+
 ## [2.13.0] - 2024-10-15
 ### Updated
 - support for DBAL 4.0 

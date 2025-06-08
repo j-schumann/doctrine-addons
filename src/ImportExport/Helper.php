@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\ImportExport;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Deprecations\Deprecation;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -16,6 +17,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  * with #[ImportableEntity].
  * Uses Symfony's PropertyAccess to get/set properties using the correct
  * getters/setters (which also supports hassers and issers).
+ *
+ * @Deprecated use
  */
 class Helper
 {
@@ -33,6 +36,11 @@ class Helper
 
     public function __construct()
     {
+        @trigger_error(
+            'ImportExport\Helper is deprecated and will be removed in 3.0, use the standalone package vrok\import-export instead!',
+            E_USER_DEPRECATED
+        );
+
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->enableExceptionOnInvalidIndex()
             ->getPropertyAccessor();
