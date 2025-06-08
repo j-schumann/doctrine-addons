@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Vrok\DoctrineAddons\ImportExport;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Deprecations\Deprecation;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -38,7 +37,7 @@ class Helper
     {
         @trigger_error(
             'ImportExport\Helper is deprecated and will be removed in 3.0, use the standalone package vrok\import-export instead!',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
