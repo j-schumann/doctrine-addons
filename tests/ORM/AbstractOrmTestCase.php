@@ -6,14 +6,18 @@ declare(strict_types=1);
 
 namespace Vrok\DoctrineAddons\Tests\ORM;
 
+use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
+use Gedmo\Sluggable\SluggableListener;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
+use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
+use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 
 abstract class AbstractOrmTestCase extends TestCase
 {
@@ -42,7 +46,19 @@ abstract class AbstractOrmTestCase extends TestCase
             $this->configuration
         );
 
-        $this->em = new EntityManager($conn, $this->configuration);
+        // Event manager
+        $evm = new EventManager();
+
+        // Set up the Sluggable listener to test the UmlautTransliterator in
+        // combination with Gedmo's Urlizer.
+        $sluggableListener = new SluggableListener();
+        $sluggableListener->setTransliterator(
+            [UmlautTransliterator::class, 'transliterate']
+        );
+
+        $evm->addEventSubscriber($sluggableListener);
+
+        $this->em = new EntityManager($conn, $this->configuration, $evm);
 
         return $this->em;
     }
@@ -57,6 +73,7 @@ abstract class AbstractOrmTestCase extends TestCase
         $classes = [
             $this->em->getClassMetadata(ImportEntity::class),
             $this->em->getClassMetadata(TestEntity::class),
+            $this->em->getClassMetadata(SlugEntity::class),
         ];
         $tool->dropSchema($classes);
         $tool->createSchema($classes);

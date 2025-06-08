@@ -18,9 +18,29 @@ class UmlautTransliterator
             return '';
         }
 
-        $text = Transliterator::unaccent($text);
-        $text = Transliterator::transliterate($text, $separator);
+        // Opinionated implementation:
+        // The default behavior of Behat\Transliterator and PHP's internal
+        // Transliterator would be to replace umlauts with "a, o, u" instead
+        // of "ae, oe, ue", but the latter improves readability in German a lot.
+        // Also Russian-Latin/BGN improves readability, as it returns
+        // "i ya lyublyu php" instead of "i a lublu php" for "И я люблю PHP".
+        $rules = '
+                ä > ae ;
+                ö > oe ;
+                ü > ue ;
+                Ä > Ae ;
+                Ö > Oe ;
+                Ü > Ue ;
+                ß > ss ;
+                :: Russian-Latin/BGN;
+                :: Any-Latin ;
+                :: Latin-ASCII ;
+            ';
+        $transliterator = \Transliterator::createFromRules(
+            $rules,
+            \Transliterator::FORWARD
+        );
 
-        return $text;
+        return $transliterator->transliterate($text);
     }
 }

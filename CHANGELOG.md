@@ -3,10 +3,17 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.0] - 2025-06-08
+### Updated
+- Updated `UmlautTransliterator` to work without the abandoned
+  Behat\Transliterator. This may cause BC breaks in case the UmlautTransliterator
+  was used separately from Gedmo\DoctrineExtensions and also when Cyrillic 
+  words/letters are used.
+
 ## [2.13.0] - 2024-10-15
 ### Updated
 - support for DBAL 4.0 
-- removed supportfor DBAL 3.x
+- removed support for DBAL 3.x
 
 ## [2.12.0] - 2024-09-25
 ### Updated

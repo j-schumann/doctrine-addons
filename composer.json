@@ -12,6 +12,7 @@
     "require-dev": {
         "ext-intl": "*",
         "doctrine/orm": "^3.0.2",
+        "gedmo/doctrine-extensions": "^3.0.0",
         "friendsofphp/php-cs-fixer": "^3.71.0",
         "behat/transliterator": "^v1.4.0",
         "phpunit/phpunit": "^11.5.12",
@@ -26,7 +27,6 @@
     },
     "suggest": {
         "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",
-        "behat/transliterator": "For Util\\UmlautTransliterator",
         "symfony/property-access": "For ImportExport\\Helper",
         "symfony/serializer": "For Entity\\LockableTrait"
     },
