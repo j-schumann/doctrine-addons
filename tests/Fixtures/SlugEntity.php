@@ -13,7 +13,7 @@ class SlugEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    public ?int $id;
+    public ?int $id = null;
 
     #[ORM\Column]
     public string $title = '';

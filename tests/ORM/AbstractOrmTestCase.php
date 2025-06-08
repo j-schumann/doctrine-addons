@@ -53,7 +53,7 @@ abstract class AbstractOrmTestCase extends TestCase
         // combination with Gedmo's Urlizer.
         $sluggableListener = new SluggableListener();
         $sluggableListener->setTransliterator(
-            [UmlautTransliterator::class, 'transliterate']
+            UmlautTransliterator::transliterate(...)
         );
 
         $evm->addEventSubscriber($sluggableListener);
