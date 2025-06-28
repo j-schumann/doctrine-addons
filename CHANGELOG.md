@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.1] - 2025-06-28
+### Fixed
+- Updated `UmlautTransliterator` to handle superscript/subscript numbers, as the
+  Behat\Transliterator previously did.
+- Removed the unused dependency to Behat\Transliterator
+
+
 ## [2.14.0] - 2025-06-08
 ### Updated
 - Updated `UmlautTransliterator` to work without the abandoned

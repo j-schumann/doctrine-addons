@@ -37,12 +37,12 @@ class UmlautTransliteratorTest extends AbstractOrmTestCase
         $this->setupSchema();
 
         $record = new SlugEntity();
-        $record->title = 'A æ Übérmensch på høyeste nivå! И я люблю PHP! есть. ﬁ 北京';
+        $record->title = 'A æ Übérmensch på høyeste nivå! И я люблю PHP! есть. ﬁ 北京 ⁴₇';
         $em->persist($record);
         $em->flush();
 
         self::assertSame(
-            'a-ae-uebermensch-pa-hoyeste-niva-i-ya-lyublyu-php-yest-fi-bei-jing',
+            'a-ae-uebermensch-pa-hoyeste-niva-i-ya-lyublyu-php-yest-fi-bei-jing-47',
             $record->slug
         );
     }

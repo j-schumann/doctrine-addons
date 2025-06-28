@@ -14,7 +14,6 @@
         "doctrine/orm": "^3.0.2",
         "gedmo/doctrine-extensions": "^3.0.0",
         "friendsofphp/php-cs-fixer": "^3.71.0",
-        "behat/transliterator": "^v1.4.0",
         "phpunit/phpunit": "^11.5.12",
         "rector/rector": "^2.0.10",
         "roave/security-advisories": "dev-latest",
