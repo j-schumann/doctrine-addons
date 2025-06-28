@@ -31,6 +31,7 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
  */
 class MariadbTestDriver extends AbstractMySQLDriver
 {
+    #[\Override]
     public function getDatabasePlatform(ServerVersionProvider $versionProvider): AbstractMySQLPlatform
     {
         $version = $versionProvider->getServerVersion();

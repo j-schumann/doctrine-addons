@@ -28,6 +28,7 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
 {
     use PDOConnect;
 
+    #[\Override]
     public function getDatabasePlatform(ServerVersionProvider $versionProvider): PostgreSQLPlatform
     {
         $version = $versionProvider->getServerVersion();

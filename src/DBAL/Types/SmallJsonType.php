@@ -25,6 +25,7 @@ class SmallJsonType extends StringType
         return true;
     }
 
+    #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (null === $value) {
@@ -38,6 +39,7 @@ class SmallJsonType extends StringType
         }
     }
 
+    #[\Override]
     public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
         if (null === $value || '' === $value) {

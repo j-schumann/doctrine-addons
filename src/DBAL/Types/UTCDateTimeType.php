@@ -21,6 +21,7 @@ class UTCDateTimeType extends DateTimeImmutableType
     /**
      * @throws ConversionException
      */
+    #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (null === $value) {
@@ -47,6 +48,7 @@ class UTCDateTimeType extends DateTimeImmutableType
     /**
      * @throws ConversionException
      */
+    #[\Override]
     public function convertToPHPValue($value, AbstractPlatform $platform): ?\DateTimeImmutable
     {
         if (null === $value || $value instanceof \DateTimeImmutable) {
