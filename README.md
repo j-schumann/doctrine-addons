@@ -119,7 +119,8 @@ a Symfony group attribute of `default:read`.
 
 Add this to your services.yaml to have ae, ue, oe in your slugs instead of
 a, u, o for ä, ü, ö.  
-This also handles some other chars, e.g. accents.
+This also handles some other chars, e.g. accents.  
+Requires `symfony/translation-contracts`.
 ```yaml
     # Symfony 7.x
     gedmo.listener.sluggable:

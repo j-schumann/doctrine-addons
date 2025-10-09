@@ -13,13 +13,14 @@
         "ext-intl": "*",
         "doctrine/orm": "^3.0.2",
         "gedmo/doctrine-extensions": "^3.0.0",
-        "friendsofphp/php-cs-fixer": "^3.75.0",
-        "phpunit/phpunit": "^12.2.5",
-        "rector/rector": "^2.1.0",
+        "friendsofphp/php-cs-fixer": "^3.88.2",
+        "phpunit/phpunit": "^12.4.0",
+        "rector/rector": "^2.2.1",
         "roave/security-advisories": "dev-latest",
         "symfony/cache": "^7.0.0",
         "symfony/property-access": "^7.0.0",
-        "symfony/serializer": "^7.0.0"
+        "symfony/serializer": "^7.0.0",
+        "symfony/translation-contracts": "^3.6.0"
     },
     "conflict": {
         "behat/transliterator": "<1.5",

@@ -28,10 +28,12 @@ abstract class AbstractOrmTestCase extends TestCase
     {
         parent::setUp();
 
-        $configuration = ORMSetup::createAttributeMetadataConfiguration(
+        $configuration = ORMSetup::createAttributeMetadataConfig(
             [__DIR__.'/../Fixtures'],
             true
         );
+
+        // @todo Remove with ORM 4.0:
         $configuration->setProxyDir(sys_get_temp_dir());
         $configuration->setProxyNamespace('Tests\Fixtures\Proxies');
         $configuration->setAutoGenerateProxyClasses(true);
