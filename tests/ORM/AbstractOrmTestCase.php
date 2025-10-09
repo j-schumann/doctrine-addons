@@ -28,7 +28,9 @@ abstract class AbstractOrmTestCase extends TestCase
     {
         parent::setUp();
 
-        $configuration = ORMSetup::createAttributeMetadataConfig(
+        // @todo Replace with createAttributeMetadataConfig when minimum required
+        //       doctrine/orm is 3.5.x
+        $configuration = ORMSetup::createAttributeMetadataConfiguration(
             [__DIR__.'/../Fixtures'],
             true
         );
