@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
-class MariadbTestDriverTest extends TestCase
+final class MariadbTestDriverTest extends TestCase
 {
     public function testReturnsCorrectPlatform(): void
     {

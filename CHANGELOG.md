@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.16.0] - TBD
+### Updated
+- removed support for Symfony < 7.2
+
 ## [2.15.0] - 2025-06-28
 ### Updated
 - removed support for PHP 8.2
@@ -23,7 +27,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Deprecated
 - `ImportExport\Helper` and it's corresponding PHP attributes will be removed in
   3.0, please use the standalone package `vrok\import-export` instead, it has 
-  improved functionality & usability (less attributes to use).
+  improved functionality & usability (fewer attributes to use).
 
 ## [2.13.0] - 2024-10-15
 ### Updated

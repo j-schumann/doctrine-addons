@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\Entity;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Entity\NormalizerHelper;
 
-class NormalizerHelperTest extends TestCase
+final class NormalizerHelperTest extends TestCase
 {
     public function testStripHtml(): void
     {

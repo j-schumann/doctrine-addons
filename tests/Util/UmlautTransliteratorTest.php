@@ -8,7 +8,7 @@ use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 
-class UmlautTransliteratorTest extends AbstractOrmTestCase
+final class UmlautTransliteratorTest extends AbstractOrmTestCase
 {
     public function testTransliterate(): void
     {

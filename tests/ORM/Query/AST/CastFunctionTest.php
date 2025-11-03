@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 use Vrok\DoctrineAddons\ORM\Query\AST\CastFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-class CastFunctionTest extends AbstractOrmTestCase
+final class CastFunctionTest extends AbstractOrmTestCase
 {
     public function testFunction(): void
     {

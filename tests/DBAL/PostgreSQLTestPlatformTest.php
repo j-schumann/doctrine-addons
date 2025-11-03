@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
 
-class PostgreSQLTestPlatformTest extends TestCase
+final class PostgreSQLTestPlatformTest extends TestCase
 {
     public function testGetTruncateTableSql(): void
     {

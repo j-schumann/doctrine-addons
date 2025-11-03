@@ -13,7 +13,7 @@ use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\NestedDTO;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestDTO;
 
-class ExportTest extends TestCase
+final class ExportTest extends TestCase
 {
     public function testExportWithGetter(): void
     {

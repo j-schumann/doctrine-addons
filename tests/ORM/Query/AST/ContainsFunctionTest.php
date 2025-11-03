@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 use Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-class ContainsFunctionTest extends AbstractOrmTestCase
+final class ContainsFunctionTest extends AbstractOrmTestCase
 {
     public function testFunction(): void
     {

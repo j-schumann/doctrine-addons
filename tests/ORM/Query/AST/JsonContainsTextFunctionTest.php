@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-class JsonContainsTextFunctionTest extends AbstractOrmTestCase
+final class JsonContainsTextFunctionTest extends AbstractOrmTestCase
 {
     public function testFunction(): void
     {

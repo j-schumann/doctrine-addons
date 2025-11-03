@@ -11,7 +11,7 @@ use Doctrine\DBAL\Types\ConversionException;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\SmallJsonType;
 
-class SmallJsonTypeTest extends TestCase
+final class SmallJsonTypeTest extends TestCase
 {
     protected MySQL80Platform $platform;
 

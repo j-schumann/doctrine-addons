@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\PostgreSQLTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
 
-class PostgreSQLTestDriverTest extends TestCase
+final class PostgreSQLTestDriverTest extends TestCase
 {
     public function testReturnsCorrectPlatform(): void
     {

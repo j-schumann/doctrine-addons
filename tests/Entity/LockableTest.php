@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Entity\LockableInterface;
 use Vrok\DoctrineAddons\Tests\Fixtures\LockableEntity;
 
-class LockableTest extends TestCase
+final class LockableTest extends TestCase
 {
     public function testLockableInterface(): void
     {

@@ -13,7 +13,7 @@ use Vrok\DoctrineAddons\Tests\Fixtures\TestDTO;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-class ImportTest extends AbstractOrmTestCase
+final class ImportTest extends AbstractOrmTestCase
 {
     public function testImportWithSetter(): void
     {

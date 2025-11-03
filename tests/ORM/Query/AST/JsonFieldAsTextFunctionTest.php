@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-class JsonFieldAsTextFunctionTest extends AbstractOrmTestCase
+final class JsonFieldAsTextFunctionTest extends AbstractOrmTestCase
 {
     public function testFunction(): void
     {

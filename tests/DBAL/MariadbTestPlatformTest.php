@@ -7,7 +7,7 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
-class MariadbTestPlatformTest extends TestCase
+final class MariadbTestPlatformTest extends TestCase
 {
     public function testGetTruncateTableSql(): void
     {

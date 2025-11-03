@@ -11,7 +11,7 @@ use Doctrine\DBAL\Types\ConversionException;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType;
 
-class UTCDateTimeTypeTest extends TestCase
+final class UTCDateTimeTypeTest extends TestCase
 {
     protected MySQL80Platform $platform;
 
