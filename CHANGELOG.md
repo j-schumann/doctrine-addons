@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [2.16.0] - TBD
 ### Updated
 - removed support for Symfony < 7.2
+- removed support for doctrine/dbal < 4.3
 
 ## [2.15.0] - 2025-06-28
 ### Updated
