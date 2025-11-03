@@ -28,24 +28,15 @@ abstract class AbstractOrmTestCase extends TestCase
     {
         parent::setUp();
 
-        $version = \Composer\InstalledVersions::getVersion('doctrine/orm');
-        if (\Composer\Semver\Comparator::greaterThanOrEqualTo($version, '4.0')) {
-            $configuration = ORMSetup::createAttributeMetadataConfig(
-                [__DIR__.'/Fixtures'],
-                true
-            );
-        }
-        // @todo remove when only ORM 4.x is supported
-        else {
-            $configuration = ORMSetup::createAttributeMetadataConfiguration(
-                [__DIR__.'/Fixtures'],
-                true
-            );
+        $configuration = ORMSetup::createAttributeMetadataConfig(
+            [__DIR__.'/Fixtures'],
+            true
+        );
 
-            $configuration->setProxyDir(sys_get_temp_dir());
-            $configuration->setProxyNamespace('Tests\Fixtures\Proxies');
-            $configuration->setAutoGenerateProxyClasses(true);
-        }
+        // @todo Remove with ORM 4.0:
+        $configuration->setProxyDir(sys_get_temp_dir());
+        $configuration->setProxyNamespace('Tests\Fixtures\Proxies');
+        $configuration->setAutoGenerateProxyClasses(true);
 
         $this->configuration = $configuration;
     }
