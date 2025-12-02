@@ -122,7 +122,6 @@ a, u, o for ä, ü, ö.
 This also handles some other chars, e.g. accents.  
 Requires `symfony/translation-contracts`.
 ```yaml
-    # Symfony 7.x
     gedmo.listener.sluggable:
       class: Gedmo\Sluggable\SluggableListener
       tags:

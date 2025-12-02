@@ -3,14 +3,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.16.0] - 2025-12-02
+## [3.0.0] - 2025-12-02
 ### Added
-- support for Symfony 8
+- Support for Symfony 8
 
-### Updated
-- removed support for Symfony < 7.2
-- removed support for doctrine/dbal < 4.3
-- removed support for doctrine/orm < 3.5
+### Removed
+- Removed the Import/Export functionality, use vrok/import-export instead
+- Removed support for PHP < 8.4
+- Removed support for Symfony < 7.4
+- Removed support for doctrine/dbal < 4.3
+- Removed support for doctrine/orm < 3.5
 
 ## [2.15.0] - 2025-06-28
 ### Updated

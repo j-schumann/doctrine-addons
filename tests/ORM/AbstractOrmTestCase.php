@@ -14,7 +14,6 @@ use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Gedmo\Sluggable\SluggableListener;
 use PHPUnit\Framework\TestCase;
-use Vrok\DoctrineAddons\Tests\Fixtures\ImportEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
@@ -74,7 +73,6 @@ abstract class AbstractOrmTestCase extends TestCase
 
         $tool = new SchemaTool($this->em);
         $classes = [
-            $this->em->getClassMetadata(ImportEntity::class),
             $this->em->getClassMetadata(TestEntity::class),
             $this->em->getClassMetadata(SlugEntity::class),
         ];
