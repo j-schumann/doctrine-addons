@@ -32,6 +32,7 @@ abstract class AbstractOrmTestCase extends TestCase
             [__DIR__.'/Fixtures'],
             true
         );
+        $configuration->enableNativeLazyObjects(true);
 
         // @todo Remove with ORM 4.0:
         $configuration->setProxyDir(sys_get_temp_dir());
