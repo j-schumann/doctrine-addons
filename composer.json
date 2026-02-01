@@ -13,15 +13,16 @@
         "ext-intl": "*",
         "doctrine/orm": "^3.5.0|^4.0.x-dev",
         "gedmo/doctrine-extensions": "^3.18.0",
-        "friendsofphp/php-cs-fixer": "^3.91.2",
-        "phpunit/phpunit": "^12.4.5",
-        "rector/rector": "^2.2.11",
+        "friendsofphp/php-cs-fixer": "^3.93.1",
+        "phpunit/phpunit": "^12.5.8",
+        "rector/rector": "^2.3.5",
         "roave/security-advisories": "dev-latest",
-        "symfony/cache": "^7.4.0|8.0.0",
-        "symfony/property-access": "^7.4.0|8.0.0",
-        "symfony/serializer": "^7.4.0|8.0.0",
+        "symfony/cache": "^7.4.0|^8.0.0",
+        "symfony/property-access": "^7.4.0|^8.0.0",
+        "symfony/serializer": "^7.4.0|^8.0.0",
         "symfony/translation-contracts": "^3.6.0",
-        "symfony/var-exporter": "^7.4.0|8.0.0"
+        "symfony/var-exporter": "^7.4.0|^8.0.0",
+        "vrok/symfony-addons": "^3.3.0"
     },
     "conflict": {
         "behat/transliterator": "<1.5",

@@ -3,9 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] - TBD
+## [3.1.0] - 2026-02-01
 ### Added
 - Support for doctrine/orm 4
+
+### Fixed
+- Support for Symfony 8
  
 ## [3.0.0] - 2025-12-02
 ### Added

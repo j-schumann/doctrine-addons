@@ -28,11 +28,11 @@ class UTCDateTimeType extends DateTimeImmutableType
             return null;
         }
 
-        if (!($value instanceof \DateTimeInterface)) {
+        if (!$value instanceof \DateTimeInterface) {
             throw InvalidType::new($value, static::class, ['DateTime', 'DateTimeImmutable', 'DateTimeInterface']);
         }
 
-        if (!($value instanceof \DateTimeImmutable)) {
+        if (!$value instanceof \DateTimeImmutable) {
             $value = \DateTimeImmutable::createFromMutable($value);
         }
 
