@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Tests\Util;
 
 use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
@@ -38,6 +36,7 @@ final class UmlautTransliteratorTest extends AbstractOrmTestCase
 
         $record = new SlugEntity();
         $record->title = 'A æ Übérmensch på høyeste nivå! И я люблю PHP! есть. ﬁ 北京 ⁴₇';
+
         $em->persist($record);
         $em->flush();
 

@@ -2,8 +2,6 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Platforms\MySQL80Platform;
@@ -13,7 +11,7 @@ use Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType;
 
 final class UTCDateTimeTypeTest extends TestCase
 {
-    protected MySQL80Platform $platform;
+    private MySQL80Platform $platform;
 
     protected function setUp(): void
     {

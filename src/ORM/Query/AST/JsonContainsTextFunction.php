@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\ORM\Query\AST;
 
 use Doctrine\ORM\Query\AST\ArithmeticExpression;
@@ -33,6 +31,7 @@ class JsonContainsTextFunction extends FunctionNode
     {
         $parser->match(TokenType::T_IDENTIFIER);
         $parser->match(TokenType::T_OPEN_PARENTHESIS);
+
         $this->expr1 = $parser->ArithmeticExpression();
         $parser->match(TokenType::T_COMMA);
         $this->expr2 = $parser->ArithmeticExpression();

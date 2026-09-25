@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\DBAL\Driver;
 
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
@@ -113,8 +111,8 @@ class MariadbTestDriver extends AbstractMySQLDriver
                 $params['password'] ?? '',
                 $driverOptions,
             );
-        } catch (\PDOException $exception) {
-            throw Exception::new($exception);
+        } catch (\PDOException $pdoException) {
+            throw Exception::new($pdoException);
         }
 
         return new Connection($pdo);
@@ -122,6 +120,8 @@ class MariadbTestDriver extends AbstractMySQLDriver
 
     /**
      * Constructs the MySQL PDO DSN.
+     *
+     * @param array<string, mixed> $params
      */
     private function constructPdoDsn(array $params): string
     {

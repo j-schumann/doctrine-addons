@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\DBAL\Driver;
 
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
@@ -13,6 +11,7 @@ use Doctrine\DBAL\Platforms\Exception\InvalidPlatformVersion;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\ServerVersionProvider;
 use Doctrine\Deprecations\Deprecation;
+use Pdo\Pgsql;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
 
 /**
@@ -81,15 +80,15 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
                 $params['password'] ?? '',
                 $driverOptions,
             );
-        } catch (\PDOException $exception) {
-            throw Exception::new($exception);
+        } catch (\PDOException $pdoException) {
+            throw Exception::new($pdoException);
         }
 
         if (
-            !isset($driverOptions[\PDO::PGSQL_ATTR_DISABLE_PREPARES])
-            || true === $driverOptions[\PDO::PGSQL_ATTR_DISABLE_PREPARES]
+            !isset($driverOptions[Pgsql::ATTR_DISABLE_PREPARES])
+            || true === $driverOptions[Pgsql::ATTR_DISABLE_PREPARES]
         ) {
-            $pdo->setAttribute(\PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
+            $pdo->setAttribute(Pgsql::ATTR_DISABLE_PREPARES, true);
         }
 
         $connection = new Connection($pdo);
@@ -98,7 +97,7 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
          * - passing client_encoding via the 'options' param breaks pgbouncer support
          */
         if (isset($params['charset'])) {
-            $connection->exec('SET NAMES \''.$params['charset'].'\'');
+            $connection->exec("SET NAMES '".$params['charset']."'");
         }
 
         return $connection;

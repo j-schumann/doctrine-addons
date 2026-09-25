@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

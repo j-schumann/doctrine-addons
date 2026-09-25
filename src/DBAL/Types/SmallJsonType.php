@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -34,8 +32,8 @@ class SmallJsonType extends StringType
 
         try {
             return json_encode($value, \JSON_THROW_ON_ERROR | \JSON_PRESERVE_ZERO_FRACTION);
-        } catch (\JsonException $e) {
-            throw SerializationFailed::new($value, 'json', $e->getMessage(), $e);
+        } catch (\JsonException $jsonException) {
+            throw SerializationFailed::new($value, 'json', $jsonException->getMessage(), $jsonException);
         }
     }
 
@@ -52,8 +50,8 @@ class SmallJsonType extends StringType
 
         try {
             return json_decode((string) $value, true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            throw ValueNotConvertible::new($value, 'json', $e->getMessage(), $e);
+        } catch (\JsonException $jsonException) {
+            throw ValueNotConvertible::new($value, 'json', $jsonException->getMessage(), $jsonException);
         }
     }
 }

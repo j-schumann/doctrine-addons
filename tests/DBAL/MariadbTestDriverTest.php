@@ -2,8 +2,6 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;

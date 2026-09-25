@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use Vrok\DoctrineAddons\ORM\Query\AST\CastFunction;

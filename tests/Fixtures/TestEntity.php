@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
 use Doctrine\DBAL\Types\Types;

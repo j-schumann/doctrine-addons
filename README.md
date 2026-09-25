@@ -131,3 +131,8 @@ Requires `symfony/translation-contracts`.
       calls:
         - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
 ```
+
+## Developer ToDo
+
+* next major: remove UTCDateTimeType
+* next major: remove TestDrivers?

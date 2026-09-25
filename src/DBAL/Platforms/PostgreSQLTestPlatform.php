@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\DBAL\Platforms;
 
 use Doctrine\DBAL\Platforms\PostgreSQL120Platform;

@@ -2,8 +2,6 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-declare(strict_types=1);
-
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
@@ -24,7 +22,7 @@ final class PostgreSQLTestDriverTest extends TestCase
     public function testConnectInterpretsParams(): void
     {
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('connection to server at "localhost" (127.0.0.1), port 5432 failed');
+        $this->expectExceptionMessageIsOrContains('connection to server at "localhost" (127.0.0.1), port 5432 failed');
 
         $driver = new PostgreSQLTestDriver();
         $driver->connect([
