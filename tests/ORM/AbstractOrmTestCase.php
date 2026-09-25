@@ -30,12 +30,6 @@ abstract class AbstractOrmTestCase extends TestCase
             true
         );
         $configuration->enableNativeLazyObjects(true);
-
-        // @todo Remove with ORM 4.0:
-        $configuration->setProxyDir(sys_get_temp_dir());
-        $configuration->setProxyNamespace('Tests\Fixtures\Proxies');
-        $configuration->setAutoGenerateProxyClasses(true);
-
         $this->configuration = $configuration;
     }
 
