@@ -18,6 +18,14 @@ final class SmallJsonTypeTest extends TestCase
         $this->platform = new MySQL80Platform();
     }
 
+    public function testSqlDeclarationDefaultsLength(): void
+    {
+        $type = new SmallJsonType();
+
+        self::assertSame('VARCHAR(255)', $type->getSQLDeclaration([], $this->platform));
+        self::assertSame('VARCHAR(100)', $type->getSQLDeclaration(['length' => 100], $this->platform));
+    }
+
     public function testConvertToDatabaseValueAllowsNull(): void
     {
         $type = new SmallJsonType();
