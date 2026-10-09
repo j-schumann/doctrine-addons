@@ -26,7 +26,8 @@ final class PostgreSQLTestDriverTest extends TestCase
     public function testConnectInterpretsParams(): void
     {
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageIsOrContains('connection to server at "localhost" (127.0.0.1), port 5432 failed');
+        // the IP depends on the resolution of localhost, e.g. ::1 when a server is running
+        $this->expectExceptionMessageMatches('/connection to server at "localhost" \\(.+\\), port 5432 failed/');
 
         $driver = new PostgreSQLTestDriver();
         $driver->connect([
