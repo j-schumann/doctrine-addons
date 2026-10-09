@@ -23,6 +23,18 @@ class SmallJsonType extends StringType
         return true;
     }
 
+    /**
+     * The ORM only defaults the length for the "string" type, but MySQL and
+     * MariaDB require the length of a VARCHAR column.
+     */
+    #[\Override]
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    {
+        $column['length'] ??= 255;
+
+        return parent::getSQLDeclaration($column, $platform);
+    }
+
     #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
