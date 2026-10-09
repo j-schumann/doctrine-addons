@@ -30,6 +30,18 @@ $qb->andWhere("JSON_CONTAINS_TEXT(u.roles, :searchRole) = true")
    ->setParameter('searchRole', 'ROLE_ADMIN');
 ```
 
+`JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` allow to use the
+[postgres-only "?|" and "?&" operators](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
+to search for any or all of multiple strings within jsonb fields, e.g. to filter users that
+have at least one of the given roles. The parameter is an array, a single string is treated
+as an array with one element.
+Beware: For an empty array, `JSON_CONTAINS_ANY_TEXT` matches no record, `JSON_CONTAINS_ALL_TEXT`
+matches every record.
+```php
+$qb->andWhere("JSON_CONTAINS_ANY_TEXT(u.roles, :searchRoles) = true")
+   ->setParameter('searchRoles', ['ROLE_ADMIN', 'ROLE_EDITOR']);
+```
+
 `JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/9.5/functions-json.html#FUNCTIONS-JSON)
 to get JSON data within a jsonb fields as string.
 This for example allows to search for records that embed JSON,
@@ -49,6 +61,8 @@ doctrine:
                 CAST: Vrok\DoctrineAddons\ORM\Query\AST\CastFunction
                 CONTAINS: Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction
                 JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
+                JSON_CONTAINS_ANY_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAnyTextFunction
+                JSON_CONTAINS_ALL_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAllTextFunction
                 JSON_FIELD_AS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction
 ```
 
