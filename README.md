@@ -132,7 +132,17 @@ Requires `symfony/translation-contracts`.
         - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
 ```
 
+## Running the tests
+
+By default the tests use an in-memory SQLite database. Set `DATABASE_URL` to run the
+integration tests against another database, the CI does this for Postgres, MySQL, MariaDB
+and SQL Server. Tests for features of other databases are skipped:
+```bash
+DATABASE_URL="pgsql://user:password@localhost:5432/dbname?serverVersion=18" vendor/bin/phpunit
+```
+
 ## Developer ToDo
+
 
 * next major: remove UTCDateTimeType
 * next major: remove TestDrivers?
