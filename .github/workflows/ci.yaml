@@ -1,7 +1,10 @@
 name: "Continuous Integration"
 
 on:
+  # pushes to feature branches are covered by their pull requests, running
+  # both would test every commit twice
   push:
+    branches: [ main, develop ]
   pull_request:
   workflow_dispatch:
 
@@ -36,7 +39,7 @@ jobs:
           - 3306:3306
     strategy:
       matrix:
-        php: [ '8.5', '8.6' ]
+        php: [ '8.4', '8.5', '8.6' ]
         database: [ mariadb ]
         dependencies: [ lowest, highest ]
       fail-fast: false # continue the other jobs if one fails
@@ -86,7 +89,7 @@ jobs:
           - 3306:3306
     strategy:
       matrix:
-        php: [ '8.5', '8.6' ]
+        php: [ '8.4', '8.5', '8.6' ]
         database: [ mysql ]
         dependencies: [ lowest, highest ]
       fail-fast: false # continue the other jobs if one fails
@@ -135,7 +138,7 @@ jobs:
           --health-retries 5
     strategy:
       matrix:
-        php: [ '8.5', '8.6' ]
+        php: [ '8.4', '8.5', '8.6' ]
         database: [ postgres ]
         dependencies: [ lowest, highest ]
       fail-fast: false # continue the other jobs if one fails
@@ -227,7 +230,7 @@ jobs:
           - "1433:1433"
     strategy:
       matrix:
-        php: [ '8.5', '8.6' ]
+        php: [ '8.4', '8.5', '8.6' ]
         database: [ sqlsrv ]
         dependencies: [ lowest, highest ]
       fail-fast: false # continue the other jobs if one fails
