@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] - 2026-10-09
+## [3.1.0] - 2026-10-11
 ### Added
 - DQL functions `JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` for the postgres-only
   `?|` and `?&` operators, to search for any or all of multiple strings within jsonb fields
