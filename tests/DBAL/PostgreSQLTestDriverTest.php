@@ -39,9 +39,6 @@ final class PostgreSQLTestDriverTest extends TestCase
         ]);
     }
 
-    /**
-     * Uses the database given in DATABASE_URL, skipped for other databases.
-     */
     #[Group('database')]
     public function testTruncateRestartsIdentity(): void
     {

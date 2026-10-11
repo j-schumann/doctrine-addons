@@ -22,9 +22,6 @@ final class MariadbTestDriverTest extends TestCase
         self::assertInstanceOf(MariadbTestPlatform::class, $platform);
     }
 
-    /**
-     * Uses the database given in DATABASE_URL, skipped for other databases.
-     */
     #[Group('database')]
     public function testTruncateIgnoresForeignKeys(): void
     {
