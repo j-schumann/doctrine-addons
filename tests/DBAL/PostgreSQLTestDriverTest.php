@@ -8,12 +8,10 @@ use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\PostgreSQLTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
-use Vrok\DoctrineAddons\Tests\TestDatabase;
 
-final class PostgreSQLTestDriverTest extends TestCase
+final class PostgreSQLTestDriverTest extends AbstractDbalTestCase
 {
     public function testReturnsCorrectPlatform(): void
     {
@@ -25,8 +23,12 @@ final class PostgreSQLTestDriverTest extends TestCase
     public function testConnectInterpretsParams(): void
     {
         $this->expectException(Exception::class);
-        // the IP depends on the resolution of localhost, e.g. ::1 when a server is running
-        $this->expectExceptionMessageMatches('/connection to server at "localhost" \\(.+\\), port 5432 failed/');
+
+        // the IP depends on the resolution of localhost, e.g. ::1 when a server
+        // is running
+        $this->expectExceptionMessageMatches(
+            '/connection to server at "localhost" \\(.+\\), port 5432 failed/'
+        );
 
         $driver = new PostgreSQLTestDriver();
         $driver->connect([
@@ -40,8 +42,9 @@ final class PostgreSQLTestDriverTest extends TestCase
 
     public function testTruncateRestartsIdentity(): void
     {
-        $params = TestDatabase::getConnectionParams();
-        if (!DriverManager::getConnection($params)->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+        $params = self::getConnectionParams();
+        $connection = DriverManager::getConnection($params);
+        if (!$connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
             self::markTestSkipped('Requires a Postgres database.');
         }
 
@@ -52,7 +55,9 @@ final class PostgreSQLTestDriverTest extends TestCase
         self::assertInstanceOf(PostgreSQLTestPlatform::class, $platform);
 
         $connection->executeStatement('DROP TABLE IF EXISTS truncate_test');
-        $connection->executeStatement('CREATE TABLE truncate_test (id SERIAL PRIMARY KEY, name VARCHAR(10))');
+        $connection->executeStatement(
+            'CREATE TABLE truncate_test (id SERIAL PRIMARY KEY, name VARCHAR(10))'
+        );
         $connection->executeStatement("INSERT INTO truncate_test (name) VALUES ('a'), ('b')");
 
         $connection->executeStatement($platform->getTruncateTableSQL('truncate_test'));

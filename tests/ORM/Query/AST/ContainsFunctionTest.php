@@ -10,7 +10,10 @@ final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
     {
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
 
-        $query = $this->buildEntityManager()->createQuery('SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE CONTAINS(t.jsonColumn, :para) = true');
+        $query = $this->buildEntityManager()->createQuery(
+            'SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t'
+            .' WHERE CONTAINS(t.jsonColumn, :para) = true'
+        );
         self::assertStringContainsString('WHERE (t0_.jsonColumn @> ?) = ', $query->getSQL());
     }
 
@@ -19,8 +22,9 @@ final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
         $this->setupRecords();
 
-        self::assertSame(['numbers'], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '5'));
-        self::assertSame(['numbers'], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '[1, 5]'));
-        self::assertSame([], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '[1, 2]'));
+        $condition = 'CONTAINS(t.jsonColumn, :value) = true';
+        self::assertSame(['numbers'], $this->findNames($condition, '5'));
+        self::assertSame(['numbers'], $this->findNames($condition, '[1, 5]'));
+        self::assertSame([], $this->findNames($condition, '[1, 2]'));
     }
 }

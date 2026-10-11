@@ -15,7 +15,9 @@ class TestEntity
     #[ORM\Column(length: 50)]
     public string $name = '';
 
-    // jsonb on Postgres, required by the DQL functions
+    /**
+     * jsonb on Postgres, required by the DQL functions.
+     */
     #[ORM\Column(type: JsonbColumn::TYPE, options: JsonbColumn::OPTIONS)]
     public array $jsonColumn = [];
 }

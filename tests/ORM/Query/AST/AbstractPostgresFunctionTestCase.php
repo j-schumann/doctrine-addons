@@ -28,10 +28,10 @@ abstract class AbstractPostgresFunctionTestCase extends AbstractOrmTestCase
         $this->setupSchema();
 
         foreach ([
-            'roles'   => ['ROLE_ADMIN', 'ROLE_EDITOR'],
+            'address' => ['city' => 'Dresden', 'zip' => '01069'],
             'blog'    => ['ROLE_ADMIN_BLOG'],
             'numbers' => [1, 5],
-            'address' => ['city' => 'Dresden', 'zip' => '01069'],
+            'roles'   => ['ROLE_ADMIN', 'ROLE_EDITOR'],
         ] as $name => $json) {
             $record = new TestEntity();
             $record->name = $name;

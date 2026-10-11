@@ -7,12 +7,10 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
-use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
-use Vrok\DoctrineAddons\Tests\TestDatabase;
 
-final class MariadbTestDriverTest extends TestCase
+final class MariadbTestDriverTest extends AbstractDbalTestCase
 {
     public function testReturnsCorrectPlatform(): void
     {
@@ -23,8 +21,9 @@ final class MariadbTestDriverTest extends TestCase
 
     public function testTruncateIgnoresForeignKeys(): void
     {
-        $params = TestDatabase::getConnectionParams();
-        if (!DriverManager::getConnection($params)->getDatabasePlatform() instanceof MariaDBPlatform) {
+        $params = self::getConnectionParams();
+        $connection = DriverManager::getConnection($params);
+        if (!$connection->getDatabasePlatform() instanceof MariaDBPlatform) {
             self::markTestSkipped('Requires a MariaDB database.');
         }
 
@@ -36,7 +35,9 @@ final class MariadbTestDriverTest extends TestCase
 
         $connection->executeStatement('DROP TABLE IF EXISTS truncate_child');
         $connection->executeStatement('DROP TABLE IF EXISTS truncate_parent');
-        $connection->executeStatement('CREATE TABLE truncate_parent (id INT AUTO_INCREMENT PRIMARY KEY) ENGINE=InnoDB');
+        $connection->executeStatement(
+            'CREATE TABLE truncate_parent (id INT AUTO_INCREMENT PRIMARY KEY) ENGINE=InnoDB'
+        );
         $connection->executeStatement(
             'CREATE TABLE truncate_child (id INT AUTO_INCREMENT PRIMARY KEY, parent_id INT,'
             .' FOREIGN KEY (parent_id) REFERENCES truncate_parent (id)) ENGINE=InnoDB'
@@ -47,7 +48,10 @@ final class MariadbTestDriverTest extends TestCase
         // a plain TRUNCATE fails for a table referenced by a foreign key
         $connection->executeStatement($platform->getTruncateTableSQL('truncate_parent'));
 
-        self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM truncate_parent'));
+        self::assertSame(
+            0,
+            (int) $connection->fetchOne('SELECT COUNT(*) FROM truncate_parent')
+        );
         $connection->executeStatement('DROP TABLE truncate_child');
         $connection->executeStatement('DROP TABLE truncate_parent');
     }
