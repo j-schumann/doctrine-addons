@@ -60,9 +60,9 @@ doctrine:
             string_functions:
                 CAST: Vrok\DoctrineAddons\ORM\Query\AST\CastFunction
                 CONTAINS: Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction
-                JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
-                JSON_CONTAINS_ANY_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAnyTextFunction
                 JSON_CONTAINS_ALL_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAllTextFunction
+                JSON_CONTAINS_ANY_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAnyTextFunction
+                JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
                 JSON_FIELD_AS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction
 ```
 
