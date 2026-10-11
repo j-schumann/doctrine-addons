@@ -8,12 +8,10 @@ use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\PostgreSQLTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
-use Vrok\DoctrineAddons\Tests\TestDatabase;
 
-final class PostgreSQLTestDriverTest extends TestCase
+final class PostgreSQLTestDriverTest extends AbstractDbalTestCase
 {
     public function testReturnsCorrectPlatform(): void
     {
@@ -40,7 +38,7 @@ final class PostgreSQLTestDriverTest extends TestCase
 
     public function testTruncateRestartsIdentity(): void
     {
-        $params = TestDatabase::getConnectionParams();
+        $params = self::getConnectionParams();
         if (!DriverManager::getConnection($params)->getDatabasePlatform() instanceof PostgreSQLPlatform) {
             self::markTestSkipped('Requires a Postgres database.');
         }

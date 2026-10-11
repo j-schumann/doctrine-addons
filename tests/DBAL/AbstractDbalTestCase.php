@@ -1,30 +1,26 @@
 <?php
 
-namespace Vrok\DoctrineAddons\Tests;
+namespace Vrok\DoctrineAddons\Tests\DBAL;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Provides the connection parameters for the database the integration tests
- * run against, see the CI jobs.
+ * Connects to the database given in DATABASE_URL, phpunit.xml.dist defaults
+ * it to an in-memory SQLite database, the CI jobs set the other platforms.
  */
-final class TestDatabase
+abstract class AbstractDbalTestCase extends TestCase
 {
     /**
-     * Returns the connection parameters for the database given in the
-     * DATABASE_URL environment variable, falls back to an in-memory SQLite
-     * database.
-     *
      * @return array<string, mixed>
      */
-    public static function getConnectionParams(): array
+    protected static function getConnectionParams(): array
     {
-        $url = $_SERVER['DATABASE_URL'] ?? $_ENV['DATABASE_URL'] ?? getenv('DATABASE_URL');
+        $url = getenv('DATABASE_URL');
         if (!\is_string($url) || '' === $url) {
-            return ['driver' => 'pdo_sqlite', 'memory' => true];
+            throw new \LogicException('DATABASE_URL is not set, see phpunit.xml.dist.');
         }
 
         return new DsnParser([
@@ -35,19 +31,14 @@ final class TestDatabase
         ])->parse($url);
     }
 
-    public static function getConnection(): Connection
-    {
-        return DriverManager::getConnection(self::getConnectionParams());
-    }
-
     /**
      * Stores the value in a column of the given type and loads it again.
      *
      * @return array{0: mixed, 1: mixed} the raw database value and the value converted by the type
      */
-    public static function storeAndLoad(Type $type, mixed $value): array
+    protected static function storeAndLoad(Type $type, mixed $value): array
     {
-        $connection = self::getConnection();
+        $connection = DriverManager::getConnection(self::getConnectionParams());
         $platform = $connection->getDatabasePlatform();
 
         $connection->executeStatement('DROP TABLE IF EXISTS type_test');

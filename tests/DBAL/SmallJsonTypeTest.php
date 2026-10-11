@@ -6,11 +6,9 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Types\ConversionException;
-use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\SmallJsonType;
-use Vrok\DoctrineAddons\Tests\TestDatabase;
 
-final class SmallJsonTypeTest extends TestCase
+final class SmallJsonTypeTest extends AbstractDbalTestCase
 {
     private MySQL80Platform $platform;
 
@@ -77,7 +75,7 @@ final class SmallJsonTypeTest extends TestCase
     {
         $data = ['text' => 'Grüße', 'float' => 1.0, 'list' => [1, 2], 'null' => null];
 
-        [, $loaded] = TestDatabase::storeAndLoad(new SmallJsonType(), $data);
+        [, $loaded] = self::storeAndLoad(new SmallJsonType(), $data);
 
         self::assertSame($data, $loaded);
     }

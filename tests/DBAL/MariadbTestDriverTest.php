@@ -7,12 +7,10 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
-use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
-use Vrok\DoctrineAddons\Tests\TestDatabase;
 
-final class MariadbTestDriverTest extends TestCase
+final class MariadbTestDriverTest extends AbstractDbalTestCase
 {
     public function testReturnsCorrectPlatform(): void
     {
@@ -23,7 +21,7 @@ final class MariadbTestDriverTest extends TestCase
 
     public function testTruncateIgnoresForeignKeys(): void
     {
-        $params = TestDatabase::getConnectionParams();
+        $params = self::getConnectionParams();
         if (!DriverManager::getConnection($params)->getDatabasePlatform() instanceof MariaDBPlatform) {
             self::markTestSkipped('Requires a MariaDB database.');
         }

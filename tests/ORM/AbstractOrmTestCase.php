@@ -11,13 +11,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Gedmo\Sluggable\SluggableListener;
-use PHPUnit\Framework\TestCase;
+use Vrok\DoctrineAddons\Tests\DBAL\AbstractDbalTestCase;
 use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
-use Vrok\DoctrineAddons\Tests\TestDatabase;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 
-abstract class AbstractOrmTestCase extends TestCase
+abstract class AbstractOrmTestCase extends AbstractDbalTestCase
 {
     protected Configuration $configuration;
     protected EntityManager $em;
@@ -35,11 +34,11 @@ abstract class AbstractOrmTestCase extends TestCase
     }
 
     /**
-     * Uses the database given in DATABASE_URL, see TestDatabase.
+     * Uses the database given in DATABASE_URL, see AbstractDbalTestCase.
      */
     protected function buildEntityManager(): EntityManager
     {
-        $conn = DriverManager::getConnection(TestDatabase::getConnectionParams(), $this->configuration);
+        $conn = DriverManager::getConnection(self::getConnectionParams(), $this->configuration);
 
         // Event manager
         $evm = new EventManager();
