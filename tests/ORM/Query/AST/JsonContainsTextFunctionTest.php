@@ -4,9 +4,8 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction;
-use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-final class JsonContainsTextFunctionTest extends AbstractOrmTestCase
+final class JsonContainsTextFunctionTest extends AbstractPostgresFunctionTestCase
 {
     public function testFunction(): void
     {
@@ -20,7 +19,7 @@ final class JsonContainsTextFunctionTest extends AbstractOrmTestCase
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('JSON_EXISTS', JsonContainsTextFunction::class);
-        $this->setupPostgresRecords();
+        $this->setupRecords();
 
         // matches only complete elements, not "ROLE_ADMIN_BLOG"
         self::assertSame(['roles'], $this->findNames('JSON_EXISTS(t.jsonColumn, :value) = true', 'ROLE_ADMIN'));

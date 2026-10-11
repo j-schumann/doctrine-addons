@@ -4,9 +4,8 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction;
-use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-final class ContainsFunctionTest extends AbstractOrmTestCase
+final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
 {
     public function testFunction(): void
     {
@@ -20,7 +19,7 @@ final class ContainsFunctionTest extends AbstractOrmTestCase
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
-        $this->setupPostgresRecords();
+        $this->setupRecords();
 
         self::assertSame(['numbers'], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '5'));
         self::assertSame(['numbers'], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '[1, 5]'));

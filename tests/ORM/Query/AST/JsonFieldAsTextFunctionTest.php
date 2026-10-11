@@ -4,9 +4,8 @@ namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction;
-use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
-final class JsonFieldAsTextFunctionTest extends AbstractOrmTestCase
+final class JsonFieldAsTextFunctionTest extends AbstractPostgresFunctionTestCase
 {
     public function testFunction(): void
     {
@@ -20,7 +19,7 @@ final class JsonFieldAsTextFunctionTest extends AbstractOrmTestCase
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('JSON_AS_TEXT', JsonFieldAsTextFunction::class);
-        $this->setupPostgresRecords();
+        $this->setupRecords();
 
         self::assertSame(['address'], $this->findNames("JSON_AS_TEXT(t.jsonColumn, 'city') = :value", 'Dresden'));
     }
