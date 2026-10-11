@@ -43,6 +43,10 @@ jobs:
       matrix:
         database: [ mariadb ]
         dependencies: [ highest, lowest ]
+        include:
+          - coverage: true
+            dependencies: highest
+            php: '8.5'
         php: [ '8.4', '8.5', '8.6' ]
     steps:
       - name: Checkout
@@ -51,17 +55,19 @@ jobs:
       - name: Common PHP setup
         uses: ./.github/actions/php-setup
         with:
+          coverage: ${{ matrix.coverage }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
 
       - name: Run tests on MariaDB
         env:
           DATABASE_URL: mysql://dbtest:dbtest@127.0.0.1:3306/dbtest?serverVersion=mariadb-12.0.0&charset=utf8mb4
-        run: vendor/bin/phpunit --log-junit build/logs/phpunit/junit.xml
+        run: vendor/bin/phpunit $PHPUNIT_COVERAGE_FLAGS --log-junit build/logs/phpunit/junit.xml
 
       - name: Upload test results
         uses: ./.github/actions/upload-phpunit-logs
         with:
+          coverage: ${{ matrix.coverage }}
           database: ${{ matrix.database }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
@@ -94,6 +100,10 @@ jobs:
       matrix:
         database: [ mysql ]
         dependencies: [ highest, lowest ]
+        include:
+          - coverage: true
+            dependencies: highest
+            php: '8.5'
         php: [ '8.4', '8.5', '8.6' ]
     steps:
       - name: Checkout
@@ -102,17 +112,19 @@ jobs:
       - name: Common PHP setup
         uses: ./.github/actions/php-setup
         with:
+          coverage: ${{ matrix.coverage }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
 
       - name: Run tests on MySQL
         env:
           DATABASE_URL: mysql://dbtest:dbtest@127.0.0.1:3306/dbtest?serverVersion=9.0&charset=utf8mb4
-        run: vendor/bin/phpunit --log-junit build/logs/phpunit/junit.xml
+        run: vendor/bin/phpunit $PHPUNIT_COVERAGE_FLAGS --log-junit build/logs/phpunit/junit.xml
 
       - name: Upload test results
         uses: ./.github/actions/upload-phpunit-logs
         with:
+          coverage: ${{ matrix.coverage }}
           database: ${{ matrix.database }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
@@ -144,6 +156,10 @@ jobs:
       matrix:
         database: [ postgres ]
         dependencies: [ highest, lowest ]
+        include:
+          - coverage: true
+            dependencies: highest
+            php: '8.5'
         php: [ '8.4', '8.5', '8.6' ]
     steps:
       - name: Checkout
@@ -152,17 +168,19 @@ jobs:
       - name: Common PHP setup
         uses: ./.github/actions/php-setup
         with:
+          coverage: ${{ matrix.coverage }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
 
       - name: Run tests on Postgres
         env:
           DATABASE_URL: pgsql://dbtest:dbtest@127.0.0.1:5432/dbtest?serverVersion=18
-        run: vendor/bin/phpunit --log-junit build/logs/phpunit/junit.xml
+        run: vendor/bin/phpunit $PHPUNIT_COVERAGE_FLAGS --log-junit build/logs/phpunit/junit.xml
 
       - name: Upload test results
         uses: ./.github/actions/upload-phpunit-logs
         with:
+          coverage: ${{ matrix.coverage }}
           database: ${{ matrix.database }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
@@ -200,14 +218,7 @@ jobs:
           # /dev/shm is the runner's tmpfs, the counterpart to the --tmpfs
           # datadirs of the other jobs
           DATABASE_URL: sqlite:////dev/shm/data.db
-        run: |
-          mkdir -p build/logs/phpunit
-          if [ "$COVERAGE" = '1' ]; then
-            vendor/bin/phpunit --coverage-clover build/logs/phpunit/clover.xml \
-              --log-junit build/logs/phpunit/junit.xml
-          else
-            vendor/bin/phpunit --log-junit build/logs/phpunit/junit.xml
-          fi
+        run: vendor/bin/phpunit $PHPUNIT_COVERAGE_FLAGS --log-junit build/logs/phpunit/junit.xml
 
       - name: Upload test results
         uses: ./.github/actions/upload-phpunit-logs
@@ -241,6 +252,10 @@ jobs:
       matrix:
         database: [ sqlsrv ]
         dependencies: [ highest, lowest ]
+        include:
+          - coverage: true
+            dependencies: highest
+            php: '8.5'
         php: [ '8.4', '8.5', '8.6' ]
     steps:
       - name: Checkout
@@ -249,6 +264,7 @@ jobs:
       - name: Common PHP setup
         uses: ./.github/actions/php-setup
         with:
+          coverage: ${{ matrix.coverage }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
 
@@ -263,11 +279,25 @@ jobs:
           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/mssql-release.list
           apt-get update
           ACCEPT_EULA=Y apt-get install -y msodbcsql18'
-          vendor/bin/phpunit --log-junit build/logs/phpunit/junit.xml
+          vendor/bin/phpunit $PHPUNIT_COVERAGE_FLAGS --log-junit build/logs/phpunit/junit.xml
 
       - name: Upload test results
         uses: ./.github/actions/upload-phpunit-logs
         with:
+          coverage: ${{ matrix.coverage }}
           database: ${{ matrix.database }}
           dependencies: ${{ matrix.dependencies }}
           php: ${{ matrix.php }}
+
+  coverage-finished:
+    name: Merge the coverage results
+    needs: [ phpunit-mariadb, phpunit-mysql, phpunit-postgres, phpunit-sqlite, phpunit-sqlsrv ]
+    runs-on: ubuntu-26.04
+
+    # also merge the uploads of the successful jobs when another job failed
+    if: always()
+    steps:
+      - name: Finish the parallel Coveralls build
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
+        with:
+          parallel-finished: true

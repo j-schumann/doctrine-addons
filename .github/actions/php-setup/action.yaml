@@ -5,7 +5,7 @@ inputs:
   coverage:
     required: false
     default: 'false'
-    description: Whether to run coverage check or not
+    description: Whether to collect the code coverage
   dependencies:
     required: true
     description: lowest|highest
@@ -19,7 +19,7 @@ runs:
     - name: Setup PHP
       uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
       with:
-        coverage: pcov
+        coverage: ${{ inputs.coverage == 'true' && 'pcov' || 'none' }}
         extensions: intl, mbstring, pdo_mysql, pdo_pgsql, pdo_sqlsrv, sqlsrv
         ini-values: memory_limit=-1
         php-version: ${{ inputs.php }}
@@ -42,10 +42,12 @@ runs:
         path: ${{ steps.composercache.outputs.dir }}
         restore-keys: ${{ runner.os }}-composer-
 
-    - name: Enable code coverage flag
+    - name: Enable code coverage
       if: inputs.coverage == 'true'
       shell: bash
-      run: echo "COVERAGE=1" >> $GITHUB_ENV
+      run: |
+        echo "PHPUNIT_COVERAGE_FLAGS=--coverage-clover build/logs/phpunit/clover.xml" \
+          >> $GITHUB_ENV
 
     - name: "Update dependencies from composer.json using composer binary provided by system"
       shell: bash
