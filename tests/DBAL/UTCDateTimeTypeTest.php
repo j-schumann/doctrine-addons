@@ -6,8 +6,10 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Types\ConversionException;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType;
+use Vrok\DoctrineAddons\Tests\TestDatabase;
 
 final class UTCDateTimeTypeTest extends TestCase
 {
@@ -73,5 +75,17 @@ final class UTCDateTimeTypeTest extends TestCase
 
         $this->expectException(ConversionException::class);
         $type->convertToPHPValue('not valid', $this->platform);
+    }
+
+    #[Group('database')]
+    public function testRoundTripWithDatabase(): void
+    {
+        $local = new \DateTimeImmutable('2026-10-09 18:30:15', new \DateTimeZone('Europe/Berlin'));
+
+        [$raw, $loaded] = TestDatabase::storeAndLoad(new UTCDateTimeType(), $local);
+
+        self::assertStringStartsWith('2026-10-09 16:30:15', $raw);
+        self::assertSame('UTC', $loaded->getTimezone()->getName());
+        self::assertSame($local->getTimestamp(), $loaded->getTimestamp());
     }
 }

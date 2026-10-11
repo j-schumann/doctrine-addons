@@ -2,6 +2,7 @@
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
+use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
@@ -13,5 +14,16 @@ final class ContainsFunctionTest extends AbstractOrmTestCase
 
         $query = $this->buildEntityManager()->createQuery('SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE CONTAINS(t.jsonColumn, :para) = true');
         self::assertSame('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE (t0_.jsonColumn @> ?) = 1', $query->getSQL());
+    }
+
+    #[Group('database')]
+    public function testWithDatabase(): void
+    {
+        $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
+        $this->setupPostgresRecords();
+
+        self::assertSame(['numbers'], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '5'));
+        self::assertSame(['numbers'], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '[1, 5]'));
+        self::assertSame([], $this->findNames('CONTAINS(t.jsonColumn, :value) = true', '[1, 2]'));
     }
 }

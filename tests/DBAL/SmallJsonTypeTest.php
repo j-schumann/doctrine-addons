@@ -6,8 +6,10 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Types\ConversionException;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\SmallJsonType;
+use Vrok\DoctrineAddons\Tests\TestDatabase;
 
 final class SmallJsonTypeTest extends TestCase
 {
@@ -70,5 +72,15 @@ final class SmallJsonTypeTest extends TestCase
         $type = new SmallJsonType();
         $this->expectException(ConversionException::class);
         $type->convertToPHPValue('{not: valid}', $this->platform);
+    }
+
+    #[Group('database')]
+    public function testRoundTripWithDatabase(): void
+    {
+        $data = ['text' => 'Grüße', 'float' => 1.0, 'list' => [1, 2], 'null' => null];
+
+        [, $loaded] = TestDatabase::storeAndLoad(new SmallJsonType(), $data);
+
+        self::assertSame($data, $loaded);
     }
 }

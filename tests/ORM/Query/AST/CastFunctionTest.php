@@ -2,6 +2,7 @@
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
+use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\CastFunction;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
@@ -13,5 +14,14 @@ final class CastFunctionTest extends AbstractOrmTestCase
 
         $query = $this->buildEntityManager()->createQuery('SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE CAST(t.jsonColumn, \'text\') = true');
         self::assertSame('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE CAST(t0_.jsonColumn as text) = 1', $query->getSQL());
+    }
+
+    #[Group('database')]
+    public function testWithDatabase(): void
+    {
+        $this->configuration->addCustomStringFunction('CAST', CastFunction::class);
+        $this->setupPostgresRecords();
+
+        self::assertSame(['address'], $this->findNames("LOWER(CAST(t.jsonColumn, 'text')) LIKE :value", '%dresden%'));
     }
 }
