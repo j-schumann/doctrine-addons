@@ -35,14 +35,11 @@ abstract class AbstractOrmTestCase extends TestCase
     }
 
     /**
-     * Uses an in-memory SQLite database by default, so tests of the generated
-     * SQL do not depend on the database the tests run against.
-     *
-     * @param array<string, mixed> $connectionParams
+     * Uses the database given in DATABASE_URL, see TestDatabase.
      */
-    protected function buildEntityManager(array $connectionParams = ['driver' => 'pdo_sqlite', 'memory' => true]): EntityManager
+    protected function buildEntityManager(): EntityManager
     {
-        $conn = DriverManager::getConnection($connectionParams, $this->configuration);
+        $conn = DriverManager::getConnection(TestDatabase::getConnectionParams(), $this->configuration);
 
         // Event manager
         $evm = new EventManager();
@@ -59,14 +56,6 @@ abstract class AbstractOrmTestCase extends TestCase
         $this->em = new EntityManager($conn, $this->configuration, $evm);
 
         return $this->em;
-    }
-
-    /**
-     * Uses the database given in DATABASE_URL, for tests that run real queries.
-     */
-    protected function buildDatabaseEntityManager(): EntityManager
-    {
-        return $this->buildEntityManager(TestDatabase::getConnectionParams());
     }
 
     protected function setupSchema(): void

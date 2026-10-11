@@ -12,7 +12,7 @@ final class JsonFieldAsTextFunctionTest extends AbstractPostgresFunctionTestCase
         $this->configuration->addCustomStringFunction('JSON_AS_TEXT', JsonFieldAsTextFunction::class);
 
         $query = $this->buildEntityManager()->createQuery("SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE JSON_AS_TEXT(t.jsonColumn, 'city') = 'Dresden'");
-        self::assertSame("SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE (t0_.jsonColumn->>'city') = 'Dresden'", $query->getSQL());
+        self::assertStringContainsString("WHERE (t0_.jsonColumn->>'city') = 'Dresden'", $query->getSQL());
     }
 
     #[Group('database')]

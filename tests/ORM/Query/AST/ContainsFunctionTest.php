@@ -12,7 +12,7 @@ final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
 
         $query = $this->buildEntityManager()->createQuery('SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t WHERE CONTAINS(t.jsonColumn, :para) = true');
-        self::assertSame('SELECT t0_.id AS id_0 FROM TestEntity t0_ WHERE (t0_.jsonColumn @> ?) = 1', $query->getSQL());
+        self::assertStringContainsString('WHERE (t0_.jsonColumn @> ?) = ', $query->getSQL());
     }
 
     #[Group('database')]

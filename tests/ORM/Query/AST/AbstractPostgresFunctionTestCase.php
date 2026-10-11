@@ -20,7 +20,7 @@ abstract class AbstractPostgresFunctionTestCase extends AbstractOrmTestCase
      */
     protected function setupRecords(): void
     {
-        $this->buildDatabaseEntityManager();
+        $this->buildEntityManager();
         if (!$this->em->getConnection()->getDatabasePlatform() instanceof PostgreSQLPlatform) {
             self::markTestSkipped('Requires a Postgres database.');
         }
