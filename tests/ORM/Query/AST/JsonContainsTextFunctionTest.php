@@ -2,7 +2,6 @@
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
-use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction;
 
 final class JsonContainsTextFunctionTest extends AbstractPostgresFunctionTestCase
@@ -15,7 +14,6 @@ final class JsonContainsTextFunctionTest extends AbstractPostgresFunctionTestCas
         self::assertStringContainsString('WHERE (t0_.jsonColumn ?? ?) = ', $query->getSQL());
     }
 
-    #[Group('database')]
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('JSON_EXISTS', JsonContainsTextFunction::class);

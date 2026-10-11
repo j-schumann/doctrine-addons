@@ -8,7 +8,6 @@ use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\PostgreSQLTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
@@ -39,7 +38,6 @@ final class PostgreSQLTestDriverTest extends TestCase
         ]);
     }
 
-    #[Group('database')]
     public function testTruncateRestartsIdentity(): void
     {
         $params = TestDatabase::getConnectionParams();

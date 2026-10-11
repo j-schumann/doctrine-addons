@@ -2,7 +2,6 @@
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
-use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction;
 
 final class JsonFieldAsTextFunctionTest extends AbstractPostgresFunctionTestCase
@@ -15,7 +14,6 @@ final class JsonFieldAsTextFunctionTest extends AbstractPostgresFunctionTestCase
         self::assertStringContainsString("WHERE (t0_.jsonColumn->>'city') = 'Dresden'", $query->getSQL());
     }
 
-    #[Group('database')]
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('JSON_AS_TEXT', JsonFieldAsTextFunction::class);

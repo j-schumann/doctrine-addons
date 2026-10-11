@@ -7,7 +7,6 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
@@ -22,7 +21,6 @@ final class MariadbTestDriverTest extends TestCase
         self::assertInstanceOf(MariadbTestPlatform::class, $platform);
     }
 
-    #[Group('database')]
     public function testTruncateIgnoresForeignKeys(): void
     {
         $params = TestDatabase::getConnectionParams();

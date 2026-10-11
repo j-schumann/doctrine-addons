@@ -2,7 +2,6 @@
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
-use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction;
 
 final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
@@ -15,7 +14,6 @@ final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
         self::assertStringContainsString('WHERE (t0_.jsonColumn @> ?) = ', $query->getSQL());
     }
 
-    #[Group('database')]
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);

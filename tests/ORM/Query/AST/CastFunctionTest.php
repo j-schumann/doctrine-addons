@@ -2,7 +2,6 @@
 
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
-use PHPUnit\Framework\Attributes\Group;
 use Vrok\DoctrineAddons\ORM\Query\AST\CastFunction;
 
 final class CastFunctionTest extends AbstractPostgresFunctionTestCase
@@ -15,7 +14,6 @@ final class CastFunctionTest extends AbstractPostgresFunctionTestCase
         self::assertStringContainsString('WHERE CAST(t0_.jsonColumn as text) = ', $query->getSQL());
     }
 
-    #[Group('database')]
     public function testWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('CAST', CastFunction::class);
