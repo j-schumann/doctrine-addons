@@ -14,6 +14,7 @@ use Gedmo\Sluggable\SluggableListener;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
+use Vrok\DoctrineAddons\Tests\TestDatabase;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 
 abstract class AbstractOrmTestCase extends TestCase
@@ -33,12 +34,12 @@ abstract class AbstractOrmTestCase extends TestCase
         $this->configuration = $configuration;
     }
 
+    /**
+     * Uses the database given in DATABASE_URL, see TestDatabase.
+     */
     protected function buildEntityManager(): EntityManager
     {
-        $conn = DriverManager::getConnection(
-            ['driver' => 'pdo_sqlite', 'memory' => true],
-            $this->configuration
-        );
+        $conn = DriverManager::getConnection(TestDatabase::getConnectionParams(), $this->configuration);
 
         // Event manager
         $evm = new EventManager();
@@ -59,7 +60,7 @@ abstract class AbstractOrmTestCase extends TestCase
 
     protected function setupSchema(): void
     {
-        if (!$this->em) {
+        if (!isset($this->em)) {
             $this->buildEntityManager();
         }
 

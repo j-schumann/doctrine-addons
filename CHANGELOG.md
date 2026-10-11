@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - DQL functions `JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` for the postgres-only
   `?|` and `?&` operators, to search for any or all of multiple strings within jsonb fields
 
+### Fixed
+- `SmallJsonType` defaults the column length to 255, before it failed on MySQL/MariaDB without
+  an explicit length, as DBAL 4 requires the length of VARCHAR columns
+
 ## [3.0.1] - 2026-02-01
 ### Added
 - Support for doctrine/orm 4
