@@ -38,11 +38,7 @@ final class JsonContainsAnyTextFunctionTest extends AbstractPostgresFunctionTest
         );
         self::assertSame(['roles'], $this->findNames($condition, ['ROLE_EDITOR', 'ROLE_NONE']));
         self::assertSame([], $this->findNames($condition, ['ROLE']));
-
-        // a single string is treated as an array with one element
         self::assertSame(['blog'], $this->findNames($condition, 'ROLE_ADMIN_BLOG'));
-
-        // an empty array matches no record
         self::assertSame([], $this->findNames($condition, []));
     }
 }

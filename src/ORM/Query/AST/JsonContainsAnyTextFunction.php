@@ -19,6 +19,9 @@ use Doctrine\ORM\Query\TokenType;
  */
 class JsonContainsAnyTextFunction extends FunctionNode
 {
+    /**
+     * The doubled ? escapes it, else it is interpreted as a parameter placeholder.
+     */
     protected const string OPERATOR = '??|';
 
     private ArithmeticExpression $expr1;
@@ -44,7 +47,6 @@ class JsonContainsAnyTextFunction extends FunctionNode
     public function getSql(SqlWalker $sqlWalker): string
     {
         return \sprintf(
-            // double ? to escape it, else interpreted as param placeholder
             '(%s %s ARRAY[%s]::text[])',
             $this->expr1->dispatch($sqlWalker),
             static::OPERATOR,
