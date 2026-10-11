@@ -33,14 +33,10 @@ abstract class AbstractOrmTestCase extends AbstractDbalTestCase
         $this->configuration = $configuration;
     }
 
-    /**
-     * Uses the database given in DATABASE_URL, see AbstractDbalTestCase.
-     */
     protected function buildEntityManager(): EntityManager
     {
         $conn = DriverManager::getConnection(self::getConnectionParams(), $this->configuration);
 
-        // Event manager
         $evm = new EventManager();
 
         // Set up the Sluggable listener to test the UmlautTransliterator in

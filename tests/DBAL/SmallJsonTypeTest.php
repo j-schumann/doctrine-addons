@@ -22,7 +22,10 @@ final class SmallJsonTypeTest extends AbstractDbalTestCase
         $type = new SmallJsonType();
 
         self::assertSame('VARCHAR(255)', $type->getSQLDeclaration([], $this->platform));
-        self::assertSame('VARCHAR(100)', $type->getSQLDeclaration(['length' => 100], $this->platform));
+        self::assertSame(
+            'VARCHAR(100)',
+            $type->getSQLDeclaration(['length' => 100], $this->platform)
+        );
     }
 
     public function testConvertToDatabaseValueAllowsNull(): void
@@ -73,7 +76,7 @@ final class SmallJsonTypeTest extends AbstractDbalTestCase
 
     public function testRoundTripWithDatabase(): void
     {
-        $data = ['text' => 'Grüße', 'float' => 1.0, 'list' => [1, 2], 'null' => null];
+        $data = ['float' => 1.0, 'list' => [1, 2], 'null' => null, 'text' => 'Grüße'];
 
         [, $loaded] = self::storeAndLoad(new SmallJsonType(), $data);
 
