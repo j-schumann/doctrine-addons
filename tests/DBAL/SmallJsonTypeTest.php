@@ -6,16 +6,26 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Types\ConversionException;
-use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\DBAL\Types\SmallJsonType;
 
-final class SmallJsonTypeTest extends TestCase
+final class SmallJsonTypeTest extends AbstractDbalTestCase
 {
     private MySQL80Platform $platform;
 
     protected function setUp(): void
     {
         $this->platform = new MySQL80Platform();
+    }
+
+    public function testSqlDeclarationDefaultsLength(): void
+    {
+        $type = new SmallJsonType();
+
+        self::assertSame('VARCHAR(255)', $type->getSQLDeclaration([], $this->platform));
+        self::assertSame(
+            'VARCHAR(100)',
+            $type->getSQLDeclaration(['length' => 100], $this->platform)
+        );
     }
 
     public function testConvertToDatabaseValueAllowsNull(): void
@@ -62,5 +72,14 @@ final class SmallJsonTypeTest extends TestCase
         $type = new SmallJsonType();
         $this->expectException(ConversionException::class);
         $type->convertToPHPValue('{not: valid}', $this->platform);
+    }
+
+    public function testRoundTripWithDatabase(): void
+    {
+        $data = ['float' => 1.0, 'list' => [1, 2], 'null' => null, 'text' => 'Grüße'];
+
+        [, $loaded] = self::storeAndLoad(new SmallJsonType(), $data);
+
+        self::assertSame($data, $loaded);
     }
 }

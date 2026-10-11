@@ -11,12 +11,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Gedmo\Sluggable\SluggableListener;
-use PHPUnit\Framework\TestCase;
+use Vrok\DoctrineAddons\Tests\DBAL\AbstractDbalTestCase;
 use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 
-abstract class AbstractOrmTestCase extends TestCase
+abstract class AbstractOrmTestCase extends AbstractDbalTestCase
 {
     protected Configuration $configuration;
     protected EntityManager $em;
@@ -35,12 +35,8 @@ abstract class AbstractOrmTestCase extends TestCase
 
     protected function buildEntityManager(): EntityManager
     {
-        $conn = DriverManager::getConnection(
-            ['driver' => 'pdo_sqlite', 'memory' => true],
-            $this->configuration
-        );
+        $conn = DriverManager::getConnection(self::getConnectionParams(), $this->configuration);
 
-        // Event manager
         $evm = new EventManager();
 
         // Set up the Sluggable listener to test the UmlautTransliterator in
@@ -59,7 +55,7 @@ abstract class AbstractOrmTestCase extends TestCase
 
     protected function setupSchema(): void
     {
-        if (!$this->em) {
+        if (!isset($this->em)) {
             $this->buildEntityManager();
         }
 
