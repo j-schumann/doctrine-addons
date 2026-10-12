@@ -150,4 +150,5 @@ Requires `symfony/translation-contracts`.
 
 * next major: remove UTCDateTimeType, small-json?
 * next major: remove TestDrivers?
-* drop support for doctrine/dbal < 4.5 -> remove tests/Fixtures/JsonbColumn.php, use `Types::JSONB`
+* next major: require doctrine/dbal ^4.5 in require-dev only (src does not need it), remove
+  tests/Fixtures/JsonbColumn.php and use `Types::JSONB`
