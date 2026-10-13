@@ -2,6 +2,8 @@
 
 namespace Vrok\DoctrineAddons\Tests\Util;
 
+use Doctrine\Common\EventManager;
+use Gedmo\Sluggable\SluggableListener;
 use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 use Vrok\DoctrineAddons\Util\UmlautTransliterator;
@@ -21,8 +23,13 @@ final class UmlautTransliteratorTest extends AbstractOrmTestCase
 
     public function testTransliterateWithSluggable(): void
     {
-        $em = $this->buildEntityManager();
-        $this->setupSchema();
+        $sluggableListener = new SluggableListener();
+        $sluggableListener->setTransliterator(UmlautTransliterator::transliterate(...));
+        $eventManager = new EventManager();
+        $eventManager->addEventSubscriber($sluggableListener);
+
+        $em = $this->buildEntityManager($eventManager);
+        $this->setupSchema(SlugEntity::class);
 
         $record = new SlugEntity();
         $record->title = 'A æ Übérmensch på høyeste nivå! И я люблю PHP! есть. ﬁ 北京 ⁴₇';

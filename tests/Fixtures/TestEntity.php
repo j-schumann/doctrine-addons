@@ -4,10 +4,14 @@ namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vrok\DoctrineAddons\Entity\LockableInterface;
+use Vrok\DoctrineAddons\Entity\LockableTrait;
 
 #[ORM\Entity]
-class TestEntity
+class TestEntity implements LockableInterface
 {
+    use LockableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
