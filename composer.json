@@ -29,7 +29,7 @@
         "doctrine/orm": "<3.0"
     },
     "suggest": {
-        "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",
+        "ext-intl": "For Util\\UmlautTransliterator",
         "symfony/property-access": "For ImportExport\\Helper",
         "symfony/serializer": "For Entity\\LockableTrait"
     },

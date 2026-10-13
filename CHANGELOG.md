@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `PostgreSQLTestPlatform`, the `RefreshDatabaseTrait` of vrok/symfony-addons resets the
   identities and handles the foreign keys itself
 - Removed support for doctrine/dbal < 4.5
+- `NormalizerHelper`, use the `Length` normalizer `trim` or copy the methods you need into
+  your project
 
 ## [3.1.0] - 2026-10-11
 ### Added

@@ -10,3 +10,5 @@
   `doctrine.dbal` config and use the default driver. The `RefreshDatabaseTrait` of
   vrok/symfony-addons 3.5 or newer disables the foreign key checks for the purge and resets the
   identities, so the fixtures get the same IDs in every test.
+* `NormalizerHelper` is removed. Use the `Length` normalizer `trim` for plain text fields or
+  copy the methods you need, e.g. `stripHtml()` and `toColor()`, into your project.
