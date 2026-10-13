@@ -78,6 +78,7 @@ doctrine:
                 name: datetime_immutable
                 class: Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType
 
+            # deprecated since 3.2, removed in 4.0, use the "json" type instead.
             # MariaDB does not support the JSON type, so we do not benefit from
             # validation/searching/path syntax etc. Also it uses a LONGTEXT
             # instead, which has a performance hit because it is stored outside
@@ -88,6 +89,9 @@ doctrine:
 ```
 
 ## Enable the MariadbTestDriver in Symfony
+
+Deprecated since 3.2, removed in 4.0: use the default driver, the `RefreshDatabaseTrait` of
+vrok/symfony-addons handles the foreign keys and resets the identities.
 
 config/packages/test/doctrine.yaml
 ```yaml
@@ -106,6 +110,9 @@ doctrine:
 ```
 
 ## Enable the PostgreSQLTestDriver in Symfony
+
+Deprecated since 3.2, removed in 4.0: use the default driver, the `RefreshDatabaseTrait` of
+vrok/symfony-addons handles the foreign keys and resets the identities.
 
 config/packages/test/doctrine.yaml
 ```yaml

@@ -3,9 +3,9 @@
 namespace Vrok\DoctrineAddons\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Vrok\DoctrineAddons\ImportExport\ExportableProperty;
-use Vrok\DoctrineAddons\ImportExport\ImportableProperty;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Vrok\ImportExport\ExportableProperty;
+use Vrok\ImportExport\ImportableProperty;
 
 /**
  * This trait represents an opinionated implementation of the LockableInterface.

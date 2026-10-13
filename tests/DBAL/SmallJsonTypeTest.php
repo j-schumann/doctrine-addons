@@ -6,10 +6,22 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Types\ConversionException;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Vrok\DoctrineAddons\DBAL\Types\SmallJsonType;
 
+// the class is deprecated, its tests run until it is removed in 4.0
+#[IgnoreDeprecations]
 final class SmallJsonTypeTest extends AbstractDbalTestCase
 {
+    public function testIsDeprecated(): void
+    {
+        $this->expectUserDeprecationMessageMatches(
+            '/^'.preg_quote('The "'.SmallJsonType::class.'" is deprecated', '/').'/'
+        );
+
+        new SmallJsonType();
+    }
+
     private MySQL80Platform $platform;
 
     protected function setUp(): void

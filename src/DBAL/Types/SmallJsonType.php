@@ -15,9 +15,16 @@ use Doctrine\DBAL\Types\StringType;
  *
  * Use only for small data objects, that produce JSON < 256 characters,
  * e.g. references with ID + classname/tablename.
+ *
+ * @deprecated since 3.2, removed in 4.0, use the "json" type instead
  */
 class SmallJsonType extends StringType
 {
+    public function __construct()
+    {
+        @trigger_error(\sprintf('The "%s" is deprecated and removed in 4.0, use the "json" type instead.', self::class), \E_USER_DEPRECATED);
+    }
+
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;

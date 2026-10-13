@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-10-13
+### Deprecated
+- Support for doctrine/dbal < 4.5
+- `SmallJsonType`, use the `json` type
+- `MariadbTestDriver`, `MariadbTestPlatform`, `PostgreSQLTestDriver` and
+  `PostgreSQLTestPlatform`, use the default driver, the `RefreshDatabaseTrait` of
+  vrok/symfony-addons handles the foreign keys and resets the identities
+- `NormalizerHelper`, use the `Length` normalizer `trim` or copy the methods you need into
+  your project
+
+### Fixed
+- `LockableTrait` uses the attributes of vrok/import-export and the `Groups` attribute of
+  symfony/serializer, its attributes still referenced the removed `ImportExport` classes and the
+  `Annotation` namespace that Symfony 8 no longer has
+
 ## [3.1.0] - 2026-10-11
 ### Added
 - DQL functions `JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` for the postgres-only

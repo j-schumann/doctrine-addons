@@ -18,10 +18,10 @@
         "rector/rector": "^2.6",
         "roave/security-advisories": "dev-latest",
         "symfony/cache": "^7.4.0|^8.0.0",
-        "symfony/property-access": "^7.4.0|^8.0.0",
         "symfony/serializer": "^7.4.0|^8.0.0",
         "symfony/translation-contracts": "^3.6.0",
         "symfony/var-exporter": "^7.4.0|^8.0.0",
+        "vrok/import-export": "^1.2.0",
         "vrok/symfony-addons": "^3.3.0"
     },
     "conflict": {
@@ -30,8 +30,8 @@
     },
     "suggest": {
         "ext-intl": "For Entity\\NormalizerHelper::to[Nullable]Locale",
-        "symfony/property-access": "For ImportExport\\Helper",
-        "symfony/serializer": "For Entity\\LockableTrait"
+        "symfony/serializer": "For the serialization groups of Entity\\LockableTrait",
+        "vrok/import-export": "For the import/export attributes of Entity\\LockableTrait"
     },
     "autoload": {
         "psr-4": {

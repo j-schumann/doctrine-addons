@@ -2,6 +2,10 @@
 
 namespace Vrok\DoctrineAddons\Entity;
 
+/**
+ * @deprecated since 3.2, removed in 4.0, use the Length normalizer "trim" or copy the
+ *             methods you need into your project
+ */
 abstract class NormalizerHelper
 {
     /**
@@ -11,6 +15,8 @@ abstract class NormalizerHelper
      */
     public static function stripHtml(?string $content): ?string
     {
+        self::triggerDeprecation();
+
         if (null === $content) {
             return null;
         }
@@ -21,6 +27,8 @@ abstract class NormalizerHelper
 
     public static function getTextLength(?string $content): int
     {
+        self::triggerDeprecation();
+
         $normalized = self::stripHtml($content);
 
         return null === $normalized ? 0 : mb_strlen($normalized);
@@ -33,6 +41,8 @@ abstract class NormalizerHelper
      */
     public static function toHtml(?string $value): string
     {
+        self::triggerDeprecation();
+
         return 0 === self::getTextLength($value) ? '' : trim((string) $value);
     }
 
@@ -43,6 +53,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableHtml(?string $value): ?string
     {
+        self::triggerDeprecation();
+
         return 0 === self::getTextLength($value) ? null : trim((string) $value);
     }
 
@@ -52,6 +64,8 @@ abstract class NormalizerHelper
      */
     public static function toString(?string $value): string
     {
+        self::triggerDeprecation();
+
         if (null === $value) {
             return '';
         }
@@ -68,6 +82,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableString(?string $value): ?string
     {
+        self::triggerDeprecation();
+
         if (null === $value) {
             return null;
         }
@@ -87,6 +103,8 @@ abstract class NormalizerHelper
      */
     public static function toStringArray(?array $values): array
     {
+        self::triggerDeprecation();
+
         if (null === $values || [] === $values) {
             return [];
         }
@@ -126,6 +144,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableStringArray(?array $values, bool $keepIndices = false): ?array
     {
+        self::triggerDeprecation();
+
         if (null === $values || [] === $values) {
             return null;
         }
@@ -170,6 +190,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableArray(?array $values): ?array
     {
+        self::triggerDeprecation();
+
         if (null === $values || [] === $values) {
             return null;
         }
@@ -192,6 +214,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableFloat(?float $value): ?float
     {
+        self::triggerDeprecation();
+
         if (null === $value || 0.0 === $value) {
             return null;
         }
@@ -204,6 +228,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableInt(?int $value): ?int
     {
+        self::triggerDeprecation();
+
         if (null === $value) {
             return null;
         }
@@ -216,6 +242,8 @@ abstract class NormalizerHelper
      */
     public static function toColor(?string $value): string
     {
+        self::triggerDeprecation();
+
         if (null === $value) {
             return '';
         }
@@ -234,6 +262,8 @@ abstract class NormalizerHelper
      */
     public static function toNullableColor(?string $value): ?string
     {
+        self::triggerDeprecation();
+
         $value = self::toNullableString($value);
 
         return null !== $value ? self::toColor($value) : null;
@@ -245,6 +275,8 @@ abstract class NormalizerHelper
      */
     public static function toLocale(?string $value): string
     {
+        self::triggerDeprecation();
+
         if (null === $value) {
             return '';
         }
@@ -264,8 +296,15 @@ abstract class NormalizerHelper
      */
     public static function toNullableLocale(?string $value): ?string
     {
+        self::triggerDeprecation();
+
         $value = self::toNullableString($value);
 
         return null !== $value ? self::toLocale($value) : null;
+    }
+
+    private static function triggerDeprecation(): void
+    {
+        @trigger_error(\sprintf('The "%s" is deprecated and removed in 4.0, use the Length normalizer "trim" or copy the methods you need into your project.', self::class), \E_USER_DEPRECATED);
     }
 }

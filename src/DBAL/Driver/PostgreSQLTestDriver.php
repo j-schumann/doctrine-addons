@@ -22,10 +22,18 @@ use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
  * createDatabasePlatformForVersion().
  * And because someone defined Doctrine\DBAL\Driver\PDO\PgSQL\Driver final we have
  * to copy all methods from there and inherit from AbstractPostgreSQLDriver.
+ *
+ * @deprecated since 3.2, removed in 4.0, use the default driver, the RefreshDatabaseTrait of
+ *             vrok/symfony-addons resets the identities
  */
 class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
 {
     use PDOConnect;
+
+    public function __construct()
+    {
+        @trigger_error(\sprintf('The "%s" is deprecated and removed in 4.0, use the default driver, the RefreshDatabaseTrait of vrok/symfony-addons resets the identities.', self::class), \E_USER_DEPRECATED);
+    }
 
     #[\Override]
     public function getDatabasePlatform(ServerVersionProvider $versionProvider): PostgreSQLPlatform
