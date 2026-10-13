@@ -49,7 +49,10 @@ final class LockableTraitTest extends AbstractOrmTestCase
         $attributes = new \ReflectionProperty(TestEntity::class, 'locked')->getAttributes();
 
         // newInstance() fails for an attribute whose class does not exist
-        $instances = array_map(static fn (\ReflectionAttribute $a): object => $a->newInstance(), $attributes);
+        $instances = array_map(
+            static fn (\ReflectionAttribute $attribute): object => $attribute->newInstance(),
+            $attributes
+        );
         $classes = array_map(get_class(...), $instances);
 
         self::assertContains(ExportableProperty::class, $classes);
