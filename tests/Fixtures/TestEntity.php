@@ -2,6 +2,7 @@
 
 namespace Vrok\DoctrineAddons\Tests\Fixtures;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -18,6 +19,6 @@ class TestEntity
     /**
      * jsonb on Postgres, required by the DQL functions.
      */
-    #[ORM\Column(type: JsonbColumn::TYPE, options: JsonbColumn::OPTIONS)]
+    #[ORM\Column(type: Types::JSONB)]
     public array $jsonColumn = [];
 }

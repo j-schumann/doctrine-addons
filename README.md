@@ -111,8 +111,3 @@ Requires `symfony/translation-contracts`.
       calls:
         - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
 ```
-
-## Developer ToDo
-
-* next major: require doctrine/dbal ^4.5 in require-dev only (src does not need it), remove
-  tests/Fixtures/JsonbColumn.php and use `Types::JSONB`
