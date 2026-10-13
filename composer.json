@@ -22,7 +22,7 @@
         "symfony/translation-contracts": "^3.6.0",
         "symfony/var-exporter": "^7.4.0|^8.0.0",
         "vrok/import-export": "^1.2.0",
-        "vrok/symfony-addons": "^3.3.0"
+        "vrok/symfony-addons": "^4.0.0"
     },
     "conflict": {
         "behat/transliterator": "<1.5",
