@@ -2,7 +2,7 @@
     "name": "vrok/doctrine-addons",
     "type": "library",
     "description": "Doctrine ORM type & helper classes",
-    "keywords": ["doctrine", "orm", "type", "utc", "test", "phpunit", "normalization"],
+    "keywords": ["doctrine", "orm", "dbal", "dql", "postgres", "type", "utc", "slug"],
     "homepage": "https://vrok.de",
     "license": "MIT",
     "require": {
@@ -12,15 +12,14 @@
     "require-dev": {
         "ext-intl": "*",
         "doctrine/orm": "^3.5.0|^4.0.x-dev",
-        "gedmo/doctrine-extensions": "^3.18.0",
         "friendsofphp/php-cs-fixer": "^3.95",
+        "gedmo/doctrine-extensions": "^3.18.0",
         "phpstan/phpstan": "^2.3.1",
         "phpstan/phpstan-deprecation-rules": "^2.0.5",
         "phpunit/phpunit": "^13.3",
         "rector/rector": "^2.6",
         "roave/security-advisories": "dev-latest",
         "symfony/cache": "^7.4.0|^8.0.0",
-        "symfony/property-access": "^7.4.0|^8.0.0",
         "symfony/serializer": "^7.4.0|^8.0.0",
         "symfony/translation-contracts": "^3.6.0",
         "symfony/var-exporter": "^7.4.0|^8.0.0",
@@ -32,7 +31,6 @@
     },
     "suggest": {
         "ext-intl": "For Util\\UmlautTransliterator",
-        "symfony/property-access": "For ImportExport\\Helper",
         "symfony/serializer": "For Entity\\LockableTrait"
     },
     "autoload": {

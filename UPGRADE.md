@@ -11,3 +11,6 @@
   identities, so the fixtures get the same IDs in every test.
 * `NormalizerHelper` is removed. Use the `Length` normalizer `trim` for plain text fields or copy
   the methods you need, e.g. `stripHtml()` and `toColor()`, into your project.
+* `JsonContainsAllTextFunction` no longer extends `JsonContainsAnyTextFunction`, both extend
+  `AbstractJsonContainsTextsFunction`. Replace `instanceof JsonContainsAnyTextFunction` checks
+  that should also match the "all" variant with the new base class.

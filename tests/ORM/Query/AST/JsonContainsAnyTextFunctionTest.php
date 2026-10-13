@@ -3,10 +3,11 @@
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAnyTextFunction;
+use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 
 final class JsonContainsAnyTextFunctionTest extends AbstractPostgresFunctionTestCase
 {
-    public function testFunction(): void
+    public function testGetSql(): void
     {
         $this->configuration->addCustomStringFunction(
             'JSON_CONTAINS_ANY_TEXT',
@@ -14,7 +15,7 @@ final class JsonContainsAnyTextFunctionTest extends AbstractPostgresFunctionTest
         );
 
         $query = $this->buildEntityManager()->createQuery(
-            'SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t'
+            'SELECT t.id FROM '.TestEntity::class.' t'
             .' WHERE JSON_CONTAINS_ANY_TEXT(t.jsonColumn, :para) = true'
         );
         self::assertStringContainsString(
@@ -23,7 +24,7 @@ final class JsonContainsAnyTextFunctionTest extends AbstractPostgresFunctionTest
         );
     }
 
-    public function testWithDatabase(): void
+    public function testQueryWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction(
             'JSON_CONTAINS_ANY_TEXT',

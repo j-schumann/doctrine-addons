@@ -9,7 +9,7 @@ Doctrine ORM.
 ## Enable Postgres specific DQL functions
 `CAST` implements the corresponding function from Postgres to convert types:
 ```php
-$queryBuilder->expr()->like('CAST(u.varchar, \'text\'))', ':parameterName')
+$queryBuilder->expr()->like('CAST(u.varchar, \'text\')', ':parameterName')
 ```
 
 `CONTAINS` allows to use the [postgres-only "@>" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
@@ -42,12 +42,12 @@ $qb->andWhere("JSON_CONTAINS_ANY_TEXT(u.roles, :searchRoles) = true")
    ->setParameter('searchRoles', ['ROLE_ADMIN', 'ROLE_EDITOR']);
 ```
 
-`JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/9.5/functions-json.html#FUNCTIONS-JSON)
-to get JSON data within a jsonb fields as string.
+`JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-OP-TABLE)
+to get JSON data within jsonb fields as string.
 This for example allows to search for records that embed JSON,
 e.g. if you store metadata or addresses:
 ```php
-$qb->andWhere("JSON_FIELD_AS_TEXT('u.address, :addrField) = :addrValue")
+$qb->andWhere("JSON_FIELD_AS_TEXT(u.address, :addrField) = :addrValue")
     ->setParameter('addrField', 'city')
     ->setParameter('addrValue', 'Dresden');
 ```
@@ -100,7 +100,7 @@ boolean property `locked` that defaults to false and that has a Symfony group at
 Add this to your services.yaml to have ae, ue, oe in your slugs instead of
 a, u, o for ä, ü, ö.  
 This also handles some other chars, e.g. accents.  
-Requires `symfony/translation-contracts`.
+Requires the `intl` extension and `symfony/translation-contracts`.
 ```yaml
     gedmo.listener.sluggable:
       class: Gedmo\Sluggable\SluggableListener

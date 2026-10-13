@@ -32,8 +32,6 @@ abstract class AbstractDbalTestCase extends TestCase
     }
 
     /**
-     * Stores the value in a column of the given type and loads it again.
-     *
      * @return array{0: mixed, 1: mixed} the raw database value and the value converted by the type
      */
     protected static function storeAndLoad(Type $type, mixed $value): array

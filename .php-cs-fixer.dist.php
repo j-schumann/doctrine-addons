@@ -18,7 +18,6 @@ return $config
             'max_arguments' => 2,
         ],
 
-        '@PHP8x3Migration'                              => true,
         '@PHP8x4Migration'                              => true,
 
         // keep close to the Symfony standard

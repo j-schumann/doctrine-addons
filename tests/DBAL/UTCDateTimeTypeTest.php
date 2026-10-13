@@ -4,27 +4,27 @@
 
 namespace Vrok\DoctrineAddons\Tests\DBAL;
 
-use Doctrine\DBAL\Platforms\MySQL80Platform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType;
 
 final class UTCDateTimeTypeTest extends AbstractDbalTestCase
 {
-    private MySQL80Platform $platform;
+    private MySQLPlatform $platform;
 
     protected function setUp(): void
     {
-        $this->platform = new MySQL80Platform();
+        $this->platform = new MySQLPlatform();
     }
 
-    public function testConvertToDatabaseValueAllowsNull(): void
+    public function testConvertToDatabaseValueWithNull(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToDatabaseValue(null, $this->platform);
         self::assertNull($result);
     }
 
-    public function testConvertToDatabaseValueRequiresDateTime(): void
+    public function testConvertToDatabaseValueFailsWithObject(): void
     {
         $type = new UTCDateTimeType();
 
@@ -32,7 +32,7 @@ final class UTCDateTimeTypeTest extends AbstractDbalTestCase
         $type->convertToDatabaseValue(new \stdClass(), $this->platform);
     }
 
-    public function testConvertToDatabaseValueReturnsString(): void
+    public function testConvertToDatabaseValue(): void
     {
         $tz = new \DateTimeZone('Europe/Berlin'); // GMT+1
         $type = new UTCDateTimeType();
@@ -51,14 +51,14 @@ final class UTCDateTimeTypeTest extends AbstractDbalTestCase
         self::assertSame('UTC', $result->getTimezone()->getName());
     }
 
-    public function testConvertToPhpValueAllowsNull(): void
+    public function testConvertToPhpValueWithNull(): void
     {
         $type = new UTCDateTimeType();
         $result = $type->convertToPHPValue(null, $this->platform);
         self::assertNull($result);
     }
 
-    public function testConvertToPhpValueRequiresString(): void
+    public function testConvertToPhpValueFailsWithObject(): void
     {
         $type = new UTCDateTimeType();
 
@@ -66,7 +66,7 @@ final class UTCDateTimeTypeTest extends AbstractDbalTestCase
         $type->convertToPHPValue(new \stdClass(), $this->platform);
     }
 
-    public function testConvertToPhpValueRequiresValidDateTime(): void
+    public function testConvertToPhpValueFailsWithInvalidString(): void
     {
         $type = new UTCDateTimeType();
 
@@ -74,7 +74,7 @@ final class UTCDateTimeTypeTest extends AbstractDbalTestCase
         $type->convertToPHPValue('not valid', $this->platform);
     }
 
-    public function testRoundTripWithDatabase(): void
+    public function testConvertWithDatabase(): void
     {
         $local = new \DateTimeImmutable('2026-10-09 18:30:15', new \DateTimeZone('Europe/Berlin'));
 

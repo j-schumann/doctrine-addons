@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [4.0.0] - unreleased
+All BC breaks are explained in UPGRADE.md.
+
+### Changed
+- `JsonContainsAllTextFunction` no longer extends `JsonContainsAnyTextFunction`, both extend the
+  new `AbstractJsonContainsTextsFunction`
+
 ### Removed
 - `SmallJsonType`, use the `json` type instead
 - `MariadbTestDriver`, `MariadbTestPlatform`, `PostgreSQLTestDriver` and `PostgreSQLTestPlatform`,

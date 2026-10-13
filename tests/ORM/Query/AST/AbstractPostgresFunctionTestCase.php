@@ -15,8 +15,7 @@ use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 abstract class AbstractPostgresFunctionTestCase extends AbstractOrmTestCase
 {
     /**
-     * Skips the test unless DATABASE_URL points to Postgres. Register the DQL function to test
-     * before.
+     * Register the DQL function to test before calling this.
      */
     protected function setupRecords(): void
     {
@@ -43,7 +42,7 @@ abstract class AbstractPostgresFunctionTestCase extends AbstractOrmTestCase
     }
 
     /**
-     * @return list<string> the names of the records matching the condition
+     * @return list<string>
      */
     protected function findNames(string $condition, mixed $value): array
     {

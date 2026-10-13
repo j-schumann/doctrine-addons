@@ -26,7 +26,7 @@ abstract class AbstractOrmTestCase extends AbstractDbalTestCase
         parent::setUp();
 
         $configuration = ORMSetup::createAttributeMetadataConfig(
-            [__DIR__.'/Fixtures'],
+            [__DIR__.'/../Fixtures'],
             true
         );
         $configuration->enableNativeLazyObjects(true);
@@ -55,10 +55,6 @@ abstract class AbstractOrmTestCase extends AbstractDbalTestCase
 
     protected function setupSchema(): void
     {
-        if (!isset($this->em)) {
-            $this->buildEntityManager();
-        }
-
         $tool = new SchemaTool($this->em);
         $classes = [
             $this->em->getClassMetadata(TestEntity::class),

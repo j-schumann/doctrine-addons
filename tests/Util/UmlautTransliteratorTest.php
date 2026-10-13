@@ -10,10 +10,7 @@ final class UmlautTransliteratorTest extends AbstractOrmTestCase
 {
     public function testTransliterate(): void
     {
-        // Updated for 2.14.0: The transliterator did not only transliterate but also already
-        // slugify the given text (replaced whitespace with the separator and trimmed the value),
-        // but this is done in Gedmo/SluggableListener by calling the "urlizer", so the updated
-        // implementation behaves more non-intrusive.
+        // only transliterates, whitespace and separators are left to Gedmo's urlizer
         self::assertSame('', UmlautTransliterator::transliterate(''));
         self::assertSame('', UmlautTransliterator::transliterate(null));
         self::assertSame(' ', UmlautTransliterator::transliterate(' '));
@@ -22,12 +19,7 @@ final class UmlautTransliteratorTest extends AbstractOrmTestCase
         self::assertSame(' iss,ea ea', UmlautTransliterator::transliterate(' ìß,èà éá'));
     }
 
-    /**
-     * This tests the integration of the transliterator (injected in the AbstractOrmTestCase) with
-     * Gedmo\Sluggable, to check if umlauts and other special chars are correctly transliterated and
-     * then remaining whitespaces are replaced with the separator (defaults to dash).
-     */
-    public function testSluggable(): void
+    public function testTransliterateWithSluggable(): void
     {
         $em = $this->buildEntityManager();
         $this->setupSchema();

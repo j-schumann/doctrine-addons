@@ -3,21 +3,22 @@
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction;
+use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 
 final class ContainsFunctionTest extends AbstractPostgresFunctionTestCase
 {
-    public function testFunction(): void
+    public function testGetSql(): void
     {
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
 
         $query = $this->buildEntityManager()->createQuery(
-            'SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t'
+            'SELECT t.id FROM '.TestEntity::class.' t'
             .' WHERE CONTAINS(t.jsonColumn, :para) = true'
         );
         self::assertStringContainsString('WHERE (t0_.jsonColumn @> ?) = ', $query->getSQL());
     }
 
-    public function testWithDatabase(): void
+    public function testQueryWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('CONTAINS', ContainsFunction::class);
         $this->setupRecords();
