@@ -73,11 +73,16 @@ config/packages/doctrine.yaml
 doctrine:
     dbal:
         types:
-            # force all dates/times to be stored in UTC
+            # MySQL/MariaDB: store all date-times in UTC, the DATETIME column
+            # has no timezone. On Postgres use the built-in datetimetz_immutable
+            # (timestamptz) instead, it stores the instant in UTC natively.
             utcdatetime:
                 name: datetime_immutable
                 class: Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType
 ```
+
+`UTCDateTimeType` replaces the `datetime_immutable` type, so it applies to every column of that
+type. Columns with the mutable `datetime` type are not converted.
 
 ## Enable the MariadbTestDriver in Symfony
 
