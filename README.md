@@ -9,7 +9,7 @@ Doctrine ORM.
 ## Enable Postgres specific DQL functions
 `CAST` implements the corresponding function from Postgres to convert types:
 ```php
-$queryBuilder->expr()->like('CAST(u.varchar, \'text\'))', ':parameterName')
+$queryBuilder->expr()->like('CAST(u.varchar, \'text\')', ':parameterName')
 ```
 
 `CONTAINS` allows to use the [postgres-only "@>" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE)
@@ -42,12 +42,12 @@ $qb->andWhere("JSON_CONTAINS_ANY_TEXT(u.roles, :searchRoles) = true")
    ->setParameter('searchRoles', ['ROLE_ADMIN', 'ROLE_EDITOR']);
 ```
 
-`JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/9.5/functions-json.html#FUNCTIONS-JSON)
-to get JSON data within a jsonb fields as string.
+`JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-OP-TABLE)
+to get JSON data within jsonb fields as string.
 This for example allows to search for records that embed JSON,
 e.g. if you store metadata or addresses:
 ```php
-$qb->andWhere("JSON_FIELD_AS_TEXT('u.address, :addrField) = :addrValue")
+$qb->andWhere("JSON_FIELD_AS_TEXT(u.address, :addrField) = :addrValue")
     ->setParameter('addrField', 'city')
     ->setParameter('addrValue', 'Dresden');
 ```
@@ -73,75 +73,34 @@ config/packages/doctrine.yaml
 doctrine:
     dbal:
         types:
-            # force all dates/times to be stored in UTC
+            # MySQL/MariaDB: store all date-times in UTC, the DATETIME column
+            # has no timezone. On Postgres use the built-in datetimetz_immutable
+            # (timestamptz) instead, it stores the instant in UTC natively.
             utcdatetime:
                 name: datetime_immutable
                 class: Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType
-
-            # deprecated since 3.2, removed in 4.0, use the "json" type instead.
-            # MariaDB does not support the JSON type, so we do not benefit from
-            # validation/searching/path syntax etc. Also it uses a LONGTEXT
-            # instead, which has a performance hit because it is stored outside
-            # the row and causes possible temp tables to be written to disk
-            smalljson:
-                name: small_json
-                class: Vrok\DoctrineAddons\DBAL\Types\SmallJsonType
 ```
 
-## Enable the MariadbTestDriver in Symfony
-
-Deprecated since 3.2, removed in 4.0: use the default driver, the `RefreshDatabaseTrait` of
-vrok/symfony-addons handles the foreign keys and resets the identities.
-
-config/packages/test/doctrine.yaml
-```yaml
-doctrine:
-    dbal:
-        # There is a bug in Doctrine\Common\DataFixtures\Purger\ORMPurger
-        # which causes tables that are target of a foreign key constraint to
-        # be deleted before the association table(s), which in turn causes
-        # "1701 Cannot truncate a table referenced in a foreign key constraint"
-        # So we use our custom driver to disable foreign key checks for TRUNCATE
-        # because only with TRUNCATE instead of DELETE FROM we ensure the same
-        # autoincrement IDs for fixtures in tests
-        # "driver" left blank intentionally
-        driver:
-        driver_class: Vrok\DoctrineAddons\DAL\Driver\MariadbTestDriver
-```
-
-## Enable the PostgreSQLTestDriver in Symfony
-
-Deprecated since 3.2, removed in 4.0: use the default driver, the `RefreshDatabaseTrait` of
-vrok/symfony-addons handles the foreign keys and resets the identities.
-
-config/packages/test/doctrine.yaml
-```yaml
-doctrine:
-    dbal:
-        # Default purge/TRUNCATE behavior of Postgres does not reset autoincrement
-        # values, so we use our custom driver to reset identities for TRUNCATE.
-        # "driver" left blank intentionally
-        driver:
-        driver_class: Vrok\DoctrineAddons\DAL\Driver\PostgreSQLTestDriver
-```
+`UTCDateTimeType` replaces the `datetime_immutable` type, so it applies to every column of that
+type. Columns with the mutable `datetime` type are not converted.
 
 ## Lockable entities
 
-Implementing a simple `LockableInterface` allows unified handling of different
-entities that can be locked/unlocked by admins etc. The provided interface
-makes very little assumptions about your code, except that each entity can
-be locked/unlocked at any time (regardless of other states the entity might have).
+Implementing a simple `LockableInterface` allows unified handling of different entities that can be
+locked/unlocked by admins etc. The provided interface makes very little assumptions about your code,
+except that each entity can be locked/unlocked at any time (regardless of other states the entity
+might have).
 
-The `LockableTrait` provides an opinionated implementation of that interface,
-by specifying a boolean property `locked` that defaults to false and that has
-a Symfony group attribute of `default:read`. 
+The `LockableTrait` provides an opinionated implementation of that interface, by specifying a
+boolean property `locked` that defaults to false and that has a Symfony group attribute of
+`default:read`.
 
 ## Slugs with correct umlauts in Symfony
 
 Add this to your services.yaml to have ae, ue, oe in your slugs instead of
 a, u, o for ä, ü, ö.  
 This also handles some other chars, e.g. accents.  
-Requires `symfony/translation-contracts`.
+Requires the `intl` extension and `symfony/translation-contracts`.
 ```yaml
     gedmo.listener.sluggable:
       class: Gedmo\Sluggable\SluggableListener
@@ -152,10 +111,3 @@ Requires `symfony/translation-contracts`.
       calls:
         - [ setTransliterator, [ [ 'Vrok\DoctrineAddons\Util\UmlautTransliterator', 'transliterate' ] ] ]
 ```
-
-## Developer ToDo
-
-* next major: remove UTCDateTimeType, small-json?
-* next major: remove TestDrivers?
-* next major: require doctrine/dbal ^4.5 in require-dev only (src does not need it), remove
-  tests/Fixtures/JsonbColumn.php and use `Types::JSONB`

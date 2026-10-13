@@ -8,16 +8,15 @@ use Vrok\ImportExport\ExportableProperty;
 use Vrok\ImportExport\ImportableProperty;
 
 /**
- * This trait represents an opinionated implementation of the LockableInterface.
- * It is used to unify the handling across all entities by making a few
- * simplifications:
+ * This trait represents an opinionated implementation of the LockableInterface. It is used to unify
+ * the handling across all entities by making a few simplifications:
  * 1) Each entity has a "locked" flag instead of differently named booleans
- * (like $user->active) or combining the locking with other states, as this would
- * prevent a transition to workflows and always poses the challenge: in which state
- * should the entity be switched when unlocking?
+ * (like $user->active) or combining the locking with other states, as this would prevent a
+ * transition to workflows and always poses the challenge: in which state should the entity be
+ * switched when unlocking?
  * 2) The flag is always visible when the entity is returned (e.g. in an API
- * response). If unwanted, the property could be overwritten in the using class,
- * or it could be removed by a normalizer.
+ * response). If unwanted, the property could be overwritten in the using class, or it could be
+ * removed by a normalizer.
  */
 trait LockableTrait
 {

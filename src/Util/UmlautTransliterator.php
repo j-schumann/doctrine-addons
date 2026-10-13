@@ -3,8 +3,8 @@
 namespace Vrok\DoctrineAddons\Util;
 
 /**
- * Used to customize the Gedmo\Sluggable listener:
- * Transliterate umlauts [ä, ü, ö] to [ae, ue, oe] instead of [a, u, o].
+ * Used to customize the Gedmo\Sluggable listener: Transliterate umlauts [ä, ü, ö] to [ae, ue, oe]
+ * instead of [a, u, o].
  */
 class UmlautTransliterator
 {
@@ -15,15 +15,13 @@ class UmlautTransliterator
         }
 
         // Opinionated implementation:
-        // The default behavior of abandoned Behat\Transliterator and PHP's
-        // internal Transliterator would be to replace umlauts with "a, o, u"
-        // instead of "ae, oe, ue", but the latter improves readability in
-        // German a lot.
-        // PHP's Transliterator would keep subscript/superscript numbers
-        // untouched, which would cause Sluggable to replace them by a dash, so
-        // we manually convert them to normal digits.
-        // Also, "Russian-Latin/BGN" improves readability, as it returns
-        // "i ya lyublyu php" instead of "i a lublu php" for "И я люблю PHP".
+        // The default behavior of abandoned Behat\Transliterator and PHP's internal Transliterator
+        // would be to replace umlauts with "a, o, u" instead of "ae, oe, ue", but the latter
+        // improves readability in German a lot.
+        // PHP's Transliterator would keep subscript/superscript numbers untouched, which would
+        // cause Sluggable to replace them by a dash, so we manually convert them to normal digits.
+        // Also, "Russian-Latin/BGN" improves readability, as it returns "i ya lyublyu php" instead
+        // of "i a lublu php" for "И я люблю PHP".
         $rules = '
                 ä > ae ;
                 ö > oe ;
@@ -62,8 +60,13 @@ class UmlautTransliterator
         $transliterator = \Transliterator::createFromRules(
             $rules,
             \Transliterator::FORWARD
-        );
+        ) ?? throw new \LogicException('The transliteration rules are invalid.');
 
-        return $transliterator->transliterate($text);
+        $result = $transliterator->transliterate($text);
+        if (false === $result) {
+            throw new \RuntimeException('Transliteration failed: '.$transliterator->getErrorMessage());
+        }
+
+        return $result;
     }
 }

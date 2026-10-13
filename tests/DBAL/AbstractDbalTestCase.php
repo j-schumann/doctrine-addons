@@ -8,8 +8,8 @@ use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Connects to the database given in DATABASE_URL, phpunit.xml.dist defaults
- * it to an in-memory SQLite database, the CI jobs set the other platforms.
+ * Connects to the database given in DATABASE_URL, phpunit.xml.dist defaults it to an in-memory
+ * SQLite database, the CI jobs set the other platforms.
  */
 abstract class AbstractDbalTestCase extends TestCase
 {
@@ -32,8 +32,6 @@ abstract class AbstractDbalTestCase extends TestCase
     }
 
     /**
-     * Stores the value in a column of the given type and loads it again.
-     *
      * @return array{0: mixed, 1: mixed} the raw database value and the value converted by the type
      */
     protected static function storeAndLoad(Type $type, mixed $value): array

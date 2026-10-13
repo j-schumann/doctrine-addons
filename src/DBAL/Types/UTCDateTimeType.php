@@ -9,8 +9,7 @@ use Doctrine\DBAL\Types\Exception\InvalidFormat;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 
 /**
- * Stores a DateTime value in UTC in the database, returnes DateTimeImmutable
- * instances.
+ * Stores a DateTime value in UTC in the database, returns DateTimeImmutable instances.
  */
 class UTCDateTimeType extends DateTimeImmutableType
 {
@@ -30,11 +29,8 @@ class UTCDateTimeType extends DateTimeImmutableType
             throw InvalidType::new($value, static::class, ['DateTime', 'DateTimeImmutable', 'DateTimeInterface']);
         }
 
-        if (!$value instanceof \DateTimeImmutable) {
-            $value = \DateTimeImmutable::createFromMutable($value);
-        }
-
-        self::$utcDateTimezone = self::$utcDateTimezone ?: new \DateTimeZone('UTC');
+        $value = \DateTimeImmutable::createFromInterface($value);
+        self::$utcDateTimezone ??= new \DateTimeZone('UTC');
 
         if ('UTC' !== $value->getTimezone()->getName()) {
             $value = $value->setTimezone(self::$utcDateTimezone);
@@ -57,7 +53,7 @@ class UTCDateTimeType extends DateTimeImmutableType
             throw InvalidType::new($value, static::class, ['string']);
         }
 
-        self::$utcDateTimezone = self::$utcDateTimezone ?: new \DateTimeZone('UTC');
+        self::$utcDateTimezone ??= new \DateTimeZone('UTC');
 
         $converted = \DateTimeImmutable::createFromFormat(
             $platform->getDateTimeFormatString(),

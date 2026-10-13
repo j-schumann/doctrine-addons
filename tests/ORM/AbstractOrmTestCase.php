@@ -10,11 +10,8 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
-use Gedmo\Sluggable\SluggableListener;
 use Vrok\DoctrineAddons\Tests\DBAL\AbstractDbalTestCase;
-use Vrok\DoctrineAddons\Tests\Fixtures\SlugEntity;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
-use Vrok\DoctrineAddons\Util\UmlautTransliterator;
 
 abstract class AbstractOrmTestCase extends AbstractDbalTestCase
 {
@@ -26,44 +23,29 @@ abstract class AbstractOrmTestCase extends AbstractDbalTestCase
         parent::setUp();
 
         $configuration = ORMSetup::createAttributeMetadataConfig(
-            [__DIR__.'/Fixtures'],
+            [__DIR__.'/../Fixtures'],
             true
         );
         $configuration->enableNativeLazyObjects(true);
         $this->configuration = $configuration;
     }
 
-    protected function buildEntityManager(): EntityManager
-    {
+    protected function buildEntityManager(
+        EventManager $eventManager = new EventManager(),
+    ): EntityManager {
         $conn = DriverManager::getConnection(self::getConnectionParams(), $this->configuration);
-
-        $evm = new EventManager();
-
-        // Set up the Sluggable listener to test the UmlautTransliterator in
-        // combination with Gedmo's Urlizer.
-        $sluggableListener = new SluggableListener();
-        $sluggableListener->setTransliterator(
-            UmlautTransliterator::transliterate(...)
-        );
-
-        $evm->addEventSubscriber($sluggableListener);
-
-        $this->em = new EntityManager($conn, $this->configuration, $evm);
+        $this->em = new EntityManager($conn, $this->configuration, $eventManager);
 
         return $this->em;
     }
 
-    protected function setupSchema(): void
+    /**
+     * @param class-string $className
+     */
+    protected function setupSchema(string $className = TestEntity::class): void
     {
-        if (!isset($this->em)) {
-            $this->buildEntityManager();
-        }
-
         $tool = new SchemaTool($this->em);
-        $classes = [
-            $this->em->getClassMetadata(TestEntity::class),
-            $this->em->getClassMetadata(SlugEntity::class),
-        ];
+        $classes = [$this->em->getClassMetadata($className)];
         $tool->dropSchema($classes);
         $tool->createSchema($classes);
     }

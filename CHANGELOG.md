@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-10-13
+All BC breaks are explained in UPGRADE.md.
+
+### Changed
+- `JsonContainsAllTextFunction` no longer extends `JsonContainsAnyTextFunction`, both extend the
+  new `AbstractJsonContainsTextsFunction`
+
+### Removed
+- `SmallJsonType`, use the `json` type instead
+- `MariadbTestDriver`, `MariadbTestPlatform`, `PostgreSQLTestDriver` and `PostgreSQLTestPlatform`,
+  the `RefreshDatabaseTrait` of vrok/symfony-addons resets the identities and handles the foreign
+  keys itself
+- Removed support for doctrine/dbal < 4.5
+- `NormalizerHelper`, use the `Length` normalizer `trim` or copy the methods you need into your
+  project
+
 ## [3.2.0] - 2026-10-13
 ### Deprecated
 - Support for doctrine/dbal < 4.5
@@ -20,12 +36,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.1.0] - 2026-10-11
 ### Added
-- DQL functions `JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` for the postgres-only
-  `?|` and `?&` operators, to search for any or all of multiple strings within jsonb fields
+- DQL functions `JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` for the postgres-only `?|` and
+  `?&` operators, to search for any or all of multiple strings within jsonb fields
 
 ### Fixed
-- `SmallJsonType` defaults the column length to 255, before it failed on MySQL/MariaDB without
-  an explicit length, as DBAL 4 requires the length of VARCHAR columns
+- `SmallJsonType` defaults the column length to 255, before it failed on MySQL/MariaDB without an
+  explicit length, as DBAL 4 requires the length of VARCHAR columns
 
 ## [3.0.1] - 2026-02-01
 ### Added
@@ -57,15 +73,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [2.14.0] - 2025-06-08
 ### Updated
-- Updated `UmlautTransliterator` to work without the abandoned
-  Behat\Transliterator. This may cause BC breaks in case the UmlautTransliterator
-  was used separately from Gedmo\DoctrineExtensions and also when Cyrillic 
-  words/letters are used.
+- Updated `UmlautTransliterator` to work without the abandoned Behat\Transliterator. This may cause
+  BC breaks in case the UmlautTransliterator was used separately from Gedmo\DoctrineExtensions and
+  also when Cyrillic words/letters are used.
 
 ### Deprecated
-- `ImportExport\Helper` and it's corresponding PHP attributes will be removed in
-  3.0, please use the standalone package `vrok\import-export` instead, it has 
-  improved functionality & usability (fewer attributes to use).
+- `ImportExport\Helper` and it's corresponding PHP attributes will be removed in 3.0, please use the
+  standalone package `vrok\import-export` instead, it has improved functionality & usability (fewer
+  attributes to use).
 
 ## [2.13.0] - 2024-10-15
 ### Updated
@@ -80,8 +95,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [2.11.0] - 2024-05-16
 ### Added
-- `ORM\Query\AST\ContainsFunction` - to check if JSON / an array contains a
-  given value
+- `ORM\Query\AST\ContainsFunction` - to check if JSON / an array contains a given value
 
 ## [2.10.0] - 2024-05-13
 ### Updated
@@ -117,16 +131,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [2.6.0] - 2022-08-11
 ### Added
-- `ImportExport\Helper` can now import lists of objects (e.g. an array of DTOs), by
-  using the new `listOf` property of the `ImportableProperty` attribute.
+- `ImportExport\Helper` can now import lists of objects (e.g. an array of DTOs), by using the new
+  `listOf` property of the `ImportableProperty` attribute.
 
 ## [2.5.0] - 2022-07-22
 ### Added
-- `ORM\Query\AST\JsonFieldAsTextFunction` - to return a selected field within embedded JSON
-  as string or compare it to a value
+- `ORM\Query\AST\JsonFieldAsTextFunction` - to return a selected field within embedded JSON as
+  string or compare it to a value
 ### Updated:
-- `ImportExport\Helper` to use static caches for im-/exportable classes & properties to
-  improve performance
+- `ImportExport\Helper` to use static caches for im-/exportable classes & properties to improve
+  performance
 
 ## [2.4.0] - 2022-03-24
 ### Added
@@ -141,5 +155,5 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - `UmlautTransliterator` to correctly translate umlauts in slugs
 ### Updated
-- `NormalizerHelper` now supports normalization of HTML color values (prepend #)
-  and locales (@see `Locale::canonicalize`)
+- `NormalizerHelper` now supports normalization of HTML color values (prepend #) and locales
+  (@see `Locale::canonicalize`)

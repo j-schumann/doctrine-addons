@@ -11,18 +11,14 @@ use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
 
 /**
- * Implements support for the postgres-only "?" operator on jsonb fields to
- * search for text.
+ * Implements support for the PostgreSQL-only "?" operator on jsonb fields to search for text.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
- *
- * "?" operator is not included in martin-georgiev/postgresql-for-doctrine or
- *  opsway/doctrine-dbal-postgresql so we implement it ourselves.
  */
 class JsonContainsTextFunction extends FunctionNode
 {
-    private ArithmeticExpression $expr1;
-    private ArithmeticExpression $expr2;
+    private ArithmeticExpression $json;
+    private ArithmeticExpression $text;
 
     /**
      * @throws QueryException
@@ -32,9 +28,9 @@ class JsonContainsTextFunction extends FunctionNode
         $parser->match(TokenType::T_IDENTIFIER);
         $parser->match(TokenType::T_OPEN_PARENTHESIS);
 
-        $this->expr1 = $parser->ArithmeticExpression();
+        $this->json = $parser->ArithmeticExpression();
         $parser->match(TokenType::T_COMMA);
-        $this->expr2 = $parser->ArithmeticExpression();
+        $this->text = $parser->ArithmeticExpression();
         $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 
@@ -46,8 +42,8 @@ class JsonContainsTextFunction extends FunctionNode
         return \sprintf(
             // double ? to escape it, else interpreted as param placeholder
             '(%s ?? %s)',
-            $this->expr1->dispatch($sqlWalker),
-            $this->expr2->dispatch($sqlWalker)
+            $this->json->dispatch($sqlWalker),
+            $this->text->dispatch($sqlWalker)
         );
     }
 }
