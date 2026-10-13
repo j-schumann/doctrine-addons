@@ -2,8 +2,11 @@
 
 namespace Vrok\DoctrineAddons\Tests\Entity;
 
+use Symfony\Component\Serializer\Attribute\Groups;
 use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
+use Vrok\ImportExport\ExportableProperty;
+use Vrok\ImportExport\ImportableProperty;
 
 final class LockableTraitTest extends AbstractOrmTestCase
 {
@@ -39,5 +42,18 @@ final class LockableTraitTest extends AbstractOrmTestCase
         $repository = $em->getRepository(TestEntity::class);
         self::assertFalse($repository->find($unlocked->id)?->locked);
         self::assertTrue($repository->find($locked->id)?->locked);
+    }
+
+    public function testLockedPropertyAttributesExist(): void
+    {
+        $attributes = new \ReflectionProperty(TestEntity::class, 'locked')->getAttributes();
+
+        // newInstance() fails for an attribute whose class does not exist
+        $instances = array_map(static fn (\ReflectionAttribute $a): object => $a->newInstance(), $attributes);
+        $classes = array_map(get_class(...), $instances);
+
+        self::assertContains(ExportableProperty::class, $classes);
+        self::assertContains(ImportableProperty::class, $classes);
+        self::assertContains(Groups::class, $classes);
     }
 }
