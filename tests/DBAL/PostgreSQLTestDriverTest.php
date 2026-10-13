@@ -8,11 +8,23 @@ use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Vrok\DoctrineAddons\DBAL\Driver\PostgreSQLTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\PostgreSQLTestPlatform;
 
+// the class is deprecated, its tests run until it is removed in 4.0
+#[IgnoreDeprecations]
 final class PostgreSQLTestDriverTest extends AbstractDbalTestCase
 {
+    public function testIsDeprecated(): void
+    {
+        $this->expectUserDeprecationMessageMatches(
+            '/^'.preg_quote('The "'.PostgreSQLTestDriver::class.'" is deprecated', '/').'/'
+        );
+
+        new PostgreSQLTestDriver();
+    }
+
     public function testReturnsCorrectPlatform(): void
     {
         $driver = new PostgreSQLTestDriver();

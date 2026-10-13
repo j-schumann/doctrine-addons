@@ -26,9 +26,17 @@ use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
  * and inherit from AbstractMySQLDriver.
  * And because someone defined the version-check functions as private we have to implement
  * them here too...
+ *
+ * @deprecated since 3.2, removed in 4.0, use the default driver, the RefreshDatabaseTrait of
+ *             vrok/symfony-addons handles the foreign keys and resets the identities
  */
 class MariadbTestDriver extends AbstractMySQLDriver
 {
+    public function __construct()
+    {
+        @trigger_error(\sprintf('The "%s" is deprecated and removed in 4.0, use the default driver, the RefreshDatabaseTrait of vrok/symfony-addons handles the foreign keys and resets the identities.', self::class), \E_USER_DEPRECATED);
+    }
+
     #[\Override]
     public function getDatabasePlatform(ServerVersionProvider $versionProvider): AbstractMySQLPlatform
     {

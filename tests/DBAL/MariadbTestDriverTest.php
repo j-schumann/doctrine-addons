@@ -7,11 +7,23 @@ namespace Vrok\DoctrineAddons\Tests\DBAL;
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Vrok\DoctrineAddons\DBAL\Driver\MariadbTestDriver;
 use Vrok\DoctrineAddons\DBAL\Platforms\MariadbTestPlatform;
 
+// the class is deprecated, its tests run until it is removed in 4.0
+#[IgnoreDeprecations]
 final class MariadbTestDriverTest extends AbstractDbalTestCase
 {
+    public function testIsDeprecated(): void
+    {
+        $this->expectUserDeprecationMessageMatches(
+            '/^'.preg_quote('The "'.MariadbTestDriver::class.'" is deprecated', '/').'/'
+        );
+
+        new MariadbTestDriver();
+    }
+
     public function testReturnsCorrectPlatform(): void
     {
         $driver = new MariadbTestDriver();

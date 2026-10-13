@@ -2,11 +2,23 @@
 
 namespace Vrok\DoctrineAddons\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Vrok\DoctrineAddons\Entity\NormalizerHelper;
 
+// the class is deprecated, its tests run until it is removed in 4.0
+#[IgnoreDeprecations]
 final class NormalizerHelperTest extends TestCase
 {
+    public function testIsDeprecated(): void
+    {
+        $this->expectUserDeprecationMessageMatches(
+            '/^'.preg_quote('The "'.NormalizerHelper::class.'" is deprecated', '/').'/'
+        );
+
+        NormalizerHelper::toString('');
+    }
+
     public function testStripHtml(): void
     {
         self::assertNull(NormalizerHelper::stripHtml(null));
