@@ -34,6 +34,7 @@ final class LockableTraitTest extends AbstractOrmTestCase
         $unlocked = new TestEntity();
         $locked = new TestEntity();
         $locked->toggleLocked();
+
         $em->persist($unlocked);
         $em->persist($locked);
         $em->flush();

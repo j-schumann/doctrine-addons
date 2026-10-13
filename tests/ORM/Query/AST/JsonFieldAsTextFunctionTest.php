@@ -20,7 +20,7 @@ final class JsonFieldAsTextFunctionTest extends AbstractPostgresFunctionTestCase
         );
         self::assertStringContainsString(
             "WHERE (t0_.jsonColumn->>'city') = 'Dresden'",
-            $query->getSQL()
+            (string) $query->getSQL()
         );
     }
 

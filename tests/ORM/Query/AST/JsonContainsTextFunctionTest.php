@@ -18,7 +18,10 @@ final class JsonContainsTextFunctionTest extends AbstractPostgresFunctionTestCas
             'SELECT t.id FROM '.TestEntity::class.' t'
             .' WHERE JSON_CONTAINS_TEXT(t.jsonColumn, :para) = true'
         );
-        self::assertStringContainsString('WHERE (t0_.jsonColumn ?? ?) = ', $query->getSQL());
+        self::assertStringContainsString(
+            'WHERE (t0_.jsonColumn ?? ?) = ',
+            (string) $query->getSQL()
+        );
     }
 
     public function testQueryWithDatabase(): void

@@ -13,11 +13,11 @@ final class CastFunctionTest extends AbstractPostgresFunctionTestCase
 
         $query = $this->buildEntityManager()->createQuery(
             'SELECT t.id FROM '.TestEntity::class.' t'
-            .' WHERE CAST(t.jsonColumn, \'text\') = true'
+            ." WHERE CAST(t.jsonColumn, 'text') = true"
         );
         self::assertStringContainsString(
             'WHERE CAST(t0_.jsonColumn as text) = ',
-            $query->getSQL()
+            (string) $query->getSQL()
         );
     }
 

@@ -25,6 +25,7 @@ final class UmlautTransliteratorTest extends AbstractOrmTestCase
     {
         $sluggableListener = new SluggableListener();
         $sluggableListener->setTransliterator(UmlautTransliterator::transliterate(...));
+
         $eventManager = new EventManager();
         $eventManager->addEventSubscriber($sluggableListener);
 

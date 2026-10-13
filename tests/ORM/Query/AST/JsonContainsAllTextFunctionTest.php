@@ -20,7 +20,7 @@ final class JsonContainsAllTextFunctionTest extends AbstractPostgresFunctionTest
         );
         self::assertStringContainsString(
             'WHERE (t0_.jsonColumn ??& ARRAY[?]::text[]) = ',
-            $query->getSQL()
+            (string) $query->getSQL()
         );
     }
 
