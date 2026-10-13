@@ -77,14 +77,6 @@ doctrine:
             utcdatetime:
                 name: datetime_immutable
                 class: Vrok\DoctrineAddons\DBAL\Types\UTCDateTimeType
-
-            # MariaDB does not support the JSON type, so we do not benefit from
-            # validation/searching/path syntax etc. Also it uses a LONGTEXT
-            # instead, which has a performance hit because it is stored outside
-            # the row and causes possible temp tables to be written to disk
-            smalljson:
-                name: small_json
-                class: Vrok\DoctrineAddons\DBAL\Types\SmallJsonType
 ```
 
 ## Enable the MariadbTestDriver in Symfony
@@ -148,7 +140,6 @@ Requires `symfony/translation-contracts`.
 
 ## Developer ToDo
 
-* next major: remove UTCDateTimeType, small-json?
 * next major: remove TestDrivers?
 * next major: require doctrine/dbal ^4.5 in require-dev only (src does not need it), remove
   tests/Fixtures/JsonbColumn.php and use `Types::JSONB`
