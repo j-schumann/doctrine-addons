@@ -3,24 +3,25 @@
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use Vrok\DoctrineAddons\ORM\Query\AST\CastFunction;
+use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 
 final class CastFunctionTest extends AbstractPostgresFunctionTestCase
 {
-    public function testFunction(): void
+    public function testGetSql(): void
     {
         $this->configuration->addCustomStringFunction('CAST', CastFunction::class);
 
         $query = $this->buildEntityManager()->createQuery(
-            'SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t'
-            .' WHERE CAST(t.jsonColumn, \'text\') = true'
+            'SELECT t.id FROM '.TestEntity::class.' t'
+            ." WHERE CAST(t.jsonColumn, 'text') = true"
         );
         self::assertStringContainsString(
             'WHERE CAST(t0_.jsonColumn as text) = ',
-            $query->getSQL()
+            (string) $query->getSQL()
         );
     }
 
-    public function testWithDatabase(): void
+    public function testQueryWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction('CAST', CastFunction::class);
         $this->setupRecords();

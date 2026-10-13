@@ -25,21 +25,19 @@ return RectorConfig::configure()
     ])
     ->withParallel(200, 4)
     ->withComposerBased(
-        twig: true,
         doctrine: true,
         phpunit: true,
     )
     ->withPreparedSets(
-    // verify changes, some are unwanted!
+        // verify changes, some are unwanted!
         deadCode: true,
         codeQuality: true,
         codingStyle: true,
         typeDeclarations: true,
         typeDeclarationDocblocks: true,
         privatization: true,
-        // unwanted:
-        // renames ChallengeConcretization $concretization to $challengeConcretization
-        // renames $email = new TemplatedEmail() to $templatedEmail
+        // unwanted: renames variables after their type, e.g. $concretization to
+        // $challengeConcretization
         naming: false,
         // unwanted: changes if ($user) to if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface)
         instanceOf: false,
@@ -58,8 +56,6 @@ return RectorConfig::configure()
         PreferPHPUnitSelfCallRector::class,
     ])
     ->withSkip([
-        __DIR__.'/tests/Fixtures/app',
-
         // mostly unnecessary as they are callbacks to array_filter etc.
         AddArrowFunctionReturnTypeRector::class,
 
@@ -94,8 +90,5 @@ return RectorConfig::configure()
         DeclareStrictTypesRector::class,
         DeclareStrictTypesTestsRector::class,
         SafeDeclareStrictTypesRector::class,
-
-        // Auto-generated, config reference dump
-        __DIR__.'/tests/Fixtures/app/config/reference.php',
     ])
 ;

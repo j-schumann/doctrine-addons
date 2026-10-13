@@ -3,33 +3,37 @@
 namespace Vrok\DoctrineAddons\Tests\ORM\Query\AST;
 
 use Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction;
+use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 
 final class JsonContainsTextFunctionTest extends AbstractPostgresFunctionTestCase
 {
-    public function testFunction(): void
+    public function testGetSql(): void
     {
         $this->configuration->addCustomStringFunction(
-            'JSON_EXISTS',
+            'JSON_CONTAINS_TEXT',
             JsonContainsTextFunction::class
         );
 
         $query = $this->buildEntityManager()->createQuery(
-            'SELECT t.id FROM Vrok\DoctrineAddons\Tests\Fixtures\TestEntity t'
-            .' WHERE JSON_EXISTS(t.jsonColumn, :para) = true'
+            'SELECT t.id FROM '.TestEntity::class.' t'
+            .' WHERE JSON_CONTAINS_TEXT(t.jsonColumn, :para) = true'
         );
-        self::assertStringContainsString('WHERE (t0_.jsonColumn ?? ?) = ', $query->getSQL());
+        self::assertStringContainsString(
+            'WHERE (t0_.jsonColumn ?? ?) = ',
+            (string) $query->getSQL()
+        );
     }
 
-    public function testWithDatabase(): void
+    public function testQueryWithDatabase(): void
     {
         $this->configuration->addCustomStringFunction(
-            'JSON_EXISTS',
+            'JSON_CONTAINS_TEXT',
             JsonContainsTextFunction::class
         );
         $this->setupRecords();
 
+        $condition = 'JSON_CONTAINS_TEXT(t.jsonColumn, :value) = true';
         // matches only complete elements, not "ROLE_ADMIN_BLOG"
-        $condition = 'JSON_EXISTS(t.jsonColumn, :value) = true';
         self::assertSame(['roles'], $this->findNames($condition, 'ROLE_ADMIN'));
         self::assertSame([], $this->findNames($condition, 'ROLE'));
     }

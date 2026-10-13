@@ -11,8 +11,8 @@ use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
 
 /**
- * Implements support for the postgres-only "->>" operator on json(b) fields to
- * return a field as text.
+ * Implements support for the PostgreSQL-only "->>" operator on json(b) fields to return a field as
+ * text.
  *
  * @todo implement support for "#>>" to return the value at a given path as string
  *
@@ -20,8 +20,8 @@ use Doctrine\ORM\Query\TokenType;
  */
 class JsonFieldAsTextFunction extends FunctionNode
 {
-    private ArithmeticExpression $expr1;
-    private ArithmeticExpression $expr2;
+    private ArithmeticExpression $json;
+    private ArithmeticExpression $field;
 
     /**
      * @throws QueryException
@@ -31,9 +31,9 @@ class JsonFieldAsTextFunction extends FunctionNode
         $parser->match(TokenType::T_IDENTIFIER);
         $parser->match(TokenType::T_OPEN_PARENTHESIS);
 
-        $this->expr1 = $parser->ArithmeticExpression();
+        $this->json = $parser->ArithmeticExpression();
         $parser->match(TokenType::T_COMMA);
-        $this->expr2 = $parser->ArithmeticExpression();
+        $this->field = $parser->ArithmeticExpression();
         $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 
@@ -44,8 +44,8 @@ class JsonFieldAsTextFunction extends FunctionNode
     {
         return \sprintf(
             '(%s->>%s)',
-            $this->expr1->dispatch($sqlWalker),
-            $this->expr2->dispatch($sqlWalker)
+            $this->json->dispatch($sqlWalker),
+            $this->field->dispatch($sqlWalker)
         );
     }
 }
