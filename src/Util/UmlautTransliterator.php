@@ -62,8 +62,13 @@ class UmlautTransliterator
         $transliterator = \Transliterator::createFromRules(
             $rules,
             \Transliterator::FORWARD
-        );
+        ) ?? throw new \LogicException('The transliteration rules are invalid.');
 
-        return $transliterator->transliterate($text);
+        $result = $transliterator->transliterate($text);
+        if (false === $result) {
+            throw new \RuntimeException('Transliteration failed: '.$transliterator->getErrorMessage());
+        }
+
+        return $result;
     }
 }

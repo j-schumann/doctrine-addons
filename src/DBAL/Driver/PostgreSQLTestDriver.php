@@ -5,7 +5,6 @@ namespace Vrok\DoctrineAddons\DBAL\Driver;
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Driver\PDO\Exception;
-use Doctrine\DBAL\Driver\PDO\Exception\InvalidConfiguration;
 use Doctrine\DBAL\Driver\PDO\PDOConnect;
 use Doctrine\DBAL\Platforms\Exception\InvalidPlatformVersion;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
@@ -62,12 +61,6 @@ class PostgreSQLTestDriver extends AbstractPostgreSQLDriver
 
         if (!empty($params['persistent'])) {
             $driverOptions[\PDO::ATTR_PERSISTENT] = true;
-        }
-
-        foreach (['user', 'password'] as $key) {
-            if (isset($params[$key]) && !\is_string($params[$key])) {
-                throw InvalidConfiguration::notAStringOrNull($key, $params[$key]);
-            }
         }
 
         $safeParams = $params;

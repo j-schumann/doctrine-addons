@@ -84,6 +84,10 @@ abstract class NormalizerHelper
 
     /**
      * All empty values (after trimming) are removed, the resulting array is returned.
+     *
+     * @param array<mixed>|null $values
+     *
+     * @return array<mixed>
      */
     public static function toStringArray(?array $values): array
     {
@@ -123,6 +127,10 @@ abstract class NormalizerHelper
      * Checks if the array is empty and contains non-empty entries. All empty
      * values (after trimming) are removed. If non-empty values remain
      * they are returned, else NULL.
+     *
+     * @param array<mixed>|null $values
+     *
+     * @return array<mixed>|null
      */
     public static function toNullableStringArray(?array $values, bool $keepIndices = false): ?array
     {
@@ -167,6 +175,10 @@ abstract class NormalizerHelper
     /**
      * Checks if the array is empty and contains non-empty entries. All empty values
      * are removed. If non-empty values remain they are returned, else NULL.
+     *
+     * @param array<mixed>|null $values
+     *
+     * @return array<mixed>|null
      */
     public static function toNullableArray(?array $values): ?array
     {
@@ -255,7 +267,7 @@ abstract class NormalizerHelper
             return '';
         }
 
-        return \Locale::canonicalize($value);
+        return \Locale::canonicalize($value) ?? $value;
     }
 
     /**

@@ -49,10 +49,12 @@ class MariadbTestDriver extends AbstractMySQLDriver
         }
 
         if (version_compare($version, '8.4.0', '>=')) {
+            // @phpstan-ignore new.deprecatedClass (same platform detection as DBAL's own driver)
             return new MySQL84Platform();
         }
 
         if (version_compare($version, '8.0.0', '>=')) {
+            // @phpstan-ignore new.deprecatedClass (same platform detection as DBAL's own driver)
             return new MySQL80Platform();
         }
 
@@ -102,7 +104,7 @@ class MariadbTestDriver extends AbstractMySQLDriver
         }
 
         $safeParams = $params;
-        unset($safeParams['password'], $safeParams['url']);
+        unset($safeParams['password']);
 
         try {
             $pdo = new \PDO(
