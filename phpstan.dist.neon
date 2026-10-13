@@ -1,0 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    ignoreErrors:
+        # only used by the entities of the projects and the tests, which are not analysed
+        - identifier: trait.unused
+          path: src/Entity/LockableTrait.php
