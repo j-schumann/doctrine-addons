@@ -9,8 +9,8 @@ use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
 
 /**
- * Implements support for the postgres-only "@>" operator on jsonb fields or
- * arrays, to search for elements.
+ * Implements support for the postgres-only "@>" operator on jsonb fields or arrays, to search for
+ * elements.
  *
  * @see https://www.postgresql.org/docs/current/functions-array.html
  * @see https://www.postgresql.org/docs/current/datatype-json.html#JSON-CONTAINMENT

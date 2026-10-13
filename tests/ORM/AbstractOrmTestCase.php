@@ -39,8 +39,8 @@ abstract class AbstractOrmTestCase extends AbstractDbalTestCase
 
         $evm = new EventManager();
 
-        // Set up the Sluggable listener to test the UmlautTransliterator in
-        // combination with Gedmo's Urlizer.
+        // Set up the Sluggable listener to test the UmlautTransliterator in combination with
+        // Gedmo's Urlizer.
         $sluggableListener = new SluggableListener();
         $sluggableListener->setTransliterator(
             UmlautTransliterator::transliterate(...)

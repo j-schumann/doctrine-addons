@@ -86,14 +86,14 @@ type. Columns with the mutable `datetime` type are not converted.
 
 ## Lockable entities
 
-Implementing a simple `LockableInterface` allows unified handling of different
-entities that can be locked/unlocked by admins etc. The provided interface
-makes very little assumptions about your code, except that each entity can
-be locked/unlocked at any time (regardless of other states the entity might have).
+Implementing a simple `LockableInterface` allows unified handling of different entities that can be
+locked/unlocked by admins etc. The provided interface makes very little assumptions about your code,
+except that each entity can be locked/unlocked at any time (regardless of other states the entity
+might have).
 
-The `LockableTrait` provides an opinionated implementation of that interface,
-by specifying a boolean property `locked` that defaults to false and that has
-a Symfony group attribute of `default:read`. 
+The `LockableTrait` provides an opinionated implementation of that interface, by specifying a
+boolean property `locked` that defaults to false and that has a Symfony group attribute of
+`default:read`.
 
 ## Slugs with correct umlauts in Symfony
 

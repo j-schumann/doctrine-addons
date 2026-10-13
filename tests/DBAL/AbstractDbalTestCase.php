@@ -8,8 +8,8 @@ use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Connects to the database given in DATABASE_URL, phpunit.xml.dist defaults
- * it to an in-memory SQLite database, the CI jobs set the other platforms.
+ * Connects to the database given in DATABASE_URL, phpunit.xml.dist defaults it to an in-memory
+ * SQLite database, the CI jobs set the other platforms.
  */
 abstract class AbstractDbalTestCase extends TestCase
 {

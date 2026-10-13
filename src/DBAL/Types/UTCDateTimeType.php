@@ -9,8 +9,7 @@ use Doctrine\DBAL\Types\Exception\InvalidFormat;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 
 /**
- * Stores a DateTime value in UTC in the database, returnes DateTimeImmutable
- * instances.
+ * Stores a DateTime value in UTC in the database, returnes DateTimeImmutable instances.
  */
 class UTCDateTimeType extends DateTimeImmutableType
 {

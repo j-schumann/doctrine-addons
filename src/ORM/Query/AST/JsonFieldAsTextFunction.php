@@ -11,8 +11,8 @@ use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
 
 /**
- * Implements support for the postgres-only "->>" operator on json(b) fields to
- * return a field as text.
+ * Implements support for the postgres-only "->>" operator on json(b) fields to return a field as
+ * text.
  *
  * @todo implement support for "#>>" to return the value at a given path as string
  *

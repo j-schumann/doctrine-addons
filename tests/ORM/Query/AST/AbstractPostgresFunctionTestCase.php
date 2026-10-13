@@ -9,14 +9,14 @@ use Vrok\DoctrineAddons\Tests\Fixtures\TestEntity;
 use Vrok\DoctrineAddons\Tests\ORM\AbstractOrmTestCase;
 
 /**
- * For the Postgres-only DQL functions: besides the generated SQL, they are
- * tested with real queries when the tests run against Postgres.
+ * For the Postgres-only DQL functions: besides the generated SQL, they are tested with real queries
+ * when the tests run against Postgres.
  */
 abstract class AbstractPostgresFunctionTestCase extends AbstractOrmTestCase
 {
     /**
-     * Skips the test unless DATABASE_URL points to Postgres. Register the DQL
-     * function to test before.
+     * Skips the test unless DATABASE_URL points to Postgres. Register the DQL function to test
+     * before.
      */
     protected function setupRecords(): void
     {
