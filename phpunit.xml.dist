@@ -23,7 +23,6 @@
         stopOnError="true"
         testdox="true"
 >
-  <coverage/>
   <php>
     <ini name="display_errors" value="1"/>
     <ini name="display_startup_errors" value="1"/>
