@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.2.0] - unreleased
+## [3.2.0] - 2026-10-13
 ### Deprecated
 - Support for doctrine/dbal < 4.5
 - `SmallJsonType`, use the `json` type
