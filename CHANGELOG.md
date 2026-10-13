@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - unreleased
+### Fixed
+- `LockableTrait` uses the attributes of vrok/import-export and the `Groups` attribute of
+  symfony/serializer, its attributes still referenced the removed `ImportExport` classes and the
+  `Annotation` namespace that Symfony 8 no longer has
+
 ## [3.1.0] - 2026-10-11
 ### Added
 - DQL functions `JSON_CONTAINS_ANY_TEXT` and `JSON_CONTAINS_ALL_TEXT` for the postgres-only
