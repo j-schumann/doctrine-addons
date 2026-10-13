@@ -11,6 +11,8 @@ Everything listed here is removed in 4.0, see its UPGRADE.md for the replacement
 - `MariadbTestDriver`, `MariadbTestPlatform`, `PostgreSQLTestDriver` and
   `PostgreSQLTestPlatform`, use the default driver, the `RefreshDatabaseTrait` of
   vrok/symfony-addons handles the foreign keys and resets the identities
+- `NormalizerHelper`, use the `Length` normalizer `trim` or copy the methods you need into
+  your project, a `stripHtml` normalizer is planned for vrok/symfony-addons
 
 ### Fixed
 - `LockableTrait` uses the attributes of vrok/import-export and the `Groups` attribute of
