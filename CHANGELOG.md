@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [4.0.0] - unreleased
 ### Removed
 - `SmallJsonType`, use the `json` type instead
+- `MariadbTestDriver`, `MariadbTestPlatform`, `PostgreSQLTestDriver` and
+  `PostgreSQLTestPlatform`, the `RefreshDatabaseTrait` of vrok/symfony-addons resets the
+  identities and handles the foreign keys itself
 
 ## [3.1.0] - 2026-10-11
 ### Added

@@ -84,37 +84,6 @@ doctrine:
 `UTCDateTimeType` replaces the `datetime_immutable` type, so it applies to every column of that
 type. Columns with the mutable `datetime` type are not converted.
 
-## Enable the MariadbTestDriver in Symfony
-
-config/packages/test/doctrine.yaml
-```yaml
-doctrine:
-    dbal:
-        # There is a bug in Doctrine\Common\DataFixtures\Purger\ORMPurger
-        # which causes tables that are target of a foreign key constraint to
-        # be deleted before the association table(s), which in turn causes
-        # "1701 Cannot truncate a table referenced in a foreign key constraint"
-        # So we use our custom driver to disable foreign key checks for TRUNCATE
-        # because only with TRUNCATE instead of DELETE FROM we ensure the same
-        # autoincrement IDs for fixtures in tests
-        # "driver" left blank intentionally
-        driver:
-        driver_class: Vrok\DoctrineAddons\DAL\Driver\MariadbTestDriver
-```
-
-## Enable the PostgreSQLTestDriver in Symfony
-
-config/packages/test/doctrine.yaml
-```yaml
-doctrine:
-    dbal:
-        # Default purge/TRUNCATE behavior of Postgres does not reset autoincrement
-        # values, so we use our custom driver to reset identities for TRUNCATE.
-        # "driver" left blank intentionally
-        driver:
-        driver_class: Vrok\DoctrineAddons\DAL\Driver\PostgreSQLTestDriver
-```
-
 ## Lockable entities
 
 Implementing a simple `LockableInterface` allows unified handling of different
@@ -145,6 +114,5 @@ Requires `symfony/translation-contracts`.
 
 ## Developer ToDo
 
-* next major: remove TestDrivers?
 * next major: require doctrine/dbal ^4.5 in require-dev only (src does not need it), remove
   tests/Fixtures/JsonbColumn.php and use `Types::JSONB`
