@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-10-15
+### Added
+- `JsonContainsAnyFunction` (`JSON_CONTAINS_ANY`) searches jsonb fields for any of multiple JSON
+  values with `@> ANY`
+
 ## [4.0.0] - 2026-10-13
 All BC breaks are explained in UPGRADE.md.
 

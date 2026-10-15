@@ -42,6 +42,14 @@ $qb->andWhere("JSON_CONTAINS_ANY_TEXT(u.roles, :searchRoles) = true")
    ->setParameter('searchRoles', ['ROLE_ADMIN', 'ROLE_EDITOR']);
 ```
 
+`JSON_CONTAINS_ANY` allows to use the postgres-only "@>" operator with `ANY` to search for any of
+multiple JSON values within jsonb fields, in a single condition. The parameter is an array of JSON
+strings, for an empty array it matches no record.
+```php
+$qb->andWhere("JSON_CONTAINS_ANY(u.numbers, :numbers) = true")
+   ->setParameter('numbers', ['3', '"three"']);
+```
+
 `JSON_FIELD_AS_TEXT` allows to use the [postgres-only "->>" operator](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-OP-TABLE)
 to get JSON data within jsonb fields as string.
 This for example allows to search for records that embed JSON,
@@ -61,6 +69,7 @@ doctrine:
                 CAST: Vrok\DoctrineAddons\ORM\Query\AST\CastFunction
                 CONTAINS: Vrok\DoctrineAddons\ORM\Query\AST\ContainsFunction
                 JSON_CONTAINS_ALL_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAllTextFunction
+                JSON_CONTAINS_ANY: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAnyFunction
                 JSON_CONTAINS_ANY_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsAnyTextFunction
                 JSON_CONTAINS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonContainsTextFunction
                 JSON_FIELD_AS_TEXT: Vrok\DoctrineAddons\ORM\Query\AST\JsonFieldAsTextFunction
