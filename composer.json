@@ -24,7 +24,7 @@
         "symfony/serializer": "^7.4.0|^8.0.0",
         "symfony/translation-contracts": "^3.6.0",
         "symfony/var-exporter": "^7.4.0|^8.0.0",
-        "vrok/import-export": "^1.2.0",
+        "vrok/import-export": "^1.2.1",
         "vrok/symfony-addons": "^4.0.0"
     },
     "conflict": {
