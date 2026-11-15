@@ -22,6 +22,8 @@ class TestEntity implements LockableInterface
 
     /**
      * jsonb on Postgres, required by the DQL functions.
+     *
+     * @var array<mixed>
      */
     #[ORM\Column(type: Types::JSONB)]
     public array $jsonColumn = [];

@@ -16,7 +16,8 @@ class SlugEntity
     #[ORM\Column]
     public string $title = '';
 
+    // the SluggableListener only fills a NULL slug
     #[Gedmo\Slug(fields: ['title'])]
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     public ?string $slug = null;
 }
